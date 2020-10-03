@@ -2,7 +2,8 @@ name: master-release
 
 on:
   push:
-  pull_request:
+    branches:
+      - master
 
 jobs:
   deploy-app-engine:
