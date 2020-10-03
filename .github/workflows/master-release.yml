@@ -2,6 +2,7 @@ name: master-release
 
 on:
   push:
+  pull-request:
 
 jobs:
   deploy-app-engine:
