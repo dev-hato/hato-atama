@@ -51,14 +51,16 @@ func (s StatusType) MarshalJSON() ([]byte, error) {
 
 func (csurlpdtype *CreateShortURLPostDataType) Normalize() {
 	if csurlpdtype.Count == nil || *csurlpdtype.Count <= 0 {
+		// URLを取り出すことができる数
 		defaultValue := int64(3)
 		csurlpdtype.Count = &defaultValue
 	}
 
+	// hashの長さの最短値をセットする
 	csurlpdtype.ShortURLLength = 8
 	if csurlpdtype.URLLengthOption != nil {
 		if *csurlpdtype.URLLengthOption == "long" {
-			csurlpdtype.ShortURLLength = 20
+			csurlpdtype.ShortURLLength = 40
 		} else if *csurlpdtype.URLLengthOption == "short" {
 			csurlpdtype.ShortURLLength = 5
 		}
@@ -85,7 +87,7 @@ func createShortURL(c echo.Context) (err error) {
 	inputData := new(CreateShortURLPostDataType)
 	if err = c.Bind(&inputData); err != nil {
 		c.Logger().Error(err)
-		return c.JSON(http.StatusNotAcceptable, RetJsonType{Message: "invalid parameter", HashKey: nil})
+		return c.JSON(http.StatusNotAcceptable, RetJsonType{Message: "invalid parameter"})
 	}
 	// 入力データの正規化
 	inputData.Normalize()
