@@ -14,5 +14,5 @@ jobs:
         project_id: ${{ secrets.GCP_PROJECT_ID }}
         service_account_key: ${{ secrets.GCP_SA_KEY }}
         export_default_credentials: true
-    - run: gcloud app deploy
+    - run: gcloud app deploy --quiet
       working-directory: ./server
