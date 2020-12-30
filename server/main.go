@@ -214,5 +214,9 @@ func main() {
 		os.Exit(1)
 	}
 	e := createServer()
-	e.Logger.Fatal(e.Start(":8080"))
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	e.Logger.Fatal(e.Start(":" + port))
 }
