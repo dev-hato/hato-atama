@@ -22,3 +22,12 @@ services:
     command: air -c .air.toml
     ports:
       - 8082:8082
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend/src:/usr/src/app/src
+    command: npm run dev
+    ports:
+      - 8080:8080

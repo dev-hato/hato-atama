@@ -15,7 +15,6 @@ module.exports = {
         exclude: [/elm-stuff/, /node_modules/],
 
         use: [
-          { loader: 'elm-hot-webpack-loader' },
           {
             loader: 'elm-webpack-loader',
             options: {
@@ -34,4 +33,12 @@ module.exports = {
     new HtmlWebpackPlugin({ template: './src/index.html' }),
     new CleanWebpackPlugin(),
   ],
+  devServer: {
+    port: 8080,
+    host: '0.0.0.0',
+    hot: true,
+    proxy: {
+      '/api': 'http://server:8082',
+    },
+  },
 };
