@@ -8,5 +8,17 @@ services:
     environment:
       DATASTORE_PROJECT_ID: app
       DATASTORE_LISTEN_ADDRESS: 0.0.0.0:8081
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+      target: build
+    volumes:
+      - ./server:/go/app
+    environment:
+      PROJECT_ID: app
+      DATASTORE_EMULATOR_HOST: "gcloud_datastore:8081"
+      PORT: 8082
+    command: air -c .air.toml
     ports:
-      - "8081:8081"
+      - 8082:8082
