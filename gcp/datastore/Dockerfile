@@ -5,6 +5,6 @@ gcloud components install cloud-datastore-emulator beta --quiet
 
 VOLUME /opt/data
 
-COPY start.sh .
+COPY gcp/datastore/start.sh .
 
 ENTRYPOINT ["./start.sh"]

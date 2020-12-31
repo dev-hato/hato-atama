@@ -2,10 +2,10 @@ FROM node:15.5
 
 WORKDIR /usr/src/app
 
-COPY package.json ./
+COPY frontend/package.json ./
 RUN npm install
 
-COPY . .
+COPY frontend .
 RUN npm run build
 
 ENTRYPOINT []

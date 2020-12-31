@@ -2,8 +2,8 @@ version: "3"
 services:
   gcloud_datastore:
     build:
-      context: ./gcp/datastore
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: gcp/datastore/Dockerfile
     tty: true
     environment:
       DATASTORE_PROJECT_ID: app
@@ -11,11 +11,11 @@ services:
 
   server:
     build:
-      context: ./server
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: server/Dockerfile
       target: build
     volumes:
-      - ./server:/go/app
+      - ./server:/go/app/server
     environment:
       PROJECT_ID: app
       DATASTORE_EMULATOR_HOST: "gcloud_datastore:8081"
@@ -26,8 +26,8 @@ services:
 
   frontend:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: frontend/Dockerfile
     volumes:
       - ./frontend/src:/usr/src/app/src
     command: npm run dev
