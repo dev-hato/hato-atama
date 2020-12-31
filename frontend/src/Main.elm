@@ -9,8 +9,12 @@ module Main exposing (..)
 import Array exposing (initialize)
 import Browser exposing (Document, UrlRequest)
 import Browser.Navigation exposing (Key)
-import Html exposing (Html, button, div, text)
-import Html.Events exposing (onClick)
+import Html exposing (Html, button, div, input, option, text)
+import Html.Attributes exposing (href, value)
+import Html.Events exposing (onClick, onInput)
+import Http
+import Json.Decode as D
+import Json.Encode as E
 import Url exposing (Url)
 
 
@@ -33,32 +37,80 @@ main =
 type Msg
     = OnUrlRequest
     | OnUrlChange
+    | UpdateRawText String
+    | RequestShortURL
+    | ReceiveShortURL (Result Http.Error ReceiveShortURLType)
 
 
 type alias Model =
-    {}
-
-
-initializeModel : Model
-initializeModel =
-    {}
-
-
-init : () -> Url -> Key -> ( Model, Cmd msg )
-init _ _ _ =
-    ( initializeModel, Cmd.none )
-
-
-view : Model -> Document msg
-view _ =
-    { title = ""
-    , body = [ div [] [ text "aaaaaaaa" ] ]
+    { rawText : String
+    , shortURL : Maybe String
+    , url : Url
     }
 
 
-update : msg -> model -> ( model, Cmd msg )
-update _ model =
-    ( model, Cmd.none )
+initializeModel : Url -> Model
+initializeModel url =
+    { rawText = ""
+    , shortURL = Nothing
+    , url = url
+    }
+
+
+init : () -> Url -> Key -> ( Model, Cmd msg )
+init _ url _ =
+    ( initializeModel url, Cmd.none )
+
+
+view : Model -> Document Msg
+view model =
+    { title = ""
+    , body =
+        [ div []
+            [ input [ value model.rawText, onInput UpdateRawText ] []
+            , button [ onClick RequestShortURL ] [ text "変換" ]
+            ]
+        , case model.shortURL of
+            Just hash ->
+                let
+                    nowURL =
+                        model.url
+
+                    shortURL =
+                        Url.toString { nowURL | path = "/l/" ++ hash, query = Nothing, fragment = Nothing }
+                in
+                Html.a [ href shortURL ] [ text shortURL ]
+
+            Nothing ->
+                div [] []
+        ]
+    }
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        UpdateRawText text ->
+            ( { model | rawText = text }, Cmd.none )
+
+        RequestShortURL ->
+            ( model, requestShortURL model.rawText )
+
+        ReceiveShortURL result ->
+            let
+                newShortURL : Maybe String
+                newShortURL =
+                    case result of
+                        Ok value ->
+                            value.hash
+
+                        Err error ->
+                            Nothing
+            in
+            ( { model | shortURL = newShortURL }, Cmd.none )
+
+        _ ->
+            ( model, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
@@ -74,3 +126,33 @@ onUrlRequest _ =
 onUrlChange : Url -> Msg
 onUrlChange _ =
     OnUrlChange
+
+
+type alias ReceiveShortURLType =
+    { status : String
+    , message : String
+    , hash : Maybe String
+    }
+
+
+requestShortURL : String -> Cmd Msg
+requestShortURL rawText =
+    let
+        toJson : String -> E.Value
+        toJson url =
+            E.object
+                [ ( "url", E.string url )
+                ]
+
+        fromJson : D.Decoder ReceiveShortURLType
+        fromJson =
+            D.map3 ReceiveShortURLType
+                (D.field "status" D.string)
+                (D.field "message" D.string)
+                (D.field "hash" (D.nullable D.string))
+    in
+    Http.post
+        { url = "./api/create"
+        , body = Http.jsonBody <| toJson rawText
+        , expect = Http.expectJson ReceiveShortURL fromJson
+        }

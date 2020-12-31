@@ -38,7 +38,8 @@ module.exports = {
     host: '0.0.0.0',
     hot: true,
     proxy: {
-      '/api': 'http://server:8082',
+      '/api/': 'http://server:8082',
+      '/l/': 'http://server:8082',
     },
   },
 };
