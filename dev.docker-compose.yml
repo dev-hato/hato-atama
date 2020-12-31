@@ -8,6 +8,7 @@ services:
     environment:
       DATASTORE_PROJECT_ID: app
       DATASTORE_LISTEN_ADDRESS: 0.0.0.0:8081
+
   server:
     build:
       context: ./server
@@ -22,6 +23,7 @@ services:
     command: air -c .air.toml
     ports:
       - 8082:8082
+
   frontend:
     build:
       context: ./frontend
