@@ -1,16 +1,10 @@
 module Main exposing (..)
 
--- Press buttons to increment and decrement a counter.
---
--- Read how it works:
---   https://guide.elm-lang.org/architecture/buttons.html
---
-
 import Array exposing (initialize)
 import Browser exposing (Document, UrlRequest)
 import Browser.Navigation exposing (Key)
 import Html exposing (Html, button, div, input, option, text)
-import Html.Attributes exposing (href, value)
+import Html.Attributes exposing (href, target, value)
 import Html.Events exposing (onClick, onInput)
 import Http
 import Json.Decode as D
@@ -79,7 +73,11 @@ view model =
                     shortURL =
                         Url.toString { nowURL | path = "/l/" ++ hash, query = Nothing, fragment = Nothing }
                 in
-                Html.a [ href shortURL ] [ text shortURL ]
+                Html.a
+                    [ href shortURL
+                    , target "_blank"
+                    ]
+                    [ text shortURL ]
 
             Nothing ->
                 div [] []

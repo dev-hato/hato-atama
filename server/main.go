@@ -194,6 +194,7 @@ func getLink(c echo.Context) (err error) {
 		return c.JSON(http.StatusInternalServerError, RetJSONType{Status: false, Message: "database error"})
 	}
 
+	c.Response().Header().Set("Cache-Control", "no-store")
 	// トランザクションがコミットされれば、URLにリダイレクトさせる
 	return c.Redirect(302, data.URLData)
 }
