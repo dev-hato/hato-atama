@@ -1,4 +1,4 @@
-FROM node:15.5
+FROM node:15.5-alpine3.12
 
 WORKDIR /usr/src/app
 
