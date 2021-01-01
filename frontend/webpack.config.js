@@ -1,6 +1,6 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const path = require('path')
 
 module.exports = {
   module: {
@@ -8,7 +8,7 @@ module.exports = {
       {
         test: /\.html$/i,
         exclude: [/elm-stuff/, /node_modules/],
-        loader: 'html-loader',
+        loader: 'html-loader'
       },
       {
         test: /\.elm$/,
@@ -18,20 +18,20 @@ module.exports = {
           {
             loader: 'elm-webpack-loader',
             options: {
-              cwd: __dirname,
-            },
-          },
-        ],
-      },
-    ],
+              cwd: __dirname
+            }
+          }
+        ]
+      }
+    ]
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: './index.[contenthash].js',
+    filename: './index.[contenthash].js'
   },
   plugins: [
     new HtmlWebpackPlugin({ template: './src/index.html' }),
-    new CleanWebpackPlugin(),
+    new CleanWebpackPlugin()
   ],
   devServer: {
     port: 8080,
@@ -39,7 +39,7 @@ module.exports = {
     hot: true,
     proxy: {
       '/api/': 'http://server:8082',
-      '/l/': 'http://server:8082',
-    },
-  },
-};
+      '/l/': 'http://server:8082'
+    }
+  }
+}
