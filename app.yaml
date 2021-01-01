@@ -1,3 +1,8 @@
 runtime: go114
 
 main: ./server
+
+handlers:
+  - url: /(.*\.(html|js))$
+    static_files: frontend/dist/\1
+    upload: frontend/dist/.*\.(html|js)$
