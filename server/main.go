@@ -31,7 +31,7 @@ type CreateShortURLPostDataType struct {
 	ShortURLLength  int     `json:"-"`
 }
 
-type RetJsonType struct {
+type RetJSONType struct {
 	Status  StatusType `json:"status"`
 	Message string     `json:"message"`
 	HashKey *string    `json:"hash,omitempty"`
@@ -87,7 +87,7 @@ func createShortURL(c echo.Context) (err error) {
 	inputData := new(CreateShortURLPostDataType)
 	if err = c.Bind(&inputData); err != nil {
 		c.Logger().Error(err)
-		return c.JSON(http.StatusNotAcceptable, RetJsonType{Message: "invalid parameter"})
+		return c.JSON(http.StatusNotAcceptable, RetJSONType{Message: "invalid parameter"})
 	}
 	// 入力データの正規化
 	inputData.Normalize()
@@ -100,12 +100,12 @@ func createShortURL(c echo.Context) (err error) {
 	tx, err := dsClient.NewTransaction(c.Request().Context())
 	if err != nil {
 		c.Logger().Error(err)
-		return c.JSON(http.StatusInternalServerError, RetJsonType{Message: "database error"})
+		return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
 	}
 
 	// 短い順に、すでにキーが存在しないか確認して行き、存在していないキーを探す
 	for i := inputData.ShortURLLength; i < 64; i++ {
-		hashKeyCandidate := string(hashedURL[:i])
+		hashKeyCandidate := hashedURL[:i]
 		key := datastore.NameKey("Random", hashKeyCandidate, parentKey)
 		v := new(interface{})
 		if err = tx.Get(key, v); err != nil {
@@ -115,14 +115,14 @@ func createShortURL(c echo.Context) (err error) {
 				break
 			}
 			c.Logger().Error(err)
-			return c.JSON(http.StatusInternalServerError, RetJsonType{Message: "database error"})
+			return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
 		}
 	}
 
 	// 全てのキーが存在してしまったので、登録できなかった
 	if hashKey == "" {
 		c.Logger().Error("No usable key: " + hashedURL)
-		return c.JSON(http.StatusInternalServerError, RetJsonType{Message: "database error"})
+		return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
 	}
 
 	key := datastore.NameKey("Random", hashKey, parentKey)
@@ -132,16 +132,16 @@ func createShortURL(c echo.Context) (err error) {
 		Count:   *inputData.Count,
 	}); err != nil {
 		c.Logger().Error(err)
-		return c.JSON(http.StatusInternalServerError, RetJsonType{Message: "database error"})
+		return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
 	}
 
 	// トランザクションを確定させる
 	if _, err = tx.Commit(); err != nil {
 		c.Logger().Error(err)
-		return c.JSON(http.StatusInternalServerError, RetJsonType{Message: "database error"})
+		return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
 	}
 
-	return c.JSON(http.StatusCreated, RetJsonType{Status: true, Message: "ok", HashKey: &hashKey})
+	return c.JSON(http.StatusCreated, RetJSONType{Status: true, Message: "ok", HashKey: &hashKey})
 }
 
 // hashを作る
@@ -154,7 +154,7 @@ func getLink(c echo.Context) (err error) {
 	tx, err := dsClient.NewTransaction(c.Request().Context())
 	if err != nil {
 		c.Logger().Error(err)
-		return c.JSON(http.StatusInternalServerError, RetJsonType{Message: "database error"})
+		return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
 	}
 
 	// 取り出す入れ物の作成
@@ -166,17 +166,17 @@ func getLink(c echo.Context) (err error) {
 
 		// データが存在しなかった
 		if err == datastore.ErrNoSuchEntity {
-			return c.JSON(http.StatusNotFound, RetJsonType{Status: false, Message: "not found"})
+			return c.JSON(http.StatusNotFound, RetJSONType{Status: false, Message: "not found"})
 		}
 
 		// その他のエラー
 		c.Logger().Error(err)
-		return c.JSON(http.StatusInternalServerError, RetJsonType{Status: false, Message: "database error"})
+		return c.JSON(http.StatusInternalServerError, RetJSONType{Status: false, Message: "database error"})
 	}
 
 	// データは存在するけど忘れてしまった
 	if data.Count == 0 {
-		return c.JSON(http.StatusNotFound, RetJsonType{Status: false, Message: "not found"})
+		return c.JSON(http.StatusNotFound, RetJSONType{Status: false, Message: "not found"})
 	}
 
 	// 使える回数を一回消費
@@ -185,13 +185,13 @@ func getLink(c echo.Context) (err error) {
 	// 一回引いた値を保存する
 	if _, err = tx.Put(key, data); err != nil {
 		c.Logger().Error(err)
-		return c.JSON(http.StatusInternalServerError, RetJsonType{Status: false, Message: "database error"})
+		return c.JSON(http.StatusInternalServerError, RetJSONType{Status: false, Message: "database error"})
 	}
 
 	// トランザクションを確定させる
 	if _, err = tx.Commit(); err != nil {
 		c.Logger().Error(err)
-		return c.JSON(http.StatusInternalServerError, RetJsonType{Status: false, Message: "database error"})
+		return c.JSON(http.StatusInternalServerError, RetJSONType{Status: false, Message: "database error"})
 	}
 
 	// トランザクションがコミットされれば、URLにリダイレクトさせる

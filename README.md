@@ -10,5 +10,5 @@
 ## 開発環境立ち上げ
 
 ```sh
-$ docker-compose -f dev.docker-compose.yml up --build
+docker-compose -f dev.docker-compose.yml up --build
 ```
