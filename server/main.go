@@ -31,7 +31,7 @@ type CreateShortURLPostDataType struct {
 	ShortURLLength  int     `json:"-"`
 }
 
-type RetJsonType struct {
+type RetJSONType struct {
 	Status  StatusType `json:"status"`
 	Message string     `json:"message"`
 	HashKey *string    `json:"hash,omitempty"`
