@@ -141,7 +141,7 @@ func createShortURL(c echo.Context) (err error) {
 		return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
 	}
 
-	return c.JSON(http.StatusCreated, RetJsonType{Status: true, Message: "ok", HashKey: &hashKey})
+	return c.JSON(http.StatusCreated, RetJSONType{Status: true, Message: "ok", HashKey: &hashKey})
 }
 
 // hashを作る
