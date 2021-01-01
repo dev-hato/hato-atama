@@ -105,7 +105,7 @@ func createShortURL(c echo.Context) (err error) {
 
 	// 短い順に、すでにキーが存在しないか確認して行き、存在していないキーを探す
 	for i := inputData.ShortURLLength; i < 64; i++ {
-		hashKeyCandidate := string(hashedURL[:i])
+		hashKeyCandidate := hashedURL[:i]
 		key := datastore.NameKey("Random", hashKeyCandidate, parentKey)
 		v := new(interface{})
 		if err = tx.Get(key, v); err != nil {
