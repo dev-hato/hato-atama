@@ -146,8 +146,8 @@ func createShortURL(c echo.Context) (err error) {
 
 // hashを作る
 func createHash(url string, now time.Time) string {
-	sha512 := sha512.Sum512(now.AppendFormat([]byte(url), time.RFC3339Nano))
-	return hex.EncodeToString(sha512[:])
+	hash := sha512.Sum512(now.AppendFormat([]byte(url), time.RFC3339Nano))
+	return hex.EncodeToString(hash[:])
 }
 
 func getLink(c echo.Context) (err error) {
