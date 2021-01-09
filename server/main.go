@@ -203,9 +203,6 @@ func initialize() (err error) {
 	ctx := context.Background()
 
 	dsClient, err = datastore.NewClient(ctx, "hato-atama")
-	if err != nil {
-		return
-	}
 	return
 }
 
