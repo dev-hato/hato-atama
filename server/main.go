@@ -59,9 +59,10 @@ func (csurlpdtype *CreateShortURLPostDataType) Normalize() {
 	// hashの長さの最短値をセットする
 	csurlpdtype.ShortURLLength = 8
 	if csurlpdtype.URLLengthOption != nil {
-		if *csurlpdtype.URLLengthOption == "long" {
+		switch *csurlpdtype.URLLengthOption {
+		case "long":
 			csurlpdtype.ShortURLLength = 40
-		} else if *csurlpdtype.URLLengthOption == "short" {
+		case "short":
 			csurlpdtype.ShortURLLength = 5
 		}
 	}
