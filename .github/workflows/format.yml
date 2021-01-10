@@ -20,8 +20,7 @@ jobs:
           echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
           go get -u golang.org/x/tools/cmd/goimports
       - name: Format files (go mod tidy)
-        run: |
-          go mod tidy
+        run: go mod tidy
       - name: Format files (others)
         working-directory: ./server
         run: |
