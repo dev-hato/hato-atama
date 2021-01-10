@@ -26,6 +26,7 @@ type ShortURLDataType struct {
 
 type CreateShortURLPostDataType struct {
 	URL             string  `json:"url"`
+	WantedShortURL  string  `json:"wanted_short_url"`
 	Count           *int64  `json:"count"`
 	URLLengthOption *string `json:"length_option"`
 	ShortURLLength  int     `json:"-"`
@@ -83,6 +84,23 @@ func createServer() (e *echo.Echo) {
 	return
 }
 
+func getKey(url string, tx *datastore.Transaction) (key *datastore.Key, hashKey string, err error) {
+	parentKey := datastore.NameKey("URL", "Named", nil)
+	keyCandidate := datastore.NameKey("Random", url, parentKey)
+	v := &ShortURLDataType{}
+
+	if err = tx.Get(keyCandidate, v); err != nil {
+		if err == datastore.ErrNoSuchEntity {
+			// 存在していないキーが見つかったらそれを返す
+			return keyCandidate, url, nil
+		}
+
+		return nil, "", err
+	}
+
+	return nil, "", nil
+}
+
 func createShortURL(c echo.Context) (err error) {
 	// 入力データの取り出し
 	inputData := new(CreateShortURLPostDataType)
@@ -93,40 +111,52 @@ func createShortURL(c echo.Context) (err error) {
 	// 入力データの正規化
 	inputData.Normalize()
 
-	// 保存するキーの素となるhashの生成
-	hashedURL := createHash(inputData.URL, time.Now())
+	var key *datastore.Key
 	hashKey := ""
 
-	parentKey := datastore.NameKey("URL", "Named", nil)
 	tx, err := dsClient.NewTransaction(c.Request().Context())
 	if err != nil {
 		c.Logger().Error(err)
 		return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
 	}
 
-	// 短い順に、すでにキーが存在しないか確認して行き、存在していないキーを探す
-	for i := inputData.ShortURLLength; i < 64; i++ {
-		hashKeyCandidate := hashedURL[:i]
-		key := datastore.NameKey("Random", hashKeyCandidate, parentKey)
-		v := new(interface{})
-		if err = tx.Get(key, v); err != nil {
-			if err == datastore.ErrNoSuchEntity {
-				// 存在していないキーが見つかったら抜ける
-				hashKey = hashKeyCandidate
-				break
-			}
+	// 希望する短縮URLが存在しないか確認する
+	if inputData.WantedShortURL != "" {
+		key, hashKey, err = getKey(inputData.WantedShortURL, tx)
+		if err != nil {
 			c.Logger().Error(err)
 			return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
 		}
 	}
 
+	// 保存するキーの素となるhashの生成
+	hashedURL := createHash(inputData.URL, time.Now())
+
+	// 短い順に、すでにキーが存在しないか確認して行き、存在していないキーを探す
+	for i := inputData.ShortURLLength; hashKey == "" && i < 64; i++ {
+		key, hashKey, err = getKey(hashedURL[:i], tx)
+		if err != nil {
+			c.Logger().Error(err)
+			return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
+		} else if hashKey != "" {
+			break
+		}
+	}
+
 	// 全てのキーが存在してしまったので、登録できなかった
 	if hashKey == "" {
-		c.Logger().Error("No usable key: " + hashedURL)
+		hashKeyCandidate := ""
+
+		if inputData.WantedShortURL == "" {
+			hashKeyCandidate = hashedURL
+		} else {
+			hashKeyCandidate = inputData.WantedShortURL
+		}
+
+		c.Logger().Error("No usable key: " + hashKeyCandidate)
 		return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
 	}
 
-	key := datastore.NameKey("Random", hashKey, parentKey)
 	// 保存処理
 	if _, err = tx.Put(key, &ShortURLDataType{
 		URLData: inputData.URL,

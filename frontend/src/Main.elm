@@ -1,10 +1,9 @@
 module Main exposing (..)
 
-import Array exposing (initialize)
 import Browser exposing (Document, UrlRequest)
 import Browser.Navigation exposing (Key)
-import Html exposing (Html, button, div, input, option, text)
-import Html.Attributes exposing (href, target, value)
+import Html exposing (Html, button, div, input, label, text)
+import Html.Attributes exposing (href, style, target, value)
 import Html.Events exposing (onClick, onInput)
 import Http
 import Json.Decode as D
@@ -31,13 +30,15 @@ main =
 type Msg
     = OnUrlRequest
     | OnUrlChange
-    | UpdateRawText String
+    | UpdateRawURL String
+    | UpdateRawWantedShortURL String
     | RequestShortURL
     | ReceiveShortURL (Result Http.Error ReceiveShortURLType)
 
 
 type alias Model =
-    { rawText : String
+    { rawURL : String
+    , rawWantedShortURL : String
     , shortURL : Maybe String
     , url : Url
     }
@@ -45,7 +46,8 @@ type alias Model =
 
 initializeModel : Url -> Model
 initializeModel url =
-    { rawText = ""
+    { rawURL = ""
+    , rawWantedShortURL = ""
     , shortURL = Nothing
     , url = url
     }
@@ -61,7 +63,17 @@ view model =
     { title = ""
     , body =
         [ div []
-            [ input [ value model.rawText, onInput UpdateRawText ] []
+            [ label [ style "display" "flex" ]
+                [ text "短縮したいURL:"
+                , input [ value model.rawURL, onInput UpdateRawURL, style "margin-left" "0.5em" ] []
+                ]
+            , label [ style "display" "flex" ]
+                [ text "希望する短縮URL:"
+                , div [ style "margin-left" "0.5em" ]
+                    [ text (Url.toString model.url)
+                    , input [ value model.rawWantedShortURL, onInput UpdateRawWantedShortURL ] []
+                    ]
+                ]
             , button [ onClick RequestShortURL ] [ text "変換" ]
             ]
         , case model.shortURL of
@@ -73,11 +85,15 @@ view model =
                     shortURL =
                         Url.toString { nowURL | path = "/l/" ++ hash, query = Nothing, fragment = Nothing }
                 in
-                Html.a
-                    [ href shortURL
-                    , target "_blank"
+                div []
+                    [ text "生成された短縮URL:"
+                    , Html.a
+                        [ href shortURL
+                        , target "_blank"
+                        , style "margin-left" "0.5em"
+                        ]
+                        [ text shortURL ]
                     ]
-                    [ text shortURL ]
 
             Nothing ->
                 div [] []
@@ -88,11 +104,14 @@ view model =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        UpdateRawText text ->
-            ( { model | rawText = text }, Cmd.none )
+        UpdateRawURL text ->
+            ( { model | rawURL = text }, Cmd.none )
+
+        UpdateRawWantedShortURL text ->
+            ( { model | rawWantedShortURL = text }, Cmd.none )
 
         RequestShortURL ->
-            ( model, requestShortURL model.rawText )
+            ( model, requestShortURL ( model.rawURL, model.rawWantedShortURL ) )
 
         ReceiveShortURL result ->
             let
@@ -133,13 +152,14 @@ type alias ReceiveShortURLType =
     }
 
 
-requestShortURL : String -> Cmd Msg
-requestShortURL rawText =
+requestShortURL : ( String, String ) -> Cmd Msg
+requestShortURL ( rawURL, rawWantedShortURL ) =
     let
-        toJson : String -> E.Value
-        toJson url =
+        toJson : ( String, String ) -> E.Value
+        toJson ( url, wantedShortURL ) =
             E.object
                 [ ( "url", E.string url )
+                , ( "wanted_short_url", E.string wantedShortURL )
                 ]
 
         fromJson : D.Decoder ReceiveShortURLType
@@ -151,6 +171,6 @@ requestShortURL rawText =
     in
     Http.post
         { url = "./api/create"
-        , body = Http.jsonBody <| toJson rawText
+        , body = Http.jsonBody <| toJson ( rawURL, rawWantedShortURL )
         , expect = Http.expectJson ReceiveShortURL fromJson
         }
