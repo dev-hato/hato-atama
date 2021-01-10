@@ -6,7 +6,6 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -15,6 +14,7 @@ import (
 	"cloud.google.com/go/datastore"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	"gopkg.in/yaml.v2"
 )
 
 var (
