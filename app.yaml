@@ -9,3 +9,6 @@ handlers:
   - url: /(.*\.(html|js))$
     static_files: frontend/dist/\1
     upload: frontend/dist/.*\.(html|js)$
+  - url: /(settings\.yml)$
+    static_files: server/\1
+    upload: server/dist/settings\.yml$
