@@ -1,4 +1,4 @@
-name: format
+name: check-package
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  go:
+  go-modules:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -15,12 +15,8 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: 1.15
-      - name: Install goimports
-        run: |
-          echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
-          go get -u golang.org/x/tools/cmd/goimports
-      - name: Format files
-        run: goimports -l -w .
+      - name: Check Go modules
+        run: go mod tidy
       # 差分があったときは差分を出力する
       - name: Show diff
         id: diff
@@ -35,7 +31,7 @@ jobs:
           git config user.email "hatohakaraage@example.com"
           git add -u
           git commit -m "鳩は唐揚げ！(自動で直してあげたよ！)"
-          git push -f https://${{github.actor}}:${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}.git HEAD:refs/heads/fix-format-${{github.event.pull_request.head.ref}}
+          git push -f https://${{github.actor}}:${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}.git HEAD:refs/heads/check-go-modules-${{github.event.pull_request.head.ref}}
       # pushしたブランチでPRを作る
       - name: Create PullRequest
         uses: actions/github-script@v3
@@ -48,7 +44,7 @@ jobs:
               repo: context.repo.repo
             }
             const pull_params = {
-              head: "dev-hato:fix-format-${{github.event.pull_request.head.ref}}",
+              head: "dev-hato:check-go-modules-${{github.event.pull_request.head.ref}}",
               base: "${{github.event.pull_request.head.ref}}",
               ...common_params
             }
@@ -86,7 +82,7 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            const head_name = "fix-format-${{github.event.pull_request.head.ref}}"
+            const head_name = "check-go-modules-${{github.event.pull_request.head.ref}}"
             const common_params = {
               owner: context.repo.owner,
               repo: context.repo.repo
