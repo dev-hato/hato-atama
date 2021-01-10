@@ -1,4 +1,4 @@
-package main
+package settings
 
 type SettingsType struct {
 	Count          int64
