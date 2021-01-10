@@ -19,6 +19,7 @@ jobs:
           go get -u golang.org/x/tools/cmd/goimports
       - name: Format files
         run: |
+          echo ${PATH}
           go mod tidy
           go mod vendor
           go fmt server/main.go
