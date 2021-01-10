@@ -45,7 +45,7 @@ jobs:
   migrating-traffic:
     runs-on: ubuntu-latest
     needs: deploy-app-engine
-    if: ${GITHUB_REF#refs/heads/} == "master"
+    if: github.event_name == 'push'
     steps:
       - uses: google-github-actions/setup-gcloud@master
         with:
