@@ -6,7 +6,6 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"time"
@@ -14,29 +13,11 @@ import (
 	"cloud.google.com/go/datastore"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
-	"gopkg.in/yaml.v2"
 )
 
 var (
-	settings Settings
 	dsClient *datastore.Client
 )
-
-type Settings struct {
-	Count          int64                  `yaml:"count"`
-	ShortURLLength ShortURLLengthSettings `yaml:"short_url_length"`
-}
-
-type ShortURLLengthSettings struct {
-	Max int                       `yaml:"max"`
-	Min MinShortURLLengthSettings `yaml:"min"`
-}
-
-type MinShortURLLengthSettings struct {
-	Default int `yaml:"default"`
-	Long    int `yaml:"long"`
-	Short   int `yaml:"short"`
-}
 
 type ShortURLDataType struct {
 	Count   int64
@@ -223,14 +204,6 @@ func initialize() (err error) {
 	ctx := context.Background()
 
 	dsClient, err = datastore.NewClient(ctx, "hato-atama")
-	if err != nil {
-		return
-	}
-	bytes, err := ioutil.ReadFile("settings.yml")
-	if err != nil {
-		return
-	}
-	err = yaml.Unmarshal(bytes, &settings)
 	if err != nil {
 		return
 	}
