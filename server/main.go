@@ -10,9 +10,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/labstack/echo"
-
 	"cloud.google.com/go/datastore"
+	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
 
