@@ -14,7 +14,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v2
       - name: Install goimports
-        run: go get -v golang.org/x/tools/cmd/goimports
+        run: go get -u golang.org/x/tools/cmd/goimports
       - name: Format files
         run: |
           go mod tidy
