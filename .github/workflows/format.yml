@@ -23,9 +23,9 @@ jobs:
         run: |
           go mod tidy
           go mod vendor
-          go fmt server/main.go
-          goimports -w server/main.go
-          gofmt -s -w server/main.go
+          go fmt server/
+          goimports -w server/
+          gofmt -s -w server/
       # 差分があったときは差分を出力する
       - name: Show diff
         id: diff
