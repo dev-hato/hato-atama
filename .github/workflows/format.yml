@@ -19,6 +19,8 @@ jobs:
           go get -u golang.org/x/tools/cmd/goimports
       - name: Format files
         run: |
+          echo $(go env GOPATH)/bin
+          ls $(go env GOPATH)/bin
           echo ${PATH}
           go mod tidy
           go mod vendor
