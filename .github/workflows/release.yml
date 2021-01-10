@@ -67,5 +67,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "<a href="https://v${process.env.GITHUB_RUN_NUMBER}-dot-hato-atama.an.r.appspot.com">aaa</a>"
+              body: "<a href=\"https://v${process.env.GITHUB_RUN_NUMBER}-dot-hato-atama.an.r.appspot.com\">aaa</a>"
             })
