@@ -1,0 +1,7 @@
+count: 3
+short_url_length:
+  max: 64
+  min:
+    default: 8
+    long: 40
+    short: 5

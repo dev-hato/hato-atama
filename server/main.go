@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -22,19 +23,19 @@ var (
 )
 
 type Settings struct {
-	Count          int64                  `json:"count"`
-	ShortURLLength ShortURLLengthSettings `json:"short_url_length"`
+	Count          int64                  `yaml:"count"`
+	ShortURLLength ShortURLLengthSettings `yaml:"short_url_length"`
 }
 
 type ShortURLLengthSettings struct {
-	Max int                       `json:"max"`
-	Min MinShortURLLengthSettings `json:"min"`
+	Max int                       `yaml:"max"`
+	Min MinShortURLLengthSettings `yaml:"min"`
 }
 
 type MinShortURLLengthSettings struct {
-	Default int `json:"default"`
-	Long    int `json:"long"`
-	Short   int `json:"short"`
+	Default int `yaml:"default"`
+	Long    int `yaml:"long"`
+	Short   int `yaml:"short"`
 }
 
 type ShortURLDataType struct {
@@ -225,11 +226,11 @@ func initialize() (err error) {
 	if err != nil {
 		return
 	}
-	bytes, err := ioutil.ReadFile("settings.json")
+	bytes, err := ioutil.ReadFile("settings.yml")
 	if err != nil {
 		return
 	}
-	err = json.Unmarshal(bytes, &settings)
+	err = yaml.Unmarshal(bytes, &settings)
 	if err != nil {
 		return
 	}
