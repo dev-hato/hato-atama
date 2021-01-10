@@ -67,5 +67,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "PR用環境: <a href=\"https://v" + process.env.GITHUB_RUN_NUMBER + "-dot-hato-atama.an.r.appspot.com\">サイト</a>, <a href=\"https://console.cloud.google.com/logs/query;query=resource.type%3D%22gae_app%22%20resource.labels.module_id%3D%22default%22%20resource.labels.version_id%3D%22v" + process.env.GITHUB_RUN_NUMBER + "%22?project=hato-atama\">ログ</a>"
+              body: "PR用環境: <a href=\"https://v" + process.env.GITHUB_RUN_NUMBER + "-dot-hato-atama.an.r.appspot.com\" target=\"_blank\">サイト</a>, <a href=\"https://console.cloud.google.com/logs/query;query=resource.type%3D%22gae_app%22%20resource.labels.module_id%3D%22default%22%20resource.labels.version_id%3D%22v" + process.env.GITHUB_RUN_NUMBER + "%22?project=hato-atama\" target=\"_blank\">ログ</a>"
             })
