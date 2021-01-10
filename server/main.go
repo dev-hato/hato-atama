@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"time"
@@ -16,8 +17,25 @@ import (
 )
 
 var (
+	settings Settings
 	dsClient *datastore.Client
 )
+
+type Settings struct {
+	Count          int64                  `json:"count"`
+	ShortURLLength ShortURLLengthSettings `json:"short_url_length"`
+}
+
+type ShortURLLengthSettings struct {
+	Max int                       `json:"max"`
+	Min MinShortURLLengthSettings `json:"min"`
+}
+
+type MinShortURLLengthSettings struct {
+	Default int `json:"default"`
+	Long    int `json:"long"`
+	Short   int `json:"short"`
+}
 
 type ShortURLDataType struct {
 	Count   int64
@@ -52,18 +70,18 @@ func (s StatusType) MarshalJSON() ([]byte, error) {
 func (csurlpdtype *CreateShortURLPostDataType) Normalize() {
 	if csurlpdtype.Count == nil || *csurlpdtype.Count <= 0 {
 		// URLを取り出すことができる数
-		defaultValue := int64(3)
+		defaultValue := settings.Count
 		csurlpdtype.Count = &defaultValue
 	}
 
 	// hashの長さの最短値をセットする
-	csurlpdtype.ShortURLLength = 8
+	csurlpdtype.ShortURLLength = settings.ShortURLLength.Min.Default
 	if csurlpdtype.URLLengthOption != nil {
 		switch *csurlpdtype.URLLengthOption {
 		case "long":
-			csurlpdtype.ShortURLLength = 40
+			csurlpdtype.ShortURLLength = settings.ShortURLLength.Min.Long
 		case "short":
-			csurlpdtype.ShortURLLength = 5
+			csurlpdtype.ShortURLLength = settings.ShortURLLength.Min.Short
 		}
 	}
 }
@@ -105,7 +123,7 @@ func createShortURL(c echo.Context) (err error) {
 	}
 
 	// 短い順に、すでにキーが存在しないか確認して行き、存在していないキーを探す
-	for i := inputData.ShortURLLength; i < 64; i++ {
+	for i := inputData.ShortURLLength; i < settings.ShortURLLength.Max; i++ {
 		hashKeyCandidate := hashedURL[:i]
 		key := datastore.NameKey("Random", hashKeyCandidate, parentKey)
 		v := new(interface{})
@@ -204,6 +222,14 @@ func initialize() (err error) {
 	ctx := context.Background()
 
 	dsClient, err = datastore.NewClient(ctx, "hato-atama")
+	if err != nil {
+		return
+	}
+	bytes, err := ioutil.ReadFile("settings.json")
+	if err != nil {
+		return
+	}
+	err = json.Unmarshal(bytes, &settings)
 	if err != nil {
 		return
 	}
