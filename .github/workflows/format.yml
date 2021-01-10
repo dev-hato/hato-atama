@@ -22,7 +22,6 @@ jobs:
       - name: Format files
         run: |
           go mod tidy
-          go mod vendor
           go fmt server/
           goimports -w server/
           gofmt -s -w server/
