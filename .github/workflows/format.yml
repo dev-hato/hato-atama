@@ -26,12 +26,13 @@ jobs:
           gofmt -s -w server/main.go
       # 差分があったときは差分を出力する
       - name: Show diff
-        if: steps.format.outcome == 'failure'
+        id: diff
         run: |
-          git diff
+          result=`git diff`
+          echo "::set-output name=result::$result"
       # 差分があったときは、コミットを作りpushする
       - name: Push
-        if: github.event.pull_request.head.repo.full_name == github.repository && steps.format.outcome == 'failure'
+        if: github.event.pull_request.head.repo.full_name == github.repository && steps.diff.outputs.result != ''
         run: |
           git config user.name "hatohakaraage"
           git config user.email "hatohakaraage@example.com"
@@ -41,7 +42,7 @@ jobs:
       # pushしたブランチでPRを作る
       - name: Create PullRequest
         uses: actions/github-script@v3
-        if: github.event.pull_request.head.repo.full_name == github.repository && steps.format.outcome == 'failure'
+        if: github.event.pull_request.head.repo.full_name == github.repository && steps.diff.outputs.result != ''
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
@@ -84,7 +85,7 @@ jobs:
       # 既にformat修正のPRがある状態で、手動でformatを修正した場合、format修正のPRを閉じる
       - name: Close PullRequest
         uses: actions/github-script@v3
-        if: github.event.pull_request.head.repo.full_name == github.repository && steps.format.outcome != 'failure'
+        if: github.event.pull_request.head.repo.full_name == github.repository && steps.diff.outputs.result == ''
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
@@ -122,5 +123,5 @@ jobs:
               }
             })
       - name: Exit
-        if: steps.format.outcome == 'failure'
+        if: steps.diff.outputs.result != ''
         run: exit 1
