@@ -23,7 +23,7 @@ jobs:
         run: go mod tidy
       - name: Format files (others)
         run: |
-          go fmt
+          go fmt .
           goimports -w .
           gofmt -s -w .
       # 差分があったときは差分を出力する
