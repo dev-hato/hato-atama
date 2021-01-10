@@ -22,11 +22,10 @@ jobs:
       - name: Format files (go mod tidy)
         run: go mod tidy
       - name: Format files (others)
-        working-directory: ./server
         run: |
           go fmt
-          goimports -w
-          gofmt -s -w
+          goimports -w .
+          gofmt -s -w .
       # 差分があったときは差分を出力する
       - name: Show diff
         id: diff
