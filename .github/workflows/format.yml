@@ -15,13 +15,10 @@ jobs:
         uses: actions/setup-go@v2
       - name: Install goimports
         run: |
-          export PATH=$(go env GOPATH)/bin:${PATH}
+          echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
           go get -u golang.org/x/tools/cmd/goimports
       - name: Format files
         run: |
-          echo $(go env GOPATH)/bin
-          ls $(go env GOPATH)/bin
-          echo ${PATH}
           go mod tidy
           go mod vendor
           go fmt server/main.go
