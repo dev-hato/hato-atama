@@ -5,13 +5,13 @@ import (
 	"crypto/sha512"
 	"encoding/hex"
 	"encoding/json"
+	"github.com/labstack/echo"
 	"fmt"
 	"net/http"
 	"os"
 	"time"
 
 	"cloud.google.com/go/datastore"
-	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
 
