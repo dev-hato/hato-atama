@@ -22,8 +22,7 @@ jobs:
       - name: Format files
         run: |
           go mod tidy
-          gofmt -s -l -w .
-          goimports -w .
+          goimports -l -w .
       # 差分があったときは差分を出力する
       - name: Show diff
         id: diff
