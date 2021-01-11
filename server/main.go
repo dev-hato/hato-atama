@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"cloud.google.com/go/datastore"
+	"github.com/dev-hato/hato-atama/server/settings"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
@@ -53,18 +54,18 @@ func (s StatusType) MarshalJSON() ([]byte, error) {
 func (csurlpdtype *CreateShortURLPostDataType) Normalize() {
 	if csurlpdtype.Count == nil || *csurlpdtype.Count <= 0 {
 		// URLを取り出すことができる数
-		defaultValue := int64(3)
+		defaultValue := settings.Count
 		csurlpdtype.Count = &defaultValue
 	}
 
 	// hashの長さの最短値をセットする
-	csurlpdtype.ShortURLLength = 8
+	csurlpdtype.ShortURLLength = settings.ShortURLLength.Min.Default
 	if csurlpdtype.URLLengthOption != nil {
 		switch *csurlpdtype.URLLengthOption {
 		case "long":
-			csurlpdtype.ShortURLLength = 40
+			csurlpdtype.ShortURLLength = settings.ShortURLLength.Min.Long
 		case "short":
-			csurlpdtype.ShortURLLength = 5
+			csurlpdtype.ShortURLLength = settings.ShortURLLength.Min.Short
 		}
 	}
 }
