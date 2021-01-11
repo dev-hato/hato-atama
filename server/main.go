@@ -121,33 +121,24 @@ func createShortURL(c echo.Context) (err error) {
 		return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
 	}
 
-	// 希望する短縮URLが存在しないか確認する
-	if inputData.WantedShortURL != "" {
-		hashKeyCandidate = inputData.WantedShortURL
-		key, hashKey, err = getKey(inputData.WantedShortURL, tx)
-		if err != nil {
-			c.Logger().Error(err)
-			return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
-		}
-	}
-
-	if hashKey == "" {
+	if inputData.WantedShortURL == "" {
 		// 保存するキーの素となるhashの生成
-		hashedURL := createHash(inputData.URL, time.Now())
-
-		if hashKeyCandidate == "" {
-			hashKeyCandidate = hashedURL
-		}
+		hashKeyCandidate = createHash(inputData.URL, time.Now())
 
 		// 短い順に、すでにキーが存在しないか確認して行き、存在していないキーを探す
-		for i := inputData.ShortURLLength; i < 64; i++ {
-			key, hashKey, err = getKey(hashedURL[:i], tx)
+		for i := inputData.ShortURLLength; hashKey == "" && i < 64; i++ {
+			key, hashKey, err = getKey(hashKeyCandidate[:i], tx)
 			if err != nil {
 				c.Logger().Error(err)
 				return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
-			} else if hashKey != "" {
-				break
 			}
+		}
+	} else {
+		hashKeyCandidate = inputData.WantedShortURL
+		key, hashKey, err = getKey(hashKeyCandidate, tx)
+		if err != nil {
+			c.Logger().Error(err)
+			return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
 		}
 	}
 
