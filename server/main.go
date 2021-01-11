@@ -95,10 +95,10 @@ func getKey(url string, tx *datastore.Transaction) (key *datastore.Key, hashKey 
 			return keyCandidate, url, nil
 		}
 
-		return nil, "", err
+		return
 	}
 
-	return nil, "", nil
+	return
 }
 
 func createShortURL(c echo.Context) (err error) {
