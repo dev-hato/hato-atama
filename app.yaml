@@ -3,9 +3,17 @@ runtime: go114
 main: ./server
 
 handlers:
-  - url: /
+  - url: /api/.*
+    script: auto
+    secure: always
+  - url: /l/.*
+    script: auto
+    secure: always
+  - url: /(.*/)*([^/]*\.(html|js))$
+    static_files: frontend/dist/\2
+    upload: frontend/dist/.*\.(html|js)$
+    secure: always
+  - url: /.*
     static_files: frontend/dist/index.html
     upload: frontend/dist/index.html
-  - url: /(.*\.(html|js))$
-    static_files: frontend/dist/\1
-    upload: frontend/dist/.*\.(html|js)$
+    secure: always
