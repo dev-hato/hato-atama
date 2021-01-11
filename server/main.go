@@ -12,6 +12,7 @@ import (
 
 	"cloud.google.com/go/datastore"
 	"github.com/dev-hato/hato-atama/server/settings"
+	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
@@ -27,7 +28,7 @@ type ShortURLDataType struct {
 
 type CreateShortURLPostDataType struct {
 	URL             string  `json:"url"`
-	WantedShortURL  *string `json:"wanted_short_url"`
+	WantedShortURL  *string `json:"wanted_short_url" validate:"alphanum"`
 	Count           *int64  `json:"count"`
 	URLLengthOption *string `json:"length_option"`
 	ShortURLLength  int     `json:"-"`
@@ -51,7 +52,12 @@ func (s StatusType) MarshalJSON() ([]byte, error) {
 	return json.Marshal(ret)
 }
 
-func (csurlpdtype *CreateShortURLPostDataType) Normalize() {
+func (csurlpdtype *CreateShortURLPostDataType) Normalize() (err error) {
+	validate := validator.New()
+	if err = validate.Struct(csurlpdtype); err != nil {
+		return
+	}
+
 	if csurlpdtype.Count == nil || *csurlpdtype.Count <= 0 {
 		// URLを取り出すことができる数
 		defaultValue := settings.Count
@@ -68,6 +74,8 @@ func (csurlpdtype *CreateShortURLPostDataType) Normalize() {
 			csurlpdtype.ShortURLLength = settings.ShortURLLength.Min.Short
 		}
 	}
+
+	return
 }
 
 func createServer() (e *echo.Echo) {
@@ -110,7 +118,10 @@ func createShortURL(c echo.Context) (err error) {
 		return c.JSON(http.StatusNotAcceptable, RetJSONType{Message: "invalid parameter"})
 	}
 	// 入力データの正規化
-	inputData.Normalize()
+	if err = inputData.Normalize(); err != nil {
+		c.Logger().Error(err)
+		return c.JSON(http.StatusInternalServerError, RetJSONType{Message: err.Error()})
+	}
 
 	var key *datastore.Key
 	hashKey := ""
