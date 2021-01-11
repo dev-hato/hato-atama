@@ -60,9 +60,17 @@ init _ url _ =
 
 view : Model -> Document Msg
 view model =
+    let
+        nowURL =
+            model.url
+    in
     { title = ""
     , body =
-        [ div []
+        [ let
+            shortURLBase =
+                Url.toString { nowURL | path = "/l/", query = Nothing, fragment = Nothing }
+          in
+          div []
             [ label [ style "display" "flex" ]
                 [ text "短縮したいURL:"
                 , input [ value model.rawURL, onInput UpdateRawURL, style "margin-left" "0.5em" ] []
@@ -70,7 +78,7 @@ view model =
             , label [ style "display" "flex" ]
                 [ text "希望する短縮URL:"
                 , div [ style "margin-left" "0.5em" ]
-                    [ text (Url.toString model.url)
+                    [ text shortURLBase
                     , input [ value model.rawWantedShortURL, onInput UpdateRawWantedShortURL ] []
                     ]
                 ]
@@ -79,9 +87,6 @@ view model =
         , case model.shortURL of
             Just hash ->
                 let
-                    nowURL =
-                        model.url
-
                     shortURL =
                         Url.toString { nowURL | path = "/l/" ++ hash, query = Nothing, fragment = Nothing }
                 in
