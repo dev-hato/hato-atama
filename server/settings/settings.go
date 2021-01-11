@@ -1,23 +1,23 @@
 package settings
 
-type SettingType struct {
+type ShortURLType struct {
 	Count          int64
-	ShortURLLength ShortURLLengthSettingType
+	ShortURLLength ShortURLLengthType
 }
 
-type ShortURLLengthSettingType struct {
+type ShortURLLengthType struct {
 	Max int
-	Min MinShortURLLengthSettingType
+	Min MinShortURLLengthType
 }
 
-type MinShortURLLengthSettingType struct {
+type MinShortURLLengthType struct {
 	Default int
 	Long    int
 	Short   int
 }
 
 var (
-	minShortURLLengthSettings = MinShortURLLengthSettingType{Default: 8, Long: 40, Short: 5}
-	shortURLLengthSettings    = ShortURLLengthSettingType{Max: 64, Min: minShortURLLengthSettings}
-	Settings                  = SettingType{Count: int64(3), ShortURLLength: shortURLLengthSettings}
+	minShortURLLength = MinShortURLLengthType{Default: 8, Long: 40, Short: 5}
+	shortURLLength    = ShortURLLengthType{Max: 64, Min: minShortURLLength}
+	ShortURL          = ShortURLType{Count: int64(3), ShortURLLength: shortURLLength}
 )
