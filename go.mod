@@ -6,6 +6,7 @@ require (
 	cloud.google.com/go v0.74.0 // indirect
 	cloud.google.com/go/datastore v1.3.0
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
+	github.com/go-playground/validator/v10 v10.4.1
 	github.com/labstack/echo v3.3.10+incompatible
 	github.com/labstack/gommon v0.3.0 // indirect
 	github.com/mattn/go-colorable v0.1.8 // indirect

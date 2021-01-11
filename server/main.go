@@ -12,6 +12,7 @@ import (
 
 	"cloud.google.com/go/datastore"
 	"github.com/dev-hato/hato-atama/server/settings"
+	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
@@ -27,6 +28,7 @@ type ShortURLDataType struct {
 
 type CreateShortURLPostDataType struct {
 	URL             string  `json:"url"`
+	WantedShortURL  *string `json:"wanted_short_url" validate:"alphanum"`
 	Count           *int64  `json:"count"`
 	URLLengthOption *string `json:"length_option"`
 	ShortURLLength  int     `json:"-"`
@@ -50,7 +52,12 @@ func (s StatusType) MarshalJSON() ([]byte, error) {
 	return json.Marshal(ret)
 }
 
-func (csurlpdtype *CreateShortURLPostDataType) Normalize() {
+func (csurlpdtype *CreateShortURLPostDataType) Normalize() (err error) {
+	validate := validator.New()
+	if err = validate.Struct(csurlpdtype); err != nil {
+		return
+	}
+
 	if csurlpdtype.Count == nil || *csurlpdtype.Count <= 0 {
 		// URLを取り出すことができる数
 		defaultValue := settings.Count
@@ -67,6 +74,8 @@ func (csurlpdtype *CreateShortURLPostDataType) Normalize() {
 			csurlpdtype.ShortURLLength = settings.ShortURLLength.Min.Short
 		}
 	}
+
+	return
 }
 
 func createServer() (e *echo.Echo) {
@@ -84,6 +93,23 @@ func createServer() (e *echo.Echo) {
 	return
 }
 
+func getKey(url string, tx *datastore.Transaction) (key *datastore.Key, hashKey string, err error) {
+	parentKey := datastore.NameKey("URL", "Named", nil)
+	keyCandidate := datastore.NameKey("Random", url, parentKey)
+	v := &ShortURLDataType{}
+
+	if err = tx.Get(keyCandidate, v); err != nil {
+		if err == datastore.ErrNoSuchEntity {
+			// 存在していないキーが見つかったらそれを返す
+			return keyCandidate, url, nil
+		}
+
+		return
+	}
+
+	return
+}
+
 func createShortURL(c echo.Context) (err error) {
 	// 入力データの取り出し
 	inputData := new(CreateShortURLPostDataType)
@@ -92,42 +118,51 @@ func createShortURL(c echo.Context) (err error) {
 		return c.JSON(http.StatusNotAcceptable, RetJSONType{Message: "invalid parameter"})
 	}
 	// 入力データの正規化
-	inputData.Normalize()
+	if err = inputData.Normalize(); err != nil {
+		c.Logger().Error(err)
+		return c.JSON(http.StatusInternalServerError, RetJSONType{Message: err.Error()})
+	}
 
-	// 保存するキーの素となるhashの生成
-	hashedURL := createHash(inputData.URL, time.Now())
+	var key *datastore.Key
 	hashKey := ""
 
-	parentKey := datastore.NameKey("URL", "Named", nil)
 	tx, err := dsClient.NewTransaction(c.Request().Context())
 	if err != nil {
 		c.Logger().Error(err)
 		return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
 	}
 
-	// 短い順に、すでにキーが存在しないか確認して行き、存在していないキーを探す
-	for i := inputData.ShortURLLength; i < settings.ShortURLLength.Max; i++ {
-		hashKeyCandidate := hashedURL[:i]
-		key := datastore.NameKey("Random", hashKeyCandidate, parentKey)
-		v := new(interface{})
-		if err = tx.Get(key, v); err != nil {
-			if err == datastore.ErrNoSuchEntity {
-				// 存在していないキーが見つかったら抜ける
-				hashKey = hashKeyCandidate
-				break
+	if inputData.WantedShortURL == nil {
+		// 保存するキーの素となるhashの生成
+		hashedURL := createHash(inputData.URL, time.Now())
+
+		// 短い順に、すでにキーが存在しないか確認して行き、存在していないキーを探す
+		for i := inputData.ShortURLLength; hashKey == "" && i < 64; i++ {
+			key, hashKey, err = getKey(hashedURL[:i], tx)
+			if err != nil {
+				c.Logger().Error(err)
+				return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
 			}
+		}
+
+		// 全てのキーが存在してしまったので、登録できなかった
+		if hashKey == "" {
+			message := "No usable key: " + hashedURL
+			c.Logger().Error(message)
+			return c.JSON(http.StatusInternalServerError, RetJSONType{Message: message})
+		}
+	} else {
+		key, hashKey, err = getKey(*inputData.WantedShortURL, tx)
+		if err != nil {
 			c.Logger().Error(err)
 			return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
+		} else if hashKey == "" { // 希望するURLが存在してしまったので、登録できなかった
+			message := "No usable key: " + *inputData.WantedShortURL
+			c.Logger().Error(message)
+			return c.JSON(http.StatusInternalServerError, RetJSONType{Message: message})
 		}
 	}
 
-	// 全てのキーが存在してしまったので、登録できなかった
-	if hashKey == "" {
-		c.Logger().Error("No usable key: " + hashedURL)
-		return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
-	}
-
-	key := datastore.NameKey("Random", hashKey, parentKey)
 	// 保存処理
 	if _, err = tx.Put(key, &ShortURLDataType{
 		URLData: inputData.URL,
