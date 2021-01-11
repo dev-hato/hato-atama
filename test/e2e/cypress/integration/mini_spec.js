@@ -4,7 +4,8 @@ describe('短縮URLを生成できる', () => {
 
     cy.visit(apiHost);
 
-    cy.get('input').type(apiHost);
+    cy.get('#raw_url').type(apiHost);
+    cy.get('#wanted_short_url').type(`abcdefghijk${Cypress._.random(0, 1e6)}`);
 
     cy.get('button').click();
 
