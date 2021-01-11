@@ -150,7 +150,7 @@ requestShortURL rawText =
                 (D.field "hash" (D.nullable D.string))
     in
     Http.post
-        { url = "./api/create"
+        { url = "/api/create"
         , body = Http.jsonBody <| toJson rawText
         , expect = Http.expectJson ReceiveShortURL fromJson
         }
