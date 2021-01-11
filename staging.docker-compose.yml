@@ -13,14 +13,10 @@ services:
     build:
       context: .
       dockerfile: server/Dockerfile
-      target: build
-    volumes:
-      - ./server:/go/app/server
     environment:
       PROJECT_ID: app
       DATASTORE_EMULATOR_HOST: "gcloud_datastore:8081"
       PORT: 8082
-    command: air -c .air.toml
     ports:
       - 8082:8082
 
@@ -28,9 +24,5 @@ services:
     build:
       context: .
       dockerfile: frontend/Dockerfile
-      target: build
-    volumes:
-      - ./frontend/src:/usr/src/app/src
-    command: npm run dev
     ports:
       - 8080:8080
