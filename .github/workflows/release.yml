@@ -44,7 +44,9 @@ jobs:
 
   migrating-traffic:
     runs-on: ubuntu-latest
-    needs: deploy-app-engine
+    needs:
+      - deploy-app-engine
+      - e2e-test-docker-compose
     if: github.event_name == 'push'
     steps:
       - uses: google-github-actions/setup-gcloud@master
