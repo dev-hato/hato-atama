@@ -3,7 +3,7 @@ module Main exposing (..)
 import Browser exposing (Document, UrlRequest)
 import Browser.Navigation exposing (Key)
 import Html exposing (Html, button, div, input, label, text)
-import Html.Attributes exposing (href, style, target, value)
+import Html.Attributes exposing (href, id, style, target, value)
 import Html.Events exposing (onClick, onInput)
 import Http
 import Json.Decode as D
@@ -75,13 +75,24 @@ view model =
           div []
             [ label [ style "display" "flex" ]
                 [ text "短縮したいURL:"
-                , input [ value model.rawURL, onInput UpdateRawURL, style "margin-left" "0.5em" ] []
+                , input
+                    [ value model.rawURL
+                    , onInput UpdateRawURL
+                    , style "margin-left" "0.5em"
+                    , id "raw_url"
+                    ]
+                    []
                 ]
             , label [ style "display" "flex" ]
                 [ text "希望する短縮URL:"
                 , div [ style "margin-left" "0.5em" ]
                     [ text shortURLBase
-                    , input [ value model.rawWantedShortURL, onInput UpdateRawWantedShortURL ] []
+                    , input
+                        [ value model.rawWantedShortURL
+                        , onInput UpdateRawWantedShortURL
+                        , id "wanted_short_url"
+                        ]
+                        []
                     ]
                 ]
             , button [ onClick RequestShortURL ] [ text "変換" ]
