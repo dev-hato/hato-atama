@@ -53,18 +53,18 @@ func (s StatusType) MarshalJSON() ([]byte, error) {
 func (csurlpdtype *CreateShortURLPostDataType) Normalize() {
 	if csurlpdtype.Count == nil || *csurlpdtype.Count <= 0 {
 		// URLを取り出すことができる数
-		defaultValue := settings.ShortURL.Count
+		defaultValue := settings.Count
 		csurlpdtype.Count = &defaultValue
 	}
 
 	// hashの長さの最短値をセットする
-	csurlpdtype.ShortURLLength = settings.ShortURL.ShortURLLength.Min.Default
+	csurlpdtype.ShortURLLength = settings.ShortURLLength.Min.Default
 	if csurlpdtype.URLLengthOption != nil {
 		switch *csurlpdtype.URLLengthOption {
 		case "long":
-			csurlpdtype.ShortURLLength = settings.ShortURL.ShortURLLength.Min.Long
+			csurlpdtype.ShortURLLength = settings.ShortURLLength.Min.Long
 		case "short":
-			csurlpdtype.ShortURLLength = settings.ShortURL.ShortURLLength.Min.Short
+			csurlpdtype.ShortURLLength = settings.ShortURLLength.Min.Short
 		}
 	}
 }
@@ -106,7 +106,7 @@ func createShortURL(c echo.Context) (err error) {
 	}
 
 	// 短い順に、すでにキーが存在しないか確認して行き、存在していないキーを探す
-	for i := inputData.ShortURLLength; i < settings.ShortURL.ShortURLLength.Max; i++ {
+	for i := inputData.ShortURLLength; i < settings.ShortURLLength.Max; i++ {
 		hashKeyCandidate := hashedURL[:i]
 		key := datastore.NameKey("Random", hashKeyCandidate, parentKey)
 		v := new(interface{})
