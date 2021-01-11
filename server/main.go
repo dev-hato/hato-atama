@@ -136,8 +136,9 @@ func createShortURL(c echo.Context) (err error) {
 
 		// 全てのキーが存在してしまったので、登録できなかった
 		if hashKey == "" {
-			c.Logger().Error("No usable key: " + hashedURL)
-			return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
+			message := "No usable key: " + hashedURL
+			c.Logger().Error(message)
+			return c.JSON(http.StatusInternalServerError, RetJSONType{Message: message})
 		}
 	} else {
 		key, hashKey, err = getKey(*inputData.WantedShortURL, tx)
@@ -145,8 +146,9 @@ func createShortURL(c echo.Context) (err error) {
 			c.Logger().Error(err)
 			return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
 		} else if hashKey == "" { // 希望するURLが存在してしまったので、登録できなかった
-			c.Logger().Error("No usable key: " + *inputData.WantedShortURL)
-			return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
+			message := "No usable key: " + *inputData.WantedShortURL
+			c.Logger().Error(message)
+			return c.JSON(http.StatusInternalServerError, RetJSONType{Message: message})
 		}
 	}
 
