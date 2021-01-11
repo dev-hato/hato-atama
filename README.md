@@ -16,5 +16,5 @@ docker-compose -f dev.docker-compose.yml up --build
 
 ### 限りなく本番のapp engineに近い設定で動くバージョン
 ```sh
-docker-compose -f prd.docker-compose.yml up --build
+docker-compose -f staging.docker-compose.yml up --build
 ```
