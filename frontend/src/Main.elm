@@ -33,7 +33,7 @@ type Msg
     | UpdateRawURL String
     | UpdateRawWantedShortURL String
     | RequestShortURL
-    | ReceiveShortURL (Result Http.Error ReceiveShortURLType)
+    | ReceiveShortURL (Result Error ReceiveShortURLType)
 
 
 type alias Model =
@@ -41,6 +41,7 @@ type alias Model =
     , rawWantedShortURL : String
     , shortURL : Maybe String
     , url : Url
+    , errorMsg : Maybe String
     }
 
 
@@ -50,6 +51,7 @@ initializeModel url =
     , rawWantedShortURL = ""
     , shortURL = Nothing
     , url = url
+    , errorMsg = Nothing
     }
 
 
@@ -102,6 +104,12 @@ view model =
 
             Nothing ->
                 div [] []
+        , case model.errorMsg of
+            Just msg ->
+                div [] [ text msg ]
+
+            Nothing ->
+                div [] []
         ]
     }
 
@@ -128,8 +136,17 @@ update msg model =
 
                         Err error ->
                             Nothing
+
+                errorMsg : Maybe String
+                errorMsg =
+                    case result of
+                        Err (DetailedBadStatus _ value) ->
+                            Just value.message
+
+                        _ ->
+                            Nothing
             in
-            ( { model | shortURL = newShortURL }, Cmd.none )
+            ( { model | shortURL = newShortURL, errorMsg = errorMsg }, Cmd.none )
 
         _ ->
             ( model, Cmd.none )
@@ -150,11 +167,51 @@ onUrlChange _ =
     OnUrlChange
 
 
+type Error
+    = BadUrl String
+    | Timeout
+    | NetworkError
+    | BadStatus Int
+    | DetailedBadStatus Int ReceiveShortURLType
+    | BadBody String
+
+
 type alias ReceiveShortURLType =
     { status : String
     , message : String
     , hash : Maybe String
     }
+
+
+expectJsonDetailed : (Result Error ReceiveShortURLType -> msg) -> D.Decoder ReceiveShortURLType -> Http.Expect msg
+expectJsonDetailed toMsg decoder =
+    Http.expectStringResponse toMsg <|
+        \response ->
+            case response of
+                Http.BadUrl_ url ->
+                    Err (BadUrl url)
+
+                Http.Timeout_ ->
+                    Err Timeout
+
+                Http.NetworkError_ ->
+                    Err NetworkError
+
+                Http.BadStatus_ metadata body ->
+                    case D.decodeString decoder body of
+                        Ok value ->
+                            Err (DetailedBadStatus metadata.statusCode value)
+
+                        Err _ ->
+                            Err (BadStatus metadata.statusCode)
+
+                Http.GoodStatus_ _ body ->
+                    case D.decodeString decoder body of
+                        Ok value ->
+                            Ok value
+
+                        Err err ->
+                            Err (BadBody (D.errorToString err))
 
 
 requestShortURL : ( String, String ) -> Cmd Msg
@@ -177,10 +234,10 @@ requestShortURL ( rawURL, rawWantedShortURL ) =
             D.map3 ReceiveShortURLType
                 (D.field "status" D.string)
                 (D.field "message" D.string)
-                (D.field "hash" (D.nullable D.string))
+                (D.maybe (D.field "hash" D.string))
     in
     Http.post
         { url = "/api/create"
         , body = Http.jsonBody <| toJson ( rawURL, rawWantedShortURL )
-        , expect = Http.expectJson ReceiveShortURL fromJson
+        , expect = expectJsonDetailed ReceiveShortURL fromJson
         }
