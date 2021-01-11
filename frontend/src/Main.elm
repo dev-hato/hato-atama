@@ -162,10 +162,15 @@ requestShortURL ( rawURL, rawWantedShortURL ) =
     let
         toJson : ( String, String ) -> E.Value
         toJson ( url, wantedShortURL ) =
-            E.object
-                [ ( "url", E.string url )
-                , ( "wanted_short_url", E.string wantedShortURL )
-                ]
+            let
+                makeWantedShortURLObject =
+                    if wantedShortURL == "" then
+                        []
+
+                    else
+                        [ ( "wanted_short_url", E.string wantedShortURL ) ]
+            in
+            E.object ([ ( "url", E.string url ) ] ++ makeWantedShortURLObject)
 
         fromJson : D.Decoder ReceiveShortURLType
         fromJson =

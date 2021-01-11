@@ -27,7 +27,7 @@ type ShortURLDataType struct {
 
 type CreateShortURLPostDataType struct {
 	URL             string  `json:"url"`
-	WantedShortURL  string  `json:"wanted_short_url"`
+	WantedShortURL  *string  `json:"wanted_short_url"`
 	Count           *int64  `json:"count"`
 	URLLengthOption *string `json:"length_option"`
 	ShortURLLength  int     `json:"-"`
@@ -121,7 +121,7 @@ func createShortURL(c echo.Context) (err error) {
 		return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
 	}
 
-	if inputData.WantedShortURL == "" {
+	if inputData.WantedShortURL == nil {
 		// 保存するキーの素となるhashの生成
 		hashedURL := createHash(inputData.URL, time.Now())
 
@@ -140,12 +140,12 @@ func createShortURL(c echo.Context) (err error) {
 			return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
 		}
 	} else {
-		key, hashKey, err = getKey(inputData.WantedShortURL, tx)
+		key, hashKey, err = getKey(*inputData.WantedShortURL, tx)
 		if err != nil {
 			c.Logger().Error(err)
 			return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
 		} else if hashKey == "" { // 希望するURLが存在してしまったので、登録できなかった
-			c.Logger().Error("No usable key: " + inputData.WantedShortURL)
+			c.Logger().Error("No usable key: " + *inputData.WantedShortURL)
 			return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
 		}
 	}
