@@ -28,7 +28,7 @@ type ShortURLDataType struct {
 
 type CreateShortURLPostDataType struct {
 	URL             string  `json:"url"`
-	WantedShortURL  *string `json:"wanted_short_url" validate:"omitempty" validate:"alphanum"`
+	WantedShortURL  *string `json:"wanted_short_url" validate:"omitempty,alphanum"`
 	Count           *int64  `json:"count"`
 	URLLengthOption *string `json:"length_option"`
 	ShortURLLength  int     `json:"-"`
