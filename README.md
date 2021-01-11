@@ -4,7 +4,7 @@
 - 使い捨てURL短縮サービス
 
 ## URL
-https://hato-atama.an.r.appspot.com/
+<https://hato-atama.an.r.appspot.com/>
 
 ## 想定している流れ
 - 入力欄にURLを入力するとシステム側で短縮URLを発行する。
