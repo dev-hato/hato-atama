@@ -4,6 +4,8 @@ on:
   workflow_dispatch:
   schedule:
     - cron: "0 0 1/10 * *"
+  pull_request:
+    branches: [ master ]
 
 jobs:
   update-frontend:
