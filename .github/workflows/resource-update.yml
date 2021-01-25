@@ -1,0 +1,56 @@
+name: resource-update
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 1/10 * *"
+
+jobs:
+  update-frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "15"
+      - name: ncu install
+        run: npx npm-check-updates -u
+      - name: npm update
+        run: npm install
+      - name: git diff
+        run: git diff
+
+  update-test-e2e:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: test/e2e
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "15"
+      - name: ncu install
+        run: npx npm-check-updates -u
+      - name: npm update
+        run: npm install
+      - name: git diff
+        run: git diff
+
+  update-go:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.15
+      - name: go mod update
+        run: go mod -u ./...
+      - name: go mod tidy
+        run: go mod tidy
+      - name: git diff
+        run: git diff
