@@ -2,8 +2,11 @@ name: resource-update
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 0 1/10 * *"
+    inputs:
+      base-branch-name:
+        description: "base branch name"
+        required: true
+        default: "master"
   pull_request:
     branches: [ master ]
 
@@ -22,8 +25,21 @@ jobs:
         run: npx npm-check-updates -u
       - name: npm update
         run: npm install
-      - name: git diff
-        run: git diff
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{secrets.GITHUB_TOKEN}}
+          commit-message: Update frontend
+          committer: GitHub <noreply@github.com>
+          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          signoff: false
+          branch: ${{ github.event.inputs.base-branch-name }}-update-frontend
+          base: ${{ github.event.inputs.base-branch-name }}
+          delete-branch: true
+          title: "Update frontend"
+          body: |
+
+          draft: false
 
   update-test-e2e:
     runs-on: ubuntu-latest
@@ -39,8 +55,21 @@ jobs:
         run: npx npm-check-updates -u
       - name: npm update
         run: npm install
-      - name: git diff
-        run: git diff
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{secrets.GITHUB_TOKEN}}
+          commit-message: Update test/e2e
+          committer: GitHub <noreply@github.com>
+          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          signoff: false
+          branch: ${{ github.event.inputs.base-branch-name }}-update-test-e2e
+          base: ${{ github.event.inputs.base-branch-name }}
+          delete-branch: true
+          title: "Update test/e2e"
+          body: |
+
+          draft: false
 
   update-go:
     runs-on: ubuntu-latest
@@ -54,5 +83,18 @@ jobs:
         run: go get -u ./...
       - name: go mod tidy
         run: go mod tidy
-      - name: git diff
-        run: git diff
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{secrets.GITHUB_TOKEN}}
+          commit-message: Update go
+          committer: GitHub <noreply@github.com>
+          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          signoff: false
+          branch: ${{ github.event.inputs.base-branch-name }}-update-go
+          base: ${{ github.event.inputs.base-branch-name }}
+          delete-branch: true
+          title: "Update go"
+          body: |
+
+          draft: false
