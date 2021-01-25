@@ -34,7 +34,7 @@ jobs:
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
           signoff: false
           branch: ${{ github.event.inputs.base-branch-name }}-update-frontend
-          base: ${{ github.event.inputs.base-branch-name }}
+          base: master
           delete-branch: true
           title: "Update frontend"
           body: |
@@ -64,7 +64,7 @@ jobs:
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
           signoff: false
           branch: ${{ github.event.inputs.base-branch-name }}-update-test-e2e
-          base: ${{ github.event.inputs.base-branch-name }}
+          base: master
           delete-branch: true
           title: "Update test/e2e"
           body: |
@@ -92,7 +92,7 @@ jobs:
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
           signoff: false
           branch: ${{ github.event.inputs.base-branch-name }}-update-go
-          base: ${{ github.event.inputs.base-branch-name }}
+          base: master
           delete-branch: true
           title: "Update go"
           body: |
