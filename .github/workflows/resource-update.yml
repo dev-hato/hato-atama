@@ -51,7 +51,7 @@ jobs:
         with:
           go-version: 1.15
       - name: go mod update
-        run: go mod -u ./...
+        run: go get -u ./...
       - name: go mod tidy
         run: go mod tidy
       - name: git diff
