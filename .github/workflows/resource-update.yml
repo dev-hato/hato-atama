@@ -33,7 +33,7 @@ jobs:
           committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
           signoff: false
-          branch: ${{ github.event.inputs.base-branch-name }}-update-frontend
+          branch: master-update-frontend
           base: master
           delete-branch: true
           title: "Update frontend"
@@ -63,7 +63,7 @@ jobs:
           committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
           signoff: false
-          branch: ${{ github.event.inputs.base-branch-name }}-update-test-e2e
+          branch: master-update-test-e2e
           base: master
           delete-branch: true
           title: "Update test/e2e"
@@ -91,7 +91,7 @@ jobs:
           committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
           signoff: false
-          branch: ${{ github.event.inputs.base-branch-name }}-update-go
+          branch: master-update-go
           base: master
           delete-branch: true
           title: "Update go"
