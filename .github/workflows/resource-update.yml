@@ -5,7 +5,7 @@ on:
     inputs:
       base-branch-name:
         description: "base branch name"
-        required: true
+        required: false
         default: "master"
   pull_request:
     branches: [ master ]
