@@ -7,8 +7,6 @@ on:
         description: "base branch name"
         required: false
         default: "master"
-  pull_request:
-    branches: [ master ]
 
 jobs:
   update-frontend:
@@ -33,8 +31,8 @@ jobs:
           committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
           signoff: false
-          branch: master-update-frontend
-          base: master
+          branch: ${{ github.event.inputs.base-branch-name }}-update-frontend
+          base: ${{ github.event.inputs.base-branch-name }}
           delete-branch: true
           title: "Update frontend"
           body: |
@@ -63,8 +61,8 @@ jobs:
           committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
           signoff: false
-          branch: master-update-test-e2e
-          base: master
+          branch: ${{ github.event.inputs.base-branch-name }}-update-test-e2e
+          base: ${{ github.event.inputs.base-branch-name }}
           delete-branch: true
           title: "Update test/e2e"
           body: |
@@ -91,8 +89,8 @@ jobs:
           committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
           signoff: false
-          branch: master-update-go
-          base: master
+          branch: ${{ github.event.inputs.base-branch-name }}-update-go
+          base: ${{ github.event.inputs.base-branch-name }}
           delete-branch: true
           title: "Update go"
           body: |
