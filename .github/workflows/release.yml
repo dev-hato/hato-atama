@@ -88,7 +88,7 @@ jobs:
   e2e-test-mini-prd:
     runs-on: ubuntu-latest
     needs:
-      - create-pr-environment
+      - deploy-app-engine
       - e2e-test-mini-docker-compose
     steps:
       - uses: actions/checkout@v2
@@ -125,7 +125,9 @@ jobs:
 
   pr-test-complete:
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
     needs:
+      - create-pr-environment
       - e2e-test-mini-prd
       - e2e-test-all-docker-compose
     steps:
