@@ -89,7 +89,7 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - create-pr-environment
-      - e2e-test-all-docker-compose
+      - e2e-test-mini-docker-compose
     steps:
       - uses: actions/checkout@v2
       - run: npm i
@@ -100,6 +100,7 @@ jobs:
   e2e-test-all-prd:
     runs-on: ubuntu-latest
     needs:
+      - e2e-test-all-docker-compose
       - e2e-test-mini-prd
     if: github.event_name == 'push'
     steps:
@@ -126,6 +127,7 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - e2e-test-mini-prd
+      - e2e-test-all-docker-compose
     steps:
       - run: exit 0
 
