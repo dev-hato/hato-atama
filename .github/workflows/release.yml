@@ -94,7 +94,7 @@ jobs:
       - uses: actions/checkout@v2
       - run: npm i
         working-directory: ./test/e2e
-      - run: npm run test -- --env API_HOST=https://v${{GITHUB_RUN_NUMBER}}-dot-hato-atama.an.r.appspot.com --spec cypress/integration/mini/*.js
+      - run: npm run test -- --env API_HOST=https://v${GITHUB_RUN_NUMBER}-dot-hato-atama.an.r.appspot.com --spec cypress/integration/mini/*.js
         working-directory: ./test/e2e
 
   e2e-test-all-prd:
@@ -106,7 +106,7 @@ jobs:
       - uses: actions/checkout@v2
       - run: npm i
         working-directory: ./test/e2e
-      - run: npm run test -- --env API_HOST=https://v${{GITHUB_RUN_NUMBER}}-dot-hato-atama.an.r.appspot.com
+      - run: npm run test -- --env API_HOST=https://v${GITHUB_RUN_NUMBER}-dot-hato-atama.an.r.appspot.com
         working-directory: ./test/e2e
 
   migrating-traffic:
