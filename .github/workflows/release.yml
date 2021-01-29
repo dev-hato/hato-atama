@@ -73,6 +73,7 @@ jobs:
         working-directory: ./test/e2e
       - run: npm run test -- --env API_HOST=http://localhost:8080/ --spec cypress/integration/mini/*.js
         working-directory: ./test/e2e
+      - run: docker-compose down
 
   e2e-test-all-docker-compose:
     runs-on: ubuntu-latest
@@ -90,6 +91,7 @@ jobs:
         working-directory: ./test/e2e
       - run: npm run test -- --env API_HOST=http://localhost:8080/
         working-directory: ./test/e2e
+      - run: docker-compose down
 
   e2e-test-mini-prd:
     runs-on: ubuntu-latest
