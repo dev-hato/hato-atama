@@ -40,9 +40,9 @@ jobs:
         with:
           name: frontend
           path: frontend/dist
-      - run: echo "env_variables:\n  ENV_NAME: \"v${GITHUB_RUN_NUMBER}\"" >> app.yaml
+      - run: 'echo "env_variables:\n  ENV_NAME: \"v${GITHUB_RUN_NUMBER}\"" >> app.yaml'
         if: github.event_name == 'pull_request'
-      - run: echo "env_variables:\n  ENV_NAME: \"prd\"" >> app.yaml
+      - run: 'echo "env_variables:\n  ENV_NAME: \"prd\"" >> app.yaml'
         if: github.event_name == 'pull'
       - run: gcloud app deploy --quiet --no-promote -v v${GITHUB_RUN_NUMBER}
 
