@@ -68,7 +68,7 @@ jobs:
       - run: docker-compose -f staging.docker-compose.yml pull
       - uses: satackey/action-docker-layer-caching@v0.0.11
         continue-on-error: true
-      - run: docker-compose -f staging.docker-compose.yml up --build -d
+      - run: docker-compose -f staging.docker-compose.yml up --build -d --build-arg BUILDKIT_INLINE_CACHE=true
       - run: npm i
         working-directory: ./test/e2e
       - run: npm run test -- --env API_HOST=http://localhost:8080/ --spec cypress/integration/mini/*.js
@@ -85,7 +85,7 @@ jobs:
       - run: docker-compose -f staging.docker-compose.yml pull
       - uses: satackey/action-docker-layer-caching@v0.0.11
         continue-on-error: true
-      - run: docker-compose -f staging.docker-compose.yml up --build -d
+      - run: docker-compose -f staging.docker-compose.yml up --build -d --build-arg BUILDKIT_INLINE_CACHE=true
       - run: npm i
         working-directory: ./test/e2e
       - run: npm run test -- --env API_HOST=http://localhost:8080/
