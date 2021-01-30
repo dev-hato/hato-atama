@@ -19,6 +19,7 @@ import (
 
 var (
 	dsClient *datastore.Client
+	envName  string
 )
 
 type ShortURLDataType struct {
@@ -94,8 +95,7 @@ func createServer() (e *echo.Echo) {
 }
 
 func getKey(url string, tx *datastore.Transaction) (key *datastore.Key, hashKey string, err error) {
-	parentKey := datastore.NameKey("URL", "Named", nil)
-	keyCandidate := datastore.NameKey("Random", url, parentKey)
+	keyCandidate := getDataStoreKey(url)
 	v := &ShortURLDataType{}
 
 	if err = tx.Get(keyCandidate, v); err != nil {
@@ -108,6 +108,13 @@ func getKey(url string, tx *datastore.Transaction) (key *datastore.Key, hashKey 
 	}
 
 	return
+}
+
+func getDataStoreKey(hash string) *datastore.Key {
+	envKey := datastore.NameKey("Env", envName, nil)
+	typeKey := datastore.NameKey("Type", "Link", envKey)
+	hashKeyKey := datastore.NameKey("HashKey", hash, typeKey)
+	return hashKeyKey
 }
 
 func createShortURL(c echo.Context) (err error) {
@@ -196,7 +203,7 @@ func getLink(c echo.Context) (err error) {
 
 	// 取り出す入れ物の作成
 	data := &ShortURLDataType{}
-	key := datastore.NameKey("Random", c.Param("param"), datastore.NameKey("URL", "Named", nil))
+	key := getDataStoreKey(c.Param("param"))
 
 	// 取り出す処理
 	if err = tx.Get(key, data); err != nil {
@@ -242,6 +249,11 @@ func initialize() (err error) {
 	dsClient, err = datastore.NewClient(ctx, "hato-atama")
 	if err != nil {
 		return
+	}
+
+	envName = os.Getenv("ENV_NAME")
+	if envName == "" {
+		envName = "local"
 	}
 	return
 }
