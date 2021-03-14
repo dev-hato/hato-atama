@@ -69,7 +69,8 @@ jobs:
       COMPOSE_DOCKER_CLI_BUILD: 1
     steps:
       - uses: actions/checkout@v2
-      - run: docker-compose -f staging.docker-compose.yml up --build -d
+      - run: docker-compose -f staging.docker-compose.yml build --parallel
+      - run: docker-compose -f staging.docker-compose.yml up -d
       - run: npm i
         working-directory: ./test/e2e
       - run: npm run test -- --env API_HOST=http://localhost:8080/ --spec cypress/integration/mini/*.js
@@ -83,7 +84,8 @@ jobs:
       COMPOSE_DOCKER_CLI_BUILD: 1
     steps:
       - uses: actions/checkout@v2
-      - run: docker-compose -f staging.docker-compose.yml up --build -d
+      - run: docker-compose -f staging.docker-compose.yml build --parallel
+      - run: docker-compose -f staging.docker-compose.yml up -d
       - run: npm i
         working-directory: ./test/e2e
       - run: npm run test -- --env API_HOST=http://localhost:8080/
