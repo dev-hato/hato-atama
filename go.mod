@@ -15,6 +15,6 @@ require (
 	golang.org/x/crypto v0.0.0-20210220033148-5ea612d1eb83 // indirect
 	golang.org/x/mod v0.4.2 // indirect
 	golang.org/x/oauth2 v0.0.0-20210313182246-cd4f82c27b84 // indirect
-	golang.org/x/sys v0.0.0-20210330210617-4fbd30eecc44 // indirect
+	golang.org/x/sys v0.0.0-20210331175145-43e1dd70ce54 // indirect
 	google.golang.org/genproto v0.0.0-20210312152112-fc591d9ea70f // indirect
 )
