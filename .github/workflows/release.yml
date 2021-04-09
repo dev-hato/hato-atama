@@ -78,7 +78,6 @@ jobs:
 
   e2e-test-all-docker-compose:
     runs-on: ubuntu-latest
-    needs: e2e-test-mini-docker-compose
     env:
       DOCKER_BUILDKIT: 1
       COMPOSE_DOCKER_CLI_BUILD: 1
