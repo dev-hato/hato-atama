@@ -12,7 +12,7 @@ import (
 
 	"cloud.google.com/go/datastore"
 	"github.com/dev-hato/hato-atama/server/settings"
-	"github.com/go-playground/validator/v10"
+	"github.com/go-playground/validator"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
