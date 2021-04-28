@@ -131,6 +131,7 @@ func createShortURL(c echo.Context) (err error) {
 	}
 
 	var key *datastore.Key
+	unusedVal := ""
 	hashKey := ""
 
 	tx, err := dsClient.NewTransaction(c.Request().Context())
