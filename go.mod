@@ -6,7 +6,7 @@ require (
 	cloud.google.com/go v0.79.0 // indirect
 	cloud.google.com/go/datastore v1.5.0
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
-	github.com/go-playground/validator/v10 v10.5.0
+	github.com/go-playground/validator/v10 v10.6.0
 	github.com/labstack/echo v3.3.10+incompatible
 	github.com/labstack/gommon v0.3.0 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
@@ -15,6 +15,6 @@ require (
 	golang.org/x/crypto v0.0.0-20210220033148-5ea612d1eb83 // indirect
 	golang.org/x/mod v0.4.2 // indirect
 	golang.org/x/oauth2 v0.0.0-20210313182246-cd4f82c27b84 // indirect
-	golang.org/x/sys v0.0.0-20210503173754-0981d6026fa6 // indirect
+	golang.org/x/sys v0.0.0-20210507014357-30e306a8bba5 // indirect
 	google.golang.org/genproto v0.0.0-20210312152112-fc591d9ea70f // indirect
 )
