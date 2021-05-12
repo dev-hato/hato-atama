@@ -13,8 +13,8 @@ require (
 	github.com/mattn/go-colorable v0.1.8 // indirect
 	github.com/valyala/fasttemplate v1.2.1 // indirect
 	golang.org/x/crypto v0.0.0-20210220033148-5ea612d1eb83 // indirect
-	golang.org/x/mod v0.4.2 // indirect
 	golang.org/x/oauth2 v0.0.0-20210313182246-cd4f82c27b84 // indirect
-	golang.org/x/sys v0.0.0-20210510120138-977fb7262007 // indirect
+	golang.org/x/sys v0.0.0-20210511113859-b0526f3d8744 // indirect
+	golang.org/x/tools v0.1.1 // indirect
 	google.golang.org/genproto v0.0.0-20210312152112-fc591d9ea70f // indirect
 )
