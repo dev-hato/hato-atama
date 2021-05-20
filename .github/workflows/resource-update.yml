@@ -19,7 +19,9 @@ jobs:
       - name: Get Node.js version
         id: get_node_version
         run: |
-          node_version=$(head -n 1 Dockerfile | awk -F [:-] '{ print $2 }')
+          image_name=hato_atama_frontend_build
+          docker build -t ${image_name} --target build ..
+          node_version=$(docker run -it ${image_name} sh -c "node --version | sed -e 's/^v//g'")
           echo "Node.js version:" ${node_version}
           echo "::set-output name=node_version::${node_version}"
       - uses: actions/setup-node@v2
@@ -55,7 +57,9 @@ jobs:
       - name: Get Node.js version
         id: get_node_version
         run: |
-          node_version=$(head -n 1 ../../frontend/Dockerfile | awk -F [:-] '{ print $2 }')
+          image_name=hato_atama_frontend_build
+          docker build -t ${image_name} --target build -f ../../frontend/Dockerfile ../..
+          node_version=$(docker run -it ${image_name} sh -c "node --version | sed -e 's/^v//g'")
           echo "Node.js version:" ${node_version}
           echo "::set-output name=node_version::${node_version}"
       - uses: actions/setup-node@v2
@@ -88,7 +92,9 @@ jobs:
       - name: Get Go version
         id: get_go_version
         run: |
-          go_version=$(head -n 1 server/Dockerfile | awk -F [:-] '{ print $2 }')
+          image_name=hato_atama_server_build
+          docker build -t ${image_name} --target build -f server/Dockerfile .
+          go_version=$(docker run ${image_name} sh -c "go version | awk '{print \$3}' | sed -e 's/^go//g'")
           echo "Go version:" ${go_version}
           echo "::set-output name=go_version::${go_version}"
       - name: Set up Go
