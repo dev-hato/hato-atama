@@ -14,9 +14,15 @@ jobs:
         working-directory: frontend
     steps:
       - uses: actions/checkout@v2
+      - name: Get Node.js version
+        id: get_node_version
+        run: |
+          node_version=$(head -n 1 Dockerfile | awk -F [:-] '{ print $2 }')
+          echo "Node.js version:" ${node_version}
+          echo "::set-output name=node_version::${node_version}"
       - uses: actions/setup-node@v2
         with:
-          node-version: "16"
+          node-version: ${{steps.get_node_version.outputs.node_version}}
       - name: npm install
         run: npm install
       - name: build
