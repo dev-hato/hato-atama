@@ -20,7 +20,7 @@ jobs:
         id: get_node_version
         run: |
           image_name=hato_atama_frontend_build
-          docker build -t ${image_name} --target build ..
+          docker build -t ${image_name} --target build -f Dockerfile ..
           node_version=$(docker run -it ${image_name} sh -c "node --version | sed -e 's/^v//g'")
           echo "Node.js version:" ${node_version}
           echo "::set-output name=node_version::${node_version}"
