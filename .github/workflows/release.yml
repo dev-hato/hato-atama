@@ -8,7 +8,6 @@ on:
 
 env:
   DOCKER_COMPOSE_IMAGE_CACHE_DIR: /tmp/cache/docker-compose-image
-  APP_IMAGE_TAG: hato-atama-staging-docker-compose:0.1.0
   APP_IMAGE_CACHE_TAG: hato-atama-staging-docker-compose-cache
 
 jobs:
@@ -102,8 +101,10 @@ jobs:
       - name: Docker tag and save
         id: docker-tag-save
         run: mkdir -p ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}
-          && docker image tag ${APP_IMAGE_TAG} ${APP_IMAGE_CACHE_TAG}
-          && docker image save -o ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/image.tar ${APP_IMAGE_CACHE_TAG}
+          && docker image save -o ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/gcloud_datastore.tar hato-atama-staging-docker-compose-cache-gcloud_datastore
+          && docker image save -o ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/server.tar hato-atama-staging-docker-compose-cache-server
+          && docker image save -o ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/frontend.tar hato-atama-staging-docker-compose-cache-frontend
+
 
   e2e-test-mini-docker-compose:
     runs-on: ubuntu-latest
@@ -123,7 +124,9 @@ jobs:
       - name: Docker load
         id: docker-load
         if: steps.cache-docker-image.outputs.cache-hit == 'true'
-        run: docker image load -i ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/image.tar
+        run: docker image load -i ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/gcloud_datastore.tar
+          && docker image load -i ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/server.tar
+          && docker image load -i ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/frontend.tar
       - run: docker-compose -f staging.docker-compose.yml build --build-arg BUILDKIT_INLINE_CACHE=1
       - run: docker-compose -f staging.docker-compose.yml up -d
       - run: npm i
@@ -149,7 +152,9 @@ jobs:
       - name: Docker load
         id: docker-load
         if: steps.cache-docker-image.outputs.cache-hit == 'true'
-        run: docker image load -i ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/image.tar
+        run: docker image load -i ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/gcloud_datastore.tar
+          && docker image load -i ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/server.tar
+          && docker image load -i ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/frontend.tar
       - run: docker-compose -f staging.docker-compose.yml build --build-arg BUILDKIT_INLINE_CACHE=1
       - run: docker-compose -f staging.docker-compose.yml up -d
       - run: npm i
