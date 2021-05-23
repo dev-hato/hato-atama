@@ -9,6 +9,8 @@ on:
 jobs:
   build-frontend:
     runs-on: ubuntu-latest
+    env:
+      DOCKER_BUILDKIT: 1
     defaults:
       run:
         working-directory: frontend
