@@ -133,10 +133,16 @@ jobs:
             docker-compose-cache-
       - name: Docker load
         id: docker-load
-        if: steps.cache-docker-image.outputs.cache-hit == 'true'
-        run: docker image load -i ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/gcloud_datastore.tar
-          && docker image load -i ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/server.tar
-          && docker image load -i ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/frontend.tar
+        run: |
+          if [ -e ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/gcloud_datastore.tar ]; then
+            docker image load -i ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/gcloud_datastore.tar
+          fi
+          if [ -e ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/server.tar ]; then
+            docker image load -i ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/server.tar
+          fi
+          if [ -e ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/frontend.tar ]; then
+            docker image load -i ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/frontend.tar
+          fi
       - run: docker-compose -f staging.docker-compose.yml build --build-arg BUILDKIT_INLINE_CACHE=1
       - run: docker-compose -f staging.docker-compose.yml up -d
       - run: npm i
