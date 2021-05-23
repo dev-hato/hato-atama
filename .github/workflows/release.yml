@@ -101,6 +101,9 @@ jobs:
       - name: Docker tag and save
         id: docker-tag-save
         run: mkdir -p ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}
+          && && docker image tag hato-atama-staging-docker-compose-gcloud_datastore hato-atama-staging-docker-compose-cache-gcloud_datastore
+          && && docker image tag hato-atama-staging-docker-compose-server hato-atama-staging-docker-compose-cache-server
+          && && docker image tag hato-atama-staging-docker-compose-frontend hato-atama-staging-docker-compose-cache-frontend
           && docker image save -o ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/gcloud_datastore.tar hato-atama-staging-docker-compose-cache-gcloud_datastore
           && docker image save -o ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/server.tar hato-atama-staging-docker-compose-cache-server
           && docker image save -o ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/frontend.tar hato-atama-staging-docker-compose-cache-frontend
