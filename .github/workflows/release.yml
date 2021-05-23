@@ -8,7 +8,6 @@ on:
 
 env:
   DOCKER_COMPOSE_IMAGE_CACHE_DIR: /tmp/cache/docker-compose-image
-  APP_IMAGE_CACHE_TAG: hato-atama-staging-docker-compose-cache
 
 jobs:
   build-frontend:
