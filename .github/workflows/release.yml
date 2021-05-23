@@ -87,9 +87,9 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ${{ env.DOCKER_COMPOSE_IMAGE_CACHE_DIR }}
-          key: docker-compose-cache-${{ hashFiles('staging.docker-compose.yml') }}-${{ hashFiles('**/Dockerfile') }}
+          key: docker-compose-cache-${{ hashFiles('staging.docker-compose.yml') }}-${{ hashFiles('**/Dockerfile') }}-${{ hashFiles('**.go', '**.js', '**.json', '**.elm', '**.html') }}
           restore-keys: |
-            docker-compose-cache-${{ hashFiles('staging.docker-compose.yml') }}-${{ hashFiles('**/Dockerfile') }}
+            docker-compose-cache-${{ hashFiles('staging.docker-compose.yml') }}-${{ hashFiles('**/Dockerfile') }}-
             docker-compose-cache-${{ hashFiles('staging.docker-compose.yml') }}-
             docker-compose-cache-
       - name: Docker load
@@ -126,9 +126,9 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ${{ env.DOCKER_COMPOSE_IMAGE_CACHE_DIR }}
-          key: docker-compose-cache-${{ hashFiles('staging.docker-compose.yml') }}-${{ hashFiles('**/Dockerfile') }}
+          key: docker-compose-cache-${{ hashFiles('staging.docker-compose.yml') }}-${{ hashFiles('**/Dockerfile') }}-${{ hashFiles('**.go', '**.js', '**.json', '**.elm', '**.html') }}
           restore-keys: |
-            docker-compose-cache-${{ hashFiles('staging.docker-compose.yml') }}-${{ hashFiles('**/Dockerfile') }}
+            docker-compose-cache-${{ hashFiles('staging.docker-compose.yml') }}-${{ hashFiles('**/Dockerfile') }}-
             docker-compose-cache-${{ hashFiles('staging.docker-compose.yml') }}-
             docker-compose-cache-
       - name: Docker load
