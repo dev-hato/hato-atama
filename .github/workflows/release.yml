@@ -96,7 +96,9 @@ jobs:
       - name: Docker load
         id: docker-load
         if: steps.cache-docker-image.outputs.cache-hit == 'true'
-        run: docker image load -i ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/image.tar
+        run: docker image load -i ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/gcloud_datastore.tar
+          && docker image load -i ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/server.tar
+          && docker image load -i ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/frontend.tar
       - run: docker-compose -f staging.docker-compose.yml build --build-arg BUILDKIT_INLINE_CACHE=1
       - name: Docker tag and save
         id: docker-tag-save
