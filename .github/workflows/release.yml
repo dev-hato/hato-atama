@@ -88,7 +88,7 @@ jobs:
         id: cache-docker-image
         uses: actions/cache@v1
         with:
-          path: ${{ env.IMAGE_CACHE_DIR }}
+          path: ${{ env.DOCKER_COMPOSE_IMAGE_CACHE_DIR }}
           key: docker-compose-cache-${{ hashFiles('staging.docker-compose.yml') }}-${{ hashFiles('**/Dockerfile') }}
           restore-keys: |
             docker-compose-cache-${{ hashFiles('staging.docker-compose.yml') }}-${{ hashFiles('**/Dockerfile') }}
@@ -97,13 +97,13 @@ jobs:
       - name: Docker load
         id: docker-load
         if: steps.cache-docker-image.outputs.cache-hit == 'true'
-        run: docker image load -i ${IMAGE_CACHE_DIR}/image.tar
+        run: docker image load -i ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/image.tar
       - run: docker-compose -f staging.docker-compose.yml --build-arg BUILDKIT_INLINE_CACHE=1 build
       - name: Docker tag and save
         id: docker-tag-save
-        run: mkdir -p ${IMAGE_CACHE_DIR}
+        run: mkdir -p ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}
           && docker image tag ${APP_IMAGE_TAG} ${APP_IMAGE_CACHE_TAG}
-          && docker image save -o ${IMAGE_CACHE_DIR}/image.tar ${APP_IMAGE_CACHE_TAG}
+          && docker image save -o ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/image.tar ${APP_IMAGE_CACHE_TAG}
 
   e2e-test-mini-docker-compose:
     runs-on: ubuntu-latest
@@ -118,12 +118,12 @@ jobs:
         id: cache-docker-image
         uses: actions/cache@v1
         with:
-          path: ${{ env.IMAGE_CACHE_DIR }}
+          path: ${{ env.DOCKER_COMPOSE_IMAGE_CACHE_DIR }}
           key: docker-compose-cache-${{ hashFiles('staging.docker-compose.yml') }}-${{ hashFiles('**/Dockerfile') }}
       - name: Docker load
         id: docker-load
         if: steps.cache-docker-image.outputs.cache-hit == 'true'
-        run: docker image load -i ${IMAGE_CACHE_DIR}/image.tar
+        run: docker image load -i ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/image.tar
       - run: docker-compose -f staging.docker-compose.yml --build-arg BUILDKIT_INLINE_CACHE=1 build
       - run: docker-compose -f staging.docker-compose.yml up -d
       - run: npm i
@@ -144,12 +144,12 @@ jobs:
         id: cache-docker-image
         uses: actions/cache@v1
         with:
-          path: ${{ env.IMAGE_CACHE_DIR }}
+          path: ${{ env.DOCKER_COMPOSE_IMAGE_CACHE_DIR }}
           key: docker-compose-cache-${{ hashFiles('staging.docker-compose.yml') }}-${{ hashFiles('**/Dockerfile') }}
       - name: Docker load
         id: docker-load
         if: steps.cache-docker-image.outputs.cache-hit == 'true'
-        run: docker image load -i ${IMAGE_CACHE_DIR}/image.tar
+        run: docker image load -i ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/image.tar
       - run: docker-compose -f staging.docker-compose.yml --build-arg BUILDKIT_INLINE_CACHE=1 build
       - run: docker-compose -f staging.docker-compose.yml up -d
       - run: npm i
