@@ -17,7 +17,9 @@ jobs:
       - name: Get Node.js version
         id: get_node_version
         run: |
-          node_version=$(head -n 1 Dockerfile | awk -F [:-] '{ print $2 }')
+          image_name=hato_atama_frontend_build
+          docker build -t ${image_name} --target build -f Dockerfile ..
+          node_version=$(docker run ${image_name} sh -c "node --version | sed -e 's/^v//g'")
           echo "Node.js version:" ${node_version}
           echo "::set-output name=node_version::${node_version}"
       - uses: actions/setup-node@v2
