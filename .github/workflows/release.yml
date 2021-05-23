@@ -142,7 +142,7 @@ jobs:
         run:
           docker image load -i ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/gcloud_datastore.tar
       - name: Docker Load server
-        if: ${{ hashFiles(${DOCKER_COMPOSE_IMAGE_CACHE_DIR}${'/server.tar'}) != '' }}
+        if: ${{ hashFiles(format('{0}/server.tar', env.DOCKER_COMPOSE_IMAGE_CACHE_DIR)) != ''  }}
         run:
           docker image load -i ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/server.tar
       - name: Docker Load frontend
