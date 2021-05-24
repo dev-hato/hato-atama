@@ -6,6 +6,9 @@ on:
       - master
   pull_request:
 
+env:
+  DOCKER_COMPOSE_IMAGE_CACHE_DIR: /tmp/cache/docker-compose-image
+
 jobs:
   build-frontend:
     runs-on: ubuntu-latest
@@ -79,12 +82,43 @@ jobs:
       COMPOSE_DOCKER_CLI_BUILD: 1
     steps:
       - uses: actions/checkout@v2
-      - run: docker-compose -f staging.docker-compose.yml build --parallel
+      - name: Cache docker image
+        id: cache-docker-image
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.DOCKER_COMPOSE_IMAGE_CACHE_DIR }}
+          key: docker-compose-cache-${{ hashFiles('staging.docker-compose.yml') }}-${{ hashFiles('**/Dockerfile') }}-${{ hashFiles('**.go', '**.js', '**.json', '**.elm', '**.html') }}
+          restore-keys: |
+            docker-compose-cache-${{ hashFiles('staging.docker-compose.yml') }}-${{ hashFiles('**/Dockerfile') }}-
+            docker-compose-cache-${{ hashFiles('staging.docker-compose.yml') }}-
+            docker-compose-cache-
+      - name: Docker load
+        id: docker-load
+        run: |
+          if [ -e ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/gcloud_datastore.tar ]; then
+            docker image load -i ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/gcloud_datastore.tar
+          fi
+          if [ -e ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/server.tar ]; then
+            docker image load -i ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/server.tar
+          fi
+          if [ -e ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/frontend.tar ]; then
+            docker image load -i ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/frontend.tar
+          fi
+      - run: docker-compose -f staging.docker-compose.yml build --build-arg BUILDKIT_INLINE_CACHE=1
       - run: docker-compose -f staging.docker-compose.yml up -d
       - run: npm i
         working-directory: ./test/e2e
       - run: npm run test -- --env API_HOST=http://localhost:8080/ --spec cypress/integration/mini/*.js
         working-directory: ./test/e2e
+      - name: Docker tag and save
+        id: docker-tag-save
+        run: mkdir -p ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}
+          && docker image tag hato-atama-staging-docker-compose-gcloud_datastore hato-atama-staging-docker-compose-cache-gcloud_datastore
+          && docker image tag hato-atama-staging-docker-compose-server hato-atama-staging-docker-compose-cache-server
+          && docker image tag hato-atama-staging-docker-compose-frontend hato-atama-staging-docker-compose-cache-frontend
+          && docker image save -o ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/gcloud_datastore.tar hato-atama-staging-docker-compose-cache-gcloud_datastore
+          && docker image save -o ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/server.tar hato-atama-staging-docker-compose-cache-server
+          && docker image save -o ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/frontend.tar hato-atama-staging-docker-compose-cache-frontend
 
   e2e-test-all-docker-compose:
     runs-on: ubuntu-latest
@@ -93,12 +127,44 @@ jobs:
       COMPOSE_DOCKER_CLI_BUILD: 1
     steps:
       - uses: actions/checkout@v2
-      - run: docker-compose -f staging.docker-compose.yml build --parallel
+      - name: Cache docker image
+        id: cache-docker-image
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.DOCKER_COMPOSE_IMAGE_CACHE_DIR }}
+          key: docker-compose-cache-${{ hashFiles('staging.docker-compose.yml') }}-${{ hashFiles('**/Dockerfile') }}-${{ hashFiles('**.go', '**.js', '**.json', '**.elm', '**.html') }}
+          restore-keys: |
+            docker-compose-cache-${{ hashFiles('staging.docker-compose.yml') }}-${{ hashFiles('**/Dockerfile') }}-
+            docker-compose-cache-${{ hashFiles('staging.docker-compose.yml') }}-
+            docker-compose-cache-
+      - name: Docker load
+        id: docker-load
+        run: |
+          if [ -e ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/gcloud_datastore.tar ]; then
+            docker image load -i ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/gcloud_datastore.tar
+          fi
+          if [ -e ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/server.tar ]; then
+            docker image load -i ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/server.tar
+          fi
+          if [ -e ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/frontend.tar ]; then
+            docker image load -i ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/frontend.tar
+          fi
+      - run: docker-compose -f staging.docker-compose.yml build --build-arg BUILDKIT_INLINE_CACHE=1
       - run: docker-compose -f staging.docker-compose.yml up -d
       - run: npm i
         working-directory: ./test/e2e
       - run: npm run test -- --env API_HOST=http://localhost:8080/
         working-directory: ./test/e2e
+      - name: Docker tag and save
+        id: docker-tag-save
+        run: mkdir -p ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}
+          && docker image tag hato-atama-staging-docker-compose-gcloud_datastore hato-atama-staging-docker-compose-cache-gcloud_datastore
+          && docker image tag hato-atama-staging-docker-compose-server hato-atama-staging-docker-compose-cache-server
+          && docker image tag hato-atama-staging-docker-compose-frontend hato-atama-staging-docker-compose-cache-frontend
+          && docker image save -o ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/gcloud_datastore.tar hato-atama-staging-docker-compose-cache-gcloud_datastore
+          && docker image save -o ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/server.tar hato-atama-staging-docker-compose-cache-server
+          && docker image save -o ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/frontend.tar hato-atama-staging-docker-compose-cache-frontend
+
 
   e2e-test-mini-prd:
     runs-on: ubuntu-latest
