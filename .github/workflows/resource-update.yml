@@ -34,7 +34,7 @@ jobs:
       - name: npm update
         run: npm install
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v3.9.2
+        uses: peter-evans/create-pull-request@v3.10.0
         with:
           token: ${{secrets.GITHUB_TOKEN}}
           commit-message: Update frontend
@@ -74,7 +74,7 @@ jobs:
       - name: npm update
         run: npm install
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v3.9.2
+        uses: peter-evans/create-pull-request@v3.10.0
         with:
           token: ${{secrets.GITHUB_TOKEN}}
           commit-message: Update test/e2e
@@ -112,7 +112,7 @@ jobs:
       - name: go mod tidy
         run: go mod tidy
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v3.9.2
+        uses: peter-evans/create-pull-request@v3.10.0
         with:
           token: ${{secrets.GITHUB_TOKEN}}
           commit-message: Update go
