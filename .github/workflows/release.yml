@@ -30,6 +30,13 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: ${{steps.get_node_version.outputs.node_version}}
+      - name: Cache node modules frontend
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: npm-cache-frontend-${{ hashFiles('**/frontend/package-lock.json') }}
+          restore-keys: |
+            npm-cache-frontend-
       - name: npm install
         run: npm install
       - name: build
@@ -106,6 +113,13 @@ jobs:
           fi
       - run: docker-compose -f staging.docker-compose.yml build --build-arg BUILDKIT_INLINE_CACHE=1
       - run: docker-compose -f staging.docker-compose.yml up -d
+      - name: Cache node modules e2e
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: npm-cache-e2e-${{ hashFiles('**/test/e2e/package-lock.json') }}
+          restore-keys: |
+            npm-cache-e2e-
       - run: npm i
         working-directory: ./test/e2e
       - run: npm run test -- --env API_HOST=http://localhost:8080/ --spec cypress/integration/mini/*.js
@@ -151,6 +165,13 @@ jobs:
           fi
       - run: docker-compose -f staging.docker-compose.yml build --build-arg BUILDKIT_INLINE_CACHE=1
       - run: docker-compose -f staging.docker-compose.yml up -d
+      - name: Cache node modules e2e
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: npm-cache-e2e-${{ hashFiles('**/test/e2e/package-lock.json') }}
+          restore-keys: |
+            npm-cache-e2e-
       - run: npm i
         working-directory: ./test/e2e
       - run: npm run test -- --env API_HOST=http://localhost:8080/
@@ -173,6 +194,13 @@ jobs:
       - e2e-test-mini-docker-compose
     steps:
       - uses: actions/checkout@v2
+      - name: Cache node modules e2e
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: npm-cache-e2e-${{ hashFiles('**/test/e2e/package-lock.json') }}
+          restore-keys: |
+            npm-cache-e2e-
       - run: npm i
         working-directory: ./test/e2e
       - run: npm run test -- --env API_HOST=https://v${GITHUB_RUN_NUMBER}-dot-hato-atama.an.r.appspot.com --spec cypress/integration/mini/*.js
@@ -186,6 +214,13 @@ jobs:
     if: github.event_name == 'push'
     steps:
       - uses: actions/checkout@v2
+      - name: Cache node modules e2e
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: npm-cache-e2e-${{ hashFiles('**/test/e2e/package-lock.json') }}
+          restore-keys: |
+            npm-cache-e2e-
       - run: npm i
         working-directory: ./test/e2e
       - run: npm run test -- --env API_HOST=https://v${GITHUB_RUN_NUMBER}-dot-hato-atama.an.r.appspot.com
