@@ -10,7 +10,7 @@ COPY frontend/src ./src
 RUN npm run build
 
 
-FROM nginx:1.19.10
+FROM nginx:1.21.0
 
 COPY frontend/nginx.conf /etc/nginx/nginx.conf
 
