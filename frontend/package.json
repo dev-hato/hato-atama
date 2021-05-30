@@ -8,9 +8,18 @@
     "build": "webpack --mode production",
     "dev": "webpack serve --mode development"
   },
+  "browserslist": [
+    "> 0.5%",
+    "> 0.5% in JP",
+    "last 2 versions",
+    "Firefox ESR",
+    "not dead",
+    "not ie<=11"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "browserslist": "^4.16.6",
     "clean-webpack-plugin": "^3.0.0",
     "elm-webpack-loader": "^8.0.0",
     "html-loader": "^2.1.2",
