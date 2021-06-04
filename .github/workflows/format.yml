@@ -9,7 +9,7 @@ on:
 jobs:
   format-go:
     runs-on: ubuntu-latest
-    if: (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]') || (github.event_name != 'pull_request_target' && github.actor != 'dependabot[bot]')
+    if: (github.event_name == 'pull_request_target' && github.actor == 'massongit') || (github.event_name != 'pull_request_target' && github.actor != 'massongit')
     env:
       DOCKER_BUILDKIT: 1
     steps:
