@@ -3,33 +3,45 @@
 # Please see the documentation for all configuration options:
 # https://help.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
 
-default-config: &default-config
-  schedule:
-    interval: "daily"
-  open-pull-requests-limit: 1
-  directory: "/"
-
 version: 2
 updates:
   - package-ecosystem: "docker"
-    <<: *default-config
     directory: "/frontend"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 1
   - package-ecosystem: "docker"
-    <<: *default-config
     directory: "/gcp/datastore"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 1
   - package-ecosystem: "docker"
-    <<: *default-config
     directory: "/server"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 1
   - package-ecosystem: "elm"
-    <<: *default-config
     directory: "/frontend"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 1
   - package-ecosystem: "github-actions"
-    <<: *default-config
+    directory: "/"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 1
   - package-ecosystem: "gomod"
-    <<: *default-config
+    directory: "/"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 1
   - package-ecosystem: "npm"
-    <<: *default-config
     directory: "/frontend"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 1
   - package-ecosystem: "npm"
-    <<: *default-config
     directory: "/test/e2e"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 1
