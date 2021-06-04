@@ -13,6 +13,7 @@ env:
 jobs:
   build-frontend:
     runs-on: ubuntu-latest
+    if: (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]') || (github.event_name != 'pull_request_target' && github.actor != 'dependabot[bot]')
     env:
       DOCKER_BUILDKIT: 1
     defaults:
@@ -20,6 +21,11 @@ jobs:
         working-directory: frontend
     steps:
       - uses: actions/checkout@v2
+        if: (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]')
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/checkout@v2
+        if: (github.event_name != 'pull_request_target' && github.actor != 'dependabot[bot]')
       - name: Get Node.js version
         id: get_node_version
         run: |
@@ -49,9 +55,15 @@ jobs:
 
   deploy-app-engine:
     runs-on: ubuntu-latest
+    if: (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]') || (github.event_name != 'pull_request_target' && github.actor != 'dependabot[bot]')
     needs: build-frontend
     steps:
       - uses: actions/checkout@v2
+        if: (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]')
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/checkout@v2
+        if: (github.event_name != 'pull_request_target' && github.actor != 'dependabot[bot]')
       - uses: google-github-actions/setup-gcloud@master
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
@@ -85,6 +97,7 @@ jobs:
 
   e2e-test-mini-docker-compose:
     runs-on: ubuntu-latest
+    if: (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]') || (github.event_name != 'pull_request_target' && github.actor != 'dependabot[bot]')
     env:
       DOCKER_BUILDKIT: 1
       COMPOSE_DOCKER_CLI_BUILD: 1
@@ -142,11 +155,17 @@ jobs:
 
   e2e-test-all-docker-compose:
     runs-on: ubuntu-latest
+    if: (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]') || (github.event_name != 'pull_request_target' && github.actor != 'dependabot[bot]')
     env:
       DOCKER_BUILDKIT: 1
       COMPOSE_DOCKER_CLI_BUILD: 1
     steps:
       - uses: actions/checkout@v2
+        if: (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]')
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/checkout@v2
+        if: (github.event_name != 'pull_request_target' && github.actor != 'dependabot[bot]')
       - name: Cache docker image
         id: cache-docker-image
         uses: actions/cache@v2
@@ -195,11 +214,17 @@ jobs:
 
   e2e-test-mini-prd:
     runs-on: ubuntu-latest
+    if: (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]') || (github.event_name != 'pull_request_target' && github.actor != 'dependabot[bot]')
     needs:
       - deploy-app-engine
       - e2e-test-mini-docker-compose
     steps:
       - uses: actions/checkout@v2
+        if: (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]')
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/checkout@v2
+        if: (github.event_name != 'pull_request_target' && github.actor != 'dependabot[bot]')
       - name: Cache node modules e2e
         uses: actions/cache@v2
         with:
@@ -247,7 +272,7 @@ jobs:
 
   pr-test-complete:
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
+    if: (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]') || (github.event_name != 'pull_request_target' && github.actor != 'dependabot[bot]')
     needs:
       - create-pr-environment
       - e2e-test-mini-prd
