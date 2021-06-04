@@ -5,6 +5,7 @@ on:
     branches:
       - master
   pull_request:
+  pull_request_target:
 
 env:
   DOCKER_COMPOSE_IMAGE_CACHE_DIR: /tmp/cache/docker-compose-image
@@ -69,7 +70,7 @@ jobs:
   create-pr-environment:
     runs-on: ubuntu-latest
     needs: deploy-app-engine
-    if: github.event_name == 'pull_request'
+    if: (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]') || (github.event_name != 'pull_request_target' && github.actor != 'dependabot[bot]')
     steps:
       - uses: actions/github-script@v4.0.2
         with:
@@ -89,6 +90,11 @@ jobs:
       COMPOSE_DOCKER_CLI_BUILD: 1
     steps:
       - uses: actions/checkout@v2
+        if: (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]')
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/checkout@v2
+        if: (github.event_name != 'pull_request_target' && github.actor != 'dependabot[bot]')
       - name: Cache docker image
         id: cache-docker-image
         uses: actions/cache@v2
