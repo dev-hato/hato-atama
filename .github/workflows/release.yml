@@ -55,7 +55,7 @@ jobs:
 
   deploy-app-engine:
     runs-on: ubuntu-latest
-    if: (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]') || (github.event_name != 'pull_request_target' && github.actor != 'dependabot[bot]')
+    if: (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]') || (github.event_name == 'pull_request' && github.actor != 'dependabot[bot]')
     needs: build-frontend
     steps:
       - uses: actions/checkout@v2
@@ -272,7 +272,7 @@ jobs:
 
   pr-test-complete:
     runs-on: ubuntu-latest
-    if: (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]') || (github.event_name != 'pull_request_target' && github.actor != 'dependabot[bot]')
+    if: (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]') || (github.event_name == 'pull_request' && github.actor != 'dependabot[bot]')
     needs:
       - create-pr-environment
       - e2e-test-mini-prd
