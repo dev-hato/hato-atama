@@ -130,8 +130,8 @@ jobs:
           if [ -e ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/frontend.tar ]; then
             docker image load -i ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/frontend.tar
           fi
-      - run: docker-compose -f staging.docker-compose.yml build --build-arg BUILDKIT_INLINE_CACHE=1
-      - run: docker-compose -f staging.docker-compose.yml up -d
+      - run: docker compose -f staging.docker-compose.yml build --build-arg BUILDKIT_INLINE_CACHE=1
+      - run: docker compose -f staging.docker-compose.yml up -d
       - name: Cache node modules e2e
         uses: actions/cache@v2
         with:
@@ -188,8 +188,8 @@ jobs:
           if [ -e ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/frontend.tar ]; then
             docker image load -i ${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/frontend.tar
           fi
-      - run: docker-compose -f staging.docker-compose.yml build --build-arg BUILDKIT_INLINE_CACHE=1
-      - run: docker-compose -f staging.docker-compose.yml up -d
+      - run: docker compose -f staging.docker-compose.yml build --build-arg BUILDKIT_INLINE_CACHE=1
+      - run: docker compose -f staging.docker-compose.yml up -d
       - name: Cache node modules e2e
         uses: actions/cache@v2
         with:
