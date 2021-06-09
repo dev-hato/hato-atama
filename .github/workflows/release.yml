@@ -82,7 +82,7 @@ jobs:
   create-pr-environment:
     runs-on: ubuntu-latest
     needs: deploy-app-engine
-    if: (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]') || (github.event_name == 'pull_request' && github.actor != 'dependabot[bot]')
+    if: (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]') || (github.event_name != 'pull_request_target' && github.actor != 'dependabot[bot]')
     steps:
       - uses: actions/github-script@v4.0.2
         with:
@@ -272,7 +272,7 @@ jobs:
 
   pr-test-complete:
     runs-on: ubuntu-latest
-    if: (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]') || (github.event_name == 'pull_request' && github.actor != 'dependabot[bot]')
+    if: (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]') || (github.event_name != 'pull_request_target' && github.actor != 'dependabot[bot]')
     needs:
       - create-pr-environment
       - e2e-test-mini-prd
