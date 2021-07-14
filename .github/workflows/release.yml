@@ -61,15 +61,15 @@ jobs:
           name: frontend
           path: frontend/dist
       - run: 'echo -e "env_variables:\n  ENV_NAME: \"v${GITHUB_RUN_NUMBER}\"" >> app.yaml'
-        if: ${{github.event_name == 'pull_request' }}
+        if: ${{ github.event_name == 'pull_request' }}
       - run: 'echo -e "env_variables:\n  ENV_NAME: \"prd\"" >> app.yaml'
-        if: ${{github.event_name == 'push' }}
+        if: ${{ github.event_name == 'push' }}
       - run: gcloud app deploy --quiet --no-promote -v "v${GITHUB_RUN_NUMBER}"
 
   create-pr-environment:
     runs-on: ubuntu-latest
     needs: deploy-app-engine
-    if: ${{github.event_name == 'pull_request' }}
+    if: ${{ github.event_name == 'pull_request' }}
     steps:
       - uses: actions/github-script@v4.0.2
         with:
@@ -211,7 +211,7 @@ jobs:
     needs:
       - e2e-test-all-docker-compose
       - e2e-test-mini-prd
-    if: ${{github.event_name == 'push' }}
+    if: ${{ github.event_name == 'push' }}
     steps:
       - uses: actions/checkout@v2
       - name: Cache node modules e2e
@@ -230,7 +230,7 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - e2e-test-all-prd
-    if: ${{github.event_name == 'push' }}
+    if: ${{ github.event_name == 'push' }}
     steps:
       - uses: google-github-actions/setup-gcloud@master
         with:
@@ -241,7 +241,7 @@ jobs:
 
   pr-test-complete:
     runs-on: ubuntu-latest
-    if: ${{github.event_name == 'pull_request' }}
+    if: ${{ github.event_name == 'pull_request' }}
     needs:
       - create-pr-environment
       - e2e-test-mini-prd
@@ -251,7 +251,7 @@ jobs:
 
   release-complete:
     runs-on: ubuntu-latest
-    if: ${{github.event_name == 'push' }}
+    if: ${{ github.event_name == 'push' }}
     needs:
       - migrating-traffic
     steps:
