@@ -17,9 +17,9 @@ jobs:
         id: get_go_version
         run: |
           image_name=hato_atama_server_build
-          docker build -t ${image_name} --target build -f server/Dockerfile .
+          docker build -t "${image_name}" --target build -f server/Dockerfile .
           go_version=$(docker run ${image_name} sh -c "go version | awk '{print \$3}' | sed -e 's/^go//g'")
-          echo "Go version:" ${go_version}
+          echo "Go version:" "${go_version}"
           echo "::set-output name=go_version::${go_version}"
       - name: Set up Go
         uses: actions/setup-go@v2
@@ -27,7 +27,7 @@ jobs:
           go-version: ${{steps.get_go_version.outputs.go_version}}
       - name: Install goimports
         run: |
-          echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
+          echo "$(go env GOPATH)/bin" >> "${GITHUB_PATH}"
           go get -u golang.org/x/tools/cmd/goimports
       - name: Format files
         run: |
@@ -37,11 +37,11 @@ jobs:
       - name: Show diff
         id: diff
         run: |
-          result=`git diff`
+          result=$(git diff)
           echo "::set-output name=result::$result"
       # 差分があったときは、コミットを作りpushする
       - name: Push
-        if: github.event.pull_request.head.repo.full_name == github.repository && steps.diff.outputs.result != ''
+        if: ${{github.event.pull_request.head.repo.full_name}} == ${{github.repository}} && ${{steps.diff.outputs.result}} != ''
         run: |
           git config user.name "hatohakaraage"
           git config user.email "hatohakaraage@example.com"
@@ -51,7 +51,7 @@ jobs:
       # pushしたブランチでPRを作る
       - name: Create PullRequest
         uses: actions/github-script@v4.0.2
-        if: github.event.pull_request.head.repo.full_name == github.repository && steps.diff.outputs.result != ''
+        if: ${{github.event.pull_request.head.repo.full_name}} == ${{github.repository}} && ${{steps.diff.outputs.result}} != ''
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
@@ -96,7 +96,7 @@ jobs:
       # 既にformat修正のPRがある状態で、手動でformatを修正した場合、format修正のPRを閉じる
       - name: Close PullRequest
         uses: actions/github-script@v4.0.2
-        if: github.event.pull_request.head.repo.full_name == github.repository && steps.diff.outputs.result == ''
+        if: ${{github.event.pull_request.head.repo.full_name}} == ${{github.repository}} && ${{steps.diff.outputs.result}} == ''
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
@@ -134,5 +134,5 @@ jobs:
               }
             })
       - name: Exit
-        if: steps.diff.outputs.result != ''
+        if: ${{steps.diff.outputs.result}} != ''
         run: exit 1
