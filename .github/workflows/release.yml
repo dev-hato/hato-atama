@@ -17,6 +17,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: |
+          mkdir -p ~/.docker/cli-plugins
+          curl https://github.com/docker/scan-cli-plugin/releases/download/latest/docker-scan_linux_amd64 -L -s -S -o ~/.docker/cli-plugins/docker-scan
+          chmod +x ~/.docker/cli-plugins/docker-scan
           image_name=hato_atama_server_build
           docker build -t "${image_name}" --target build -f server/Dockerfile .
           docker scan "${image_name}"
