@@ -9,17 +9,6 @@ on:
         default: "master"
 
 jobs:
-  testt:
-    runs-on: ubuntu-latest
-    env:
-      DOCKER_BUILDKIT: 1
-    steps:
-      - uses: actions/checkout@v2
-      - run: |
-          image_name=hato_atama_server_build
-          docker build -t "${image_name}" --target build -f server/Dockerfile .
-          docker scan "${image_name}"
-
   update-frontend:
     runs-on: ubuntu-latest
     env:

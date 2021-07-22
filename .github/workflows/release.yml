@@ -10,6 +10,17 @@ env:
   DOCKER_COMPOSE_IMAGE_CACHE_DIR: /tmp/cache/docker-compose-image
 
 jobs:
+  testt:
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_BUILDKIT: 1
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          image_name=hato_atama_server_build
+          docker build -t "${image_name}" --target build -f server/Dockerfile .
+          docker scan "${image_name}"
+
   build-frontend:
     runs-on: ubuntu-latest
     env:
