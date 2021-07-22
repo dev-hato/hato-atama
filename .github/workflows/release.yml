@@ -89,7 +89,7 @@ jobs:
       COMPOSE_DOCKER_CLI_BUILD: 1
     strategy:
       matrix:
-        browser: ["chrome", "firefox", "edge"]
+        browser: ["chrome", "firefox"]
     steps:
       - uses: actions/checkout@v2
       - name: Cache docker image
