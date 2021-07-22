@@ -87,6 +87,9 @@ jobs:
     env:
       DOCKER_BUILDKIT: 1
       COMPOSE_DOCKER_CLI_BUILD: 1
+    strategy:
+      matrix:
+        browser: ["chrome", "firefox", "edge"]
     steps:
       - uses: actions/checkout@v2
       - name: Cache docker image
@@ -122,7 +125,7 @@ jobs:
             npm-cache-e2e-
       - run: npm i
         working-directory: ./test/e2e
-      - run: npm run test -- --env API_HOST=http://localhost:8080/ --spec cypress/integration/mini/*.js
+      - run: npm run test -- --env API_HOST=http://localhost:8080/ --spec cypress/integration/mini/*.js --browser ${{ matrix.browser }}
         working-directory: ./test/e2e
       - name: Docker tag and save
         id: docker-tag-save
@@ -185,7 +188,6 @@ jobs:
           && docker image save -o "${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/gcloud_datastore.tar" hato-atama-staging-docker-compose-cache-gcloud_datastore
           && docker image save -o "${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/server.tar" hato-atama-staging-docker-compose-cache-server
           && docker image save -o "${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/frontend.tar" hato-atama-staging-docker-compose-cache-frontend
-
 
   e2e-test-mini-prd:
     runs-on: ubuntu-latest
