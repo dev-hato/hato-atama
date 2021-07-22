@@ -89,7 +89,7 @@ jobs:
       COMPOSE_DOCKER_CLI_BUILD: 1
     strategy:
       matrix:
-        browser: ["chrome", "firefox"]
+        browser: ["chrome", "chromium", "firefox", "electron"]
     steps:
       - uses: actions/checkout@v2
       - name: Cache docker image
@@ -144,7 +144,7 @@ jobs:
       COMPOSE_DOCKER_CLI_BUILD: 1
     strategy:
       matrix:
-        browser: ["chrome", "firefox"]
+        browser: ["chrome", "chromium", "firefox", "electron"]
     steps:
       - uses: actions/checkout@v2
       - name: Cache docker image
@@ -199,7 +199,7 @@ jobs:
       - e2e-test-mini-docker-compose
     strategy:
       matrix:
-        browser: ["chrome", "firefox"]
+        browser: ["chrome", "chromium", "firefox", "electron"]
     steps:
       - uses: actions/checkout@v2
       - name: Cache node modules e2e
@@ -221,7 +221,7 @@ jobs:
       - e2e-test-mini-prd
     strategy:
       matrix:
-        browser: ["chrome", "firefox"]
+        browser: ["chrome", "chromium", "firefox", "electron"]
     if: ${{ github.event_name == 'push' }}
     steps:
       - uses: actions/checkout@v2
