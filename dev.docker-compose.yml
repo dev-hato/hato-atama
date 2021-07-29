@@ -1,9 +1,13 @@
 version: "3"
+
 services:
   gcloud_datastore:
     build:
       context: .
       dockerfile: gcp/datastore/Dockerfile
+      cache_from:
+        - ghcr.io/dev-hato/hato-atama/gcloud_datastore
+    image: ghcr.io/dev-hato/hato-atama/gcloud_datastore
     tty: true
     environment:
       DATASTORE_PROJECT_ID: app
@@ -14,6 +18,9 @@ services:
       context: .
       dockerfile: server/Dockerfile
       target: build
+      cache_from:
+        - ghcr.io/dev-hato/hato-atama/server
+    image: ghcr.io/dev-hato/hato-atama/server
     volumes:
       - ./server:/go/app/server
     environment:
@@ -29,6 +36,9 @@ services:
       context: .
       dockerfile: frontend/Dockerfile
       target: build
+      cache_from:
+        - ghcr.io/dev-hato/hato-atama/frontend
+    image: ghcr.io/dev-hato/hato-atama/frontend
     volumes:
       - ./frontend/src:/usr/src/app/src
     command: npm run dev
