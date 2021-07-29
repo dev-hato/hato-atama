@@ -95,8 +95,8 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - run: docker-compose -f staging.docker-compose.yml pull
       - run: docker-compose -f staging.docker-compose.yml build --build-arg BUILDKIT_INLINE_CACHE=1
-      - run: docker-compose -f staging.docker-compose.yml push
       - run: docker-compose -f staging.docker-compose.yml up -d
       - name: Cache node modules e2e
         uses: actions/cache@v2
@@ -126,8 +126,8 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - run: docker-compose -f staging.docker-compose.yml pull
       - run: docker-compose -f staging.docker-compose.yml build --build-arg BUILDKIT_INLINE_CACHE=1
-      - run: docker-compose -f staging.docker-compose.yml push
       - run: docker-compose -f staging.docker-compose.yml up -d
       - name: Cache node modules e2e
         uses: actions/cache@v2
