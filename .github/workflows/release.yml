@@ -6,8 +6,6 @@ on:
       - master
   pull_request:
 
-permissions: write-all
-
 jobs:
   build-frontend:
     runs-on: ubuntu-latest
