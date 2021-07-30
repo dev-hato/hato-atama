@@ -7,7 +7,7 @@ on:
   pull_request:
 
 env:
-  BRANCH_NAME: ${GITHUB_REF#refs/heads/}
+  BRANCH_NAME: "${GITHUB_REF#refs/heads/}"
 
 jobs:
   build-frontend:
