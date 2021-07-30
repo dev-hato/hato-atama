@@ -6,9 +6,6 @@ on:
       - master
   pull_request:
 
-env:
-  DOCKER_COMPOSE_IMAGE_CACHE_DIR: /tmp/cache/docker-compose-image
-
 jobs:
   build-frontend:
     runs-on: ubuntu-latest
@@ -89,32 +86,23 @@ jobs:
       COMPOSE_DOCKER_CLI_BUILD: 1
     strategy:
       matrix:
-        browser: ["chrome", "chromium", "firefox", "electron"]
+        browser: [ "chrome", "chromium", "firefox", "electron" ]
     steps:
       - uses: actions/checkout@v2
-      - name: Cache docker image
-        id: cache-docker-image
-        uses: actions/cache@v2
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
         with:
-          path: ${{ env.DOCKER_COMPOSE_IMAGE_CACHE_DIR }}
-          key: docker-compose-cache-${{ hashFiles('staging.docker-compose.yml') }}-${{ hashFiles('**/Dockerfile') }}-${{ hashFiles('**.go', '**.js', '**.json', '**.elm', '**.html') }}
-          restore-keys: |
-            docker-compose-cache-${{ hashFiles('staging.docker-compose.yml') }}-${{ hashFiles('**/Dockerfile') }}-
-            docker-compose-cache-${{ hashFiles('staging.docker-compose.yml') }}-
-            docker-compose-cache-
-      - name: Docker load
-        id: docker-load
-        run: |
-          if [ -e "${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/gcloud_datastore.tar" ]; then
-            docker image load -i "${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/gcloud_datastore.tar"
-          fi
-          if [ -e "${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/server.tar" ]; then
-            docker image load -i "${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/server.tar"
-          fi
-          if [ -e "${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/frontend.tar" ]; then
-            docker image load -i "${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/frontend.tar"
-          fi
-      - run: docker-compose -f staging.docker-compose.yml build --build-arg BUILDKIT_INLINE_CACHE=1
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - run: echo 'TAG_NAME=${{github.head_ref}}' >> "$GITHUB_ENV"
+        if: ${{ github.event_name == 'pull_request' }}
+      - run: echo 'TAG_NAME=latest' >> "$GITHUB_ENV"
+        if: ${{ github.event_name == 'push' }}
+      - run: docker-compose -f staging.docker-compose.yml build
       - run: docker-compose -f staging.docker-compose.yml up -d
       - name: Cache node modules e2e
         uses: actions/cache@v2
@@ -127,15 +115,6 @@ jobs:
         working-directory: ./test/e2e
       - run: npm run test -- --env API_HOST=http://localhost:8080/ --spec cypress/integration/mini/*.js --browser ${{ matrix.browser }}
         working-directory: ./test/e2e
-      - name: Docker tag and save
-        id: docker-tag-save
-        run: mkdir -p "${DOCKER_COMPOSE_IMAGE_CACHE_DIR}"
-          && docker image tag hato-atama-staging-docker-compose-gcloud_datastore hato-atama-staging-docker-compose-cache-gcloud_datastore
-          && docker image tag hato-atama-staging-docker-compose-server hato-atama-staging-docker-compose-cache-server
-          && docker image tag hato-atama-staging-docker-compose-frontend hato-atama-staging-docker-compose-cache-frontend
-          && docker image save -o "${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/gcloud_datastore.tar" hato-atama-staging-docker-compose-cache-gcloud_datastore
-          && docker image save -o "${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/server.tar" hato-atama-staging-docker-compose-cache-server
-          && docker image save -o "${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/frontend.tar" hato-atama-staging-docker-compose-cache-frontend
 
   e2e-test-all-docker-compose:
     runs-on: ubuntu-latest
@@ -144,32 +123,23 @@ jobs:
       COMPOSE_DOCKER_CLI_BUILD: 1
     strategy:
       matrix:
-        browser: ["chrome", "chromium", "firefox", "electron"]
+        browser: [ "chrome", "chromium", "firefox", "electron" ]
     steps:
       - uses: actions/checkout@v2
-      - name: Cache docker image
-        id: cache-docker-image
-        uses: actions/cache@v2
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
         with:
-          path: ${{ env.DOCKER_COMPOSE_IMAGE_CACHE_DIR }}
-          key: docker-compose-cache-${{ hashFiles('staging.docker-compose.yml') }}-${{ hashFiles('**/Dockerfile') }}-${{ hashFiles('**.go', '**.js', '**.json', '**.elm', '**.html') }}
-          restore-keys: |
-            docker-compose-cache-${{ hashFiles('staging.docker-compose.yml') }}-${{ hashFiles('**/Dockerfile') }}-
-            docker-compose-cache-${{ hashFiles('staging.docker-compose.yml') }}-
-            docker-compose-cache-
-      - name: Docker load
-        id: docker-load
-        run: |
-          if [ -e "${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/gcloud_datastore.tar" ]; then
-            docker image load -i "${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/gcloud_datastore.tar"
-          fi
-          if [ -e "${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/server.tar" ]; then
-            docker image load -i "${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/server.tar"
-          fi
-          if [ -e "${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/frontend.tar" ]; then
-            docker image load -i "${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/frontend.tar"
-          fi
-      - run: docker-compose -f staging.docker-compose.yml build --build-arg BUILDKIT_INLINE_CACHE=1
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - run: echo 'TAG_NAME=${{github.head_ref}}' >> "$GITHUB_ENV"
+        if: ${{ github.event_name == 'pull_request' }}
+      - run: echo 'TAG_NAME=latest' >> "$GITHUB_ENV"
+        if: ${{ github.event_name == 'push' }}
+      - run: docker-compose -f staging.docker-compose.yml build
       - run: docker-compose -f staging.docker-compose.yml up -d
       - name: Cache node modules e2e
         uses: actions/cache@v2
@@ -182,15 +152,6 @@ jobs:
         working-directory: ./test/e2e
       - run: npm run test -- --env API_HOST=http://localhost:8080/ --browser ${{ matrix.browser }}
         working-directory: ./test/e2e
-      - name: Docker tag and save
-        id: docker-tag-save
-        run: mkdir -p "${DOCKER_COMPOSE_IMAGE_CACHE_DIR}"
-          && docker image tag hato-atama-staging-docker-compose-gcloud_datastore hato-atama-staging-docker-compose-cache-gcloud_datastore
-          && docker image tag hato-atama-staging-docker-compose-server hato-atama-staging-docker-compose-cache-server
-          && docker image tag hato-atama-staging-docker-compose-frontend hato-atama-staging-docker-compose-cache-frontend
-          && docker image save -o "${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/gcloud_datastore.tar" hato-atama-staging-docker-compose-cache-gcloud_datastore
-          && docker image save -o "${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/server.tar" hato-atama-staging-docker-compose-cache-server
-          && docker image save -o "${DOCKER_COMPOSE_IMAGE_CACHE_DIR}/frontend.tar" hato-atama-staging-docker-compose-cache-frontend
 
   e2e-test-mini-prd:
     runs-on: ubuntu-latest
@@ -199,7 +160,7 @@ jobs:
       - e2e-test-mini-docker-compose
     strategy:
       matrix:
-        browser: ["chrome", "chromium", "firefox", "electron"]
+        browser: [ "chrome", "chromium", "firefox", "electron" ]
     steps:
       - uses: actions/checkout@v2
       - name: Cache node modules e2e
@@ -221,7 +182,7 @@ jobs:
       - e2e-test-mini-prd
     strategy:
       matrix:
-        browser: ["chrome", "chromium", "firefox", "electron"]
+        browser: [ "chrome", "chromium", "firefox", "electron" ]
     if: ${{ github.event_name == 'push' }}
     steps:
       - uses: actions/checkout@v2
@@ -236,6 +197,31 @@ jobs:
         working-directory: ./test/e2e
       - run: npm run test -- --env "API_HOST=https://v${GITHUB_RUN_NUMBER}-dot-hato-atama.an.r.appspot.com" --browser ${{ matrix.browser }}
         working-directory: ./test/e2e
+
+  docker-compose-build:
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_BUILDKIT: 1
+      COMPOSE_DOCKER_CLI_BUILD: 1
+    permissions:
+      packages: write
+    steps:
+      - uses: actions/checkout@v2
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - run: echo 'TAG_NAME=${{github.head_ref}}' >> "$GITHUB_ENV"
+        if: ${{ github.event_name == 'pull_request' }}
+      - run: echo 'TAG_NAME=latest' >> "$GITHUB_ENV"
+        if: ${{ github.event_name == 'push' }}
+      - run: docker-compose -f staging.docker-compose.yml build --build-arg BUILDKIT_INLINE_CACHE=1
+      - run: docker-compose -f staging.docker-compose.yml push
 
   migrating-traffic:
     runs-on: ubuntu-latest
@@ -257,6 +243,7 @@ jobs:
       - create-pr-environment
       - e2e-test-mini-prd
       - e2e-test-all-docker-compose
+      - docker-compose-build
     steps:
       - run: exit 0
 
@@ -265,5 +252,6 @@ jobs:
     if: ${{ github.event_name == 'push' }}
     needs:
       - migrating-traffic
+      - docker-compose-build
     steps:
       - run: exit 0

@@ -7,36 +7,36 @@ services:
       context: .
       dockerfile: gcp/datastore/Dockerfile
       cache_from:
-        - "hato-atama-staging-docker-compose-cache-gcloud_datastore"
+        - ghcr.io/dev-hato/hato-atama/gcloud_datastore:${TAG_NAME}
+        - ghcr.io/dev-hato/hato-atama/gcloud_datastore
+    image: ghcr.io/dev-hato/hato-atama/gcloud_datastore:${TAG_NAME}
     tty: true
     environment:
       DATASTORE_PROJECT_ID: app
       DATASTORE_LISTEN_ADDRESS: 0.0.0.0:8081
-    image:
-      "hato-atama-staging-docker-compose-gcloud_datastore"
 
   server:
     build:
       context: .
       dockerfile: server/Dockerfile
       cache_from:
-        - "hato-atama-staging-docker-compose-cache-server"
+        - ghcr.io/dev-hato/hato-atama/server:${TAG_NAME}
+        - ghcr.io/dev-hato/hato-atama/server
+    image: ghcr.io/dev-hato/hato-atama/server:${TAG_NAME}
     environment:
       PROJECT_ID: app
       DATASTORE_EMULATOR_HOST: "gcloud_datastore:8081"
       PORT: 8082
     ports:
       - 8082:8082
-    image:
-      "hato-atama-staging-docker-compose-server"
 
   frontend:
     build:
       context: .
       dockerfile: frontend/Dockerfile
       cache_from:
-        - "hato-atama-staging-docker-compose-cache-frontend"
+        - ghcr.io/dev-hato/hato-atama/frontend:${TAG_NAME}
+        - ghcr.io/dev-hato/hato-atama/frontend
+    image: ghcr.io/dev-hato/hato-atama/frontend:${TAG_NAME}
     ports:
       - 8080:8080
-    image:
-      "hato-atama-staging-docker-compose-frontend"
