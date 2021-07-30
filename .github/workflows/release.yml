@@ -98,8 +98,12 @@ jobs:
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v1
-      - run: "BRANCH_NAME=pr_${GITHUB_REF#refs/heads/} docker-compose -f staging.docker-compose.yml build"
-      - run: "BRANCH_NAME=pr_${GITHUB_REF#refs/heads/} docker-compose -f staging.docker-compose.yml up -d"
+      - run: echo "BRANCH_NAME=${GITHUB_HEAD_REF}" >> $GITHUB_ENV
+        if: ${{ github.event_name == 'pull_request' }}
+      - run: echo "BRANCH_NAME=latest" >> $GITHUB_ENV
+        if: ${{ github.event_name == 'push' }}
+      - run: "docker-compose -f staging.docker-compose.yml build"
+      - run: "docker-compose -f staging.docker-compose.yml up -d"
       - name: Cache node modules e2e
         uses: actions/cache@v2
         with:
@@ -131,8 +135,12 @@ jobs:
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v1
-      - run: "BRANCH_NAME=pr_${GITHUB_REF#refs/heads/} docker-compose -f staging.docker-compose.yml build"
-      - run: "BRANCH_NAME=pr_${GITHUB_REF#refs/heads/} docker-compose -f staging.docker-compose.yml up -d"
+      - run: echo "BRANCH_NAME=${GITHUB_HEAD_REF}" >> $GITHUB_ENV
+        if: ${{ github.event_name == 'pull_request' }}
+      - run: echo "BRANCH_NAME=latest" >> $GITHUB_ENV
+        if: ${{ github.event_name == 'push' }}
+      - run: "docker-compose -f staging.docker-compose.yml build"
+      - run: "docker-compose -f staging.docker-compose.yml up -d"
       - name: Cache node modules e2e
         uses: actions/cache@v2
         with:
@@ -208,8 +216,12 @@ jobs:
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v1
-      - run: "BRANCH_NAME=pr_${GITHUB_REF#refs/heads/} docker-compose -f staging.docker-compose.yml build --build-arg BUILDKIT_INLINE_CACHE=1"
-      - run: "BRANCH_NAME=pr_${GITHUB_REF#refs/heads/} docker-compose -f staging.docker-compose.yml push"
+      - run: echo "BRANCH_NAME=${GITHUB_HEAD_REF}" >> $GITHUB_ENV
+        if: ${{ github.event_name == 'pull_request' }}
+      - run: echo "BRANCH_NAME=latest" >> $GITHUB_ENV
+        if: ${{ github.event_name == 'push' }}
+      - run: "docker-compose -f staging.docker-compose.yml build --build-arg BUILDKIT_INLINE_CACHE=1"
+      - run: "docker-compose -f staging.docker-compose.yml push"
 
   migrating-traffic:
     runs-on: ubuntu-latest
