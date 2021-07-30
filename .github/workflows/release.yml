@@ -241,5 +241,6 @@ jobs:
     if: ${{ github.event_name == 'push' }}
     needs:
       - migrating-traffic
+      - docker-compose-build
     steps:
       - run: exit 0
