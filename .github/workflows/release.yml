@@ -79,8 +79,31 @@ jobs:
               body: "${{github.event.pull_request.head.sha}} のPR用環境: <a href=\"https://v" + process.env.GITHUB_RUN_NUMBER + "-dot-hato-atama.an.r.appspot.com\">サイト</a>, <a href=\"https://console.cloud.google.com/logs/query;query=resource.type%3D%22gae_app%22%20resource.labels.module_id%3D%22default%22%20resource.labels.version_id%3D%22v" + process.env.GITHUB_RUN_NUMBER + "%22?project=hato-atama\">ログ</a>"
             })
 
+  docker-compose-build:
+    runs-on: ubuntu-latest
+    env:
+        DOCKER_BUILDKIT: 1
+        COMPOSE_DOCKER_CLI_BUILD: 1
+    permissions:
+      packages: write
+    steps:
+      - uses: actions/checkout@v2
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - run: docker-compose -f staging.docker-compose.yml pull
+      - run: docker-compose -f staging.docker-compose.yml build --build-arg BUILDKIT_INLINE_CACHE=1
+      - run: docker-compose -f staging.docker-compose.yml push
+
   e2e-test-mini-docker-compose:
     runs-on: ubuntu-latest
+    needs: docker-compose-build
     env:
       DOCKER_BUILDKIT: 1
       COMPOSE_DOCKER_CLI_BUILD: 1
@@ -115,6 +138,7 @@ jobs:
 
   e2e-test-all-docker-compose:
     runs-on: ubuntu-latest
+    needs: docker-compose-build
     env:
       DOCKER_BUILDKIT: 1
       COMPOSE_DOCKER_CLI_BUILD: 1
