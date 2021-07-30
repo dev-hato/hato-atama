@@ -14,10 +14,10 @@
 
 ### 編集するとhot reloadが走る、開発に適したバージョン
 ```sh
-BRANCH_NAME=`git symbolic-ref --short HEAD` docker-compose -f dev.docker-compose.yml up --build
+TAG_NAME=`git symbolic-ref --short HEAD` docker-compose -f dev.docker-compose.yml up --build
 ```
 
 ### 限りなく本番のapp engineに近い設定で動くバージョン
 ```sh
-BRANCH_NAME=`git symbolic-ref --short HEAD` docker-compose -f staging.docker-compose.yml up --build
+TAG_NAME=`git symbolic-ref --short HEAD` docker-compose -f staging.docker-compose.yml up --build
 ```
