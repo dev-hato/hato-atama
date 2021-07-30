@@ -98,9 +98,9 @@ jobs:
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v1
-      - run: "echo 'TAG_NAME=${{github.head_ref}}' >> $GITHUB_ENV"
+      - run: (echo 'TAG_NAME=${{github.head_ref}}') >> $GITHUB_ENV
         if: ${{ github.event_name == 'pull_request' }}
-      - run: "echo 'TAG_NAME=latest' >> $GITHUB_ENV"
+      - run: (echo 'TAG_NAME=latest') >> $GITHUB_ENV
         if: ${{ github.event_name == 'push' }}
       - run: docker-compose -f staging.docker-compose.yml build
       - run: docker-compose -f staging.docker-compose.yml up -d
@@ -135,9 +135,9 @@ jobs:
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v1
-      - run: "echo 'TAG_NAME=${{github.head_ref}}' >> $GITHUB_ENV"
+      - run: (echo 'TAG_NAME=${{github.head_ref}}') >> $GITHUB_ENV
         if: ${{ github.event_name == 'pull_request' }}
-      - run: "echo 'TAG_NAME=latest' >> $GITHUB_ENV"
+      - run: (echo 'TAG_NAME=latest') >> $GITHUB_ENV
         if: ${{ github.event_name == 'push' }}
       - run: docker-compose -f staging.docker-compose.yml build
       - run: docker-compose -f staging.docker-compose.yml up -d
@@ -216,9 +216,9 @@ jobs:
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v1
-      - run: "echo 'TAG_NAME=${{github.head_ref}}' >> $GITHUB_ENV"
+      - run: (echo 'TAG_NAME=${{github.head_ref}}) >> $GITHUB_ENV
         if: ${{ github.event_name == 'pull_request' }}
-      - run: "echo 'TAG_NAME=latest' >> $GITHUB_ENV"
+      - run: (echo 'TAG_NAME=latest') >> $GITHUB_ENV
         if: ${{ github.event_name == 'push' }}
       - run: docker-compose -f staging.docker-compose.yml build --build-arg BUILDKIT_INLINE_CACHE=1
       - run: docker-compose -f staging.docker-compose.yml push
