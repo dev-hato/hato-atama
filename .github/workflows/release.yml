@@ -48,11 +48,6 @@ jobs:
     needs: build-frontend
     steps:
       - uses: actions/checkout@v2
-      - uses: google-github-actions/setup-gcloud@master
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          export_default_credentials: true
       - uses: actions/download-artifact@v2
         with:
           name: frontend
@@ -61,7 +56,14 @@ jobs:
         if: ${{ github.event_name == 'pull_request' }}
       - run: 'echo -e "env_variables:\n  ENV_NAME: \"prd\"" >> app.yaml'
         if: ${{ github.event_name == 'push' }}
-      - run: gcloud app deploy --quiet --no-promote -v "v${GITHUB_RUN_NUMBER}"
+      - name: Deploy to App Engine
+        uses: google-github-actions/deploy-appengine@v0.4.0
+        with:
+          deliverables: app.yaml
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          credentials: ${{ secrets.GCP_SA_KEY }}
+          promote: false
+          version: "v${GITHUB_RUN_NUMBER}"
 
   create-pr-environment:
     runs-on: ubuntu-latest
