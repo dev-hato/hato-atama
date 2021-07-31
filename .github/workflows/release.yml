@@ -63,7 +63,7 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           credentials: ${{ secrets.GCP_SA_KEY }}
           promote: false
-          version: "v${GITHUB_RUN_NUMBER}"
+          version: "v${{github.run_number}}"
 
   create-pr-environment:
     runs-on: ubuntu-latest
