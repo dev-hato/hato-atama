@@ -271,7 +271,10 @@ jobs:
       - pr-test-complete-success
       - pr-test-complete-not-success
     steps:
-      - run: exit ${{ env.EXIT_CODE }}
+      - run: exit 0
+        if: ${{ env.EXIT_CODE == 0 }}
+      - run: exit 1
+        if: ${{ env.EXIT_CODE != 0 }}
 
   release-complete:
     runs-on: ubuntu-latest
