@@ -245,6 +245,7 @@ jobs:
       - e2e-test-mini-prd
       - e2e-test-all-docker-compose
       - docker-compose-build
+    steps: []
 
   pr-test-complete-success:
     runs-on: ubuntu-latest
