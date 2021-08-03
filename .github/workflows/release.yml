@@ -240,7 +240,7 @@ jobs:
 
   pr-test-complete:
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'pull_request' && !failure() }}
+    if: ${{ github.event_name == 'pull_request' && always() }}
     needs:
       - create-pr-environment
       - e2e-test-mini-prd
@@ -248,12 +248,18 @@ jobs:
       - docker-compose-build
     steps:
       - run: exit 0
+        if: ${{ success() }}
+      - run: exit 1
+        if: ${{ !success() }}
 
   release-complete:
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' && !failure() }}
+    if: ${{ github.event_name == 'push' && always() }}
     needs:
       - migrating-traffic
       - docker-compose-build
     steps:
       - run: exit 0
+        if: ${{ success() }}
+      - run: exit 1
+        if: ${{ !success() }}
