@@ -248,9 +248,9 @@ jobs:
       - docker-compose-build
     steps:
       - run: exit 0
-        if: ${{ success() }}
+        if: ${{ !failure() }}
       - run: exit 1
-        if: ${{ !success() }}
+        if: ${{ failure() }}
 
   release-complete:
     runs-on: ubuntu-latest
@@ -260,6 +260,6 @@ jobs:
       - docker-compose-build
     steps:
       - run: exit 0
-        if: ${{ success() }}
+        if: ${{ !failure() }}
       - run: exit 1
-        if: ${{ !success() }}
+        if: ${{ failure() }}
