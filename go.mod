@@ -10,6 +10,7 @@ require (
 	github.com/labstack/echo/v4 v4.5.0
 	github.com/mattn/go-isatty v0.0.13 // indirect
 	golang.org/x/net v0.0.0-20210716203947-853a461950ff // indirect
+	golang.org/x/sys v0.0.0-20210806184541-e5e7981a1069 // indirect
 	google.golang.org/api v0.51.0 // indirect
 	google.golang.org/genproto v0.0.0-20210726200206-e7812ac95cc0 // indirect
 )
