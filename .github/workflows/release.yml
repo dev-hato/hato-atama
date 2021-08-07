@@ -260,7 +260,7 @@ jobs:
       - run: exit 1
         if: ${{ needs.pr-test-complete-check.result != 'success' }}
 
-  release-complete:
+  release-complete-check:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'push' }}
     needs:
@@ -268,3 +268,14 @@ jobs:
       - docker-compose-build
     steps:
       - run: exit 0
+
+  release-complete:
+    runs-on: ubuntu-latest
+    if: always()
+    needs:
+      - release-complete-check
+    steps:
+      - run: exit 0
+        if: ${{ needs.release-complete-check.result == 'success' }}
+      - run: exit 1
+        if: ${{ needs.release-complete-check.result != 'success' }}
