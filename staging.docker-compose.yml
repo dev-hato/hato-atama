@@ -1,4 +1,4 @@
-version: "3.4"
+version: "3.8"
 
 services:
 
@@ -28,7 +28,7 @@ services:
       DATASTORE_EMULATOR_HOST: "gcloud_datastore:8081"
       PORT: 8082
     ports:
-      - 8082:8082
+      - "8082:8082"
 
   frontend:
     build:
@@ -39,4 +39,4 @@ services:
         - ghcr.io/dev-hato/hato-atama/frontend
     image: ghcr.io/dev-hato/hato-atama/frontend:${TAG_NAME}
     ports:
-      - 8080:8080
+      - "8080:8080"

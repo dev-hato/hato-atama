@@ -1,4 +1,4 @@
-version: "3"
+version: "3.8"
 
 services:
   gcloud_datastore:
@@ -31,7 +31,7 @@ services:
       PORT: 8082
     command: air -c .air.toml
     ports:
-      - 8082:8082
+      - "8082:8082"
 
   frontend:
     build:
@@ -46,4 +46,4 @@ services:
       - ./frontend/src:/usr/src/app/src
     command: npm run dev
     ports:
-      - 8080:8080
+      - "8080:8080"
