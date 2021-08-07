@@ -255,10 +255,10 @@ jobs:
     needs:
       - pr-test-complete-check
     steps:
-      - run: exit 0
-        if: ${{ needs.pr-test-complete-check.result == 'success' }}
-      - run: exit 1
-        if: ${{ needs.pr-test-complete-check.result != 'success' }}
+      - if: ${{ needs.pr-test-complete-check.result == 'success' }}
+        run: exit 0
+      - if: ${{ needs.pr-test-complete-check.result != 'success' }}
+        run: exit 1
 
   release-complete-check:
     runs-on: ubuntu-latest
@@ -275,7 +275,7 @@ jobs:
     needs:
       - release-complete-check
     steps:
-      - run: exit 0
-        if: ${{ needs.release-complete-check.result == 'success' }}
-      - run: exit 1
-        if: ${{ needs.release-complete-check.result != 'success' }}
+      - if: ${{ needs.release-complete-check.result == 'success' }}
+        run: exit 0
+      - if: ${{ needs.release-complete-check.result != 'success' }}
+        run: exit 1
