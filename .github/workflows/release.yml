@@ -238,7 +238,7 @@ jobs:
           export_default_credentials: true
       - run: gcloud app services set-traffic default --splits "v${GITHUB_RUN_NUMBER}=1"
 
-  pr-test-complete:
+  pr-test-complete-check:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'pull_request' }}
     needs:
@@ -249,7 +249,18 @@ jobs:
     steps:
       - run: exit 0
 
-  release-complete:
+  pr-test-complete:
+    runs-on: ubuntu-latest
+    if: ${{ always() && github.event_name == 'pull_request' }}
+    needs:
+      - pr-test-complete-check
+    steps:
+      - if: ${{ needs.pr-test-complete-check.result == 'success' }}
+        run: exit 0
+      - if: ${{ needs.pr-test-complete-check.result != 'success' }}
+        run: exit 1
+
+  release-complete-check:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'push' }}
     needs:
@@ -257,3 +268,14 @@ jobs:
       - docker-compose-build
     steps:
       - run: exit 0
+
+  release-complete:
+    runs-on: ubuntu-latest
+    if: ${{ always() && github.event_name == 'push' }}
+    needs:
+      - release-complete-check
+    steps:
+      - if: ${{ needs.release-complete-check.result == 'success' }}
+        run: exit 0
+      - if: ${{ needs.release-complete-check.result != 'success' }}
+        run: exit 1
