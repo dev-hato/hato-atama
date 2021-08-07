@@ -251,7 +251,7 @@ jobs:
 
   pr-test-complete:
     runs-on: ubuntu-latest
-    if: always()
+    if: ${{ always() && github.event_name == 'pull_request' }}
     needs:
       - pr-test-complete-check
     steps:
@@ -271,7 +271,7 @@ jobs:
 
   release-complete:
     runs-on: ubuntu-latest
-    if: always()
+    if: ${{ always() && github.event_name == 'push' }}
     needs:
       - release-complete-check
     steps:
