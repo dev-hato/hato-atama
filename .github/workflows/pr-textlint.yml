@@ -32,11 +32,11 @@ jobs:
       - name: yarn cache
         uses: actions/cache@v2.1.6
         with:
-          key: ${{ hashFiles('./.github/workflows/pr-textlint.yml') }}-${{ runner.os }}-${{ matrix.node-version }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ hashFiles('./.github/workflows/pr-textlint.yml') }}-${{ runner.os }}-${{ steps.get_node_version.outputs.node_version }}-yarn-${{ hashFiles('**/yarn.lock') }}
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
           restore-keys: |
-            ${{ hashFiles('./.github/workflows/pr-textlint.yml') }}-${{ runner.os }}-${{ matrix.node-version }}-yarn-${{ hashFiles('**/yarn.lock') }}
-            ${{ hashFiles('./.github/workflows/pr-textlint.yml') }}-${{ runner.os }}-${{ matrix.node-version }}-yarn-
+            ${{ hashFiles('./.github/workflows/pr-textlint.yml') }}-${{ runner.os }}-${{ steps.get_node_version.outputs.node_version }}-yarn-${{ hashFiles('**/yarn.lock') }}
+            ${{ hashFiles('./.github/workflows/pr-textlint.yml') }}-${{ runner.os }}-${{ steps.get_node_version.outputs.node_version }}-yarn-
       - name: Install dependencies
         run: |
           yarn install -D
@@ -128,11 +128,11 @@ jobs:
       - name: yarn cache
         uses: actions/cache@v2.1.6
         with:
-          key: ${{ hashFiles('./.github/workflows/pr-textlint.yml') }}-${{ runner.os }}-${{ matrix.node-version }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ hashFiles('./.github/workflows/pr-textlint.yml') }}-${{ runner.os }}-${{ steps.get_node_version.outputs.node_version }}-yarn-${{ hashFiles('**/yarn.lock') }}
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
           restore-keys: |
-            ${{ hashFiles('./.github/workflows/pr-textlint.yml') }}-${{ runner.os }}-${{ matrix.node-version }}-yarn-${{ hashFiles('**/yarn.lock') }}
-            ${{ hashFiles('./.github/workflows/pr-textlint.yml') }}-${{ runner.os }}-${{ matrix.node-version }}-yarn-
+            ${{ hashFiles('./.github/workflows/pr-textlint.yml') }}-${{ runner.os }}-${{ steps.get_node_version.outputs.node_version }}-yarn-${{ hashFiles('**/yarn.lock') }}
+            ${{ hashFiles('./.github/workflows/pr-textlint.yml') }}-${{ runner.os }}-${{ steps.get_node_version.outputs.node_version }}-yarn-
       - name: Install dependencies
         run: |
           yarn install -D
