@@ -15,12 +15,7 @@
     "ja-hiragana-keishikimeishi": true,
     "ja-unnatural-alphabet": true,
     "ng-word": true,
-    "no-dead-link": {
-        "ignore": [
-            "https://github.com/dev-hato/hato-bot/releases/latest",
-            "https://heroku.com/deploy"
-        ]
-    },
+    "no-dead-link": true,
     "no-mixed-zenkaku-and-hankaku-alphabet": true,
     "prefer-tari-tari": true,
     "preset-ja-spacing": true,
