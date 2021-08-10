@@ -17,7 +17,7 @@ jobs:
         id: get_go_version
         run: |
           image_name=hato_atama_server_build
-          docker build -t "${image_name}" --target build -f server/Dockerfile .
+          docker build --cache-from ghcr.io/dev-hato/hato-atama/server -t "${image_name}" --target build -f server/Dockerfile .
           go_version=$(docker run ${image_name} sh -c "go version | awk '{print \$3}' | sed -e 's/^go//g'")
           echo "Go version:" "${go_version}"
           echo "::set-output name=go_version::${go_version}"
