@@ -37,7 +37,7 @@
     ```
 1. `.git/hooks/pre-commit` に実行権限を付与する。
     ```sh
-    $ chmod +x .git/hooks/pre-commit
+    chmod +x .git/hooks/pre-commit
     ```
 
 ### 立ち上げ
