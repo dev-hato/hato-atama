@@ -26,13 +26,13 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: ${{steps.get_node_version.outputs.node_version}}
-      - name: Cache node modules frontend
+      - name: Cache node modules
         uses: actions/cache@v2
         with:
           path: ~/.npm
-          key: npm-cache-frontend-${{ hashFiles('**/frontend/package-lock.json') }}
+          key: npm-cache-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            npm-cache-frontend-
+            npm-cache-
       - name: npm install
         run: npm install
       # lintする
@@ -117,13 +117,13 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: ${{steps.get_node_version.outputs.node_version}}
-      - name: Cache node modules frontend
+      - name: Cache node modules
         uses: actions/cache@v2
         with:
           path: ~/.npm
-          key: npm-cache-frontend-${{ hashFiles('**/frontend/package-lock.json') }}
+          key: npm-cache-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            npm-cache-frontend-
+            npm-cache-
       - name: npm install
         run: npm install
       # textlintでformatする
