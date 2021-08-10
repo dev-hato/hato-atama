@@ -39,7 +39,7 @@ jobs:
       - name: Lint files
         id: lint
         run: |
-          result="$(find . -type f -name "*.md" -not -path "./node_modules/*" -print0 | xargs -0 npx textlint 2>&1)" || true
+          result="npx textlint $(find . -type f -name "*.md" -not -path "./node_modules/*" -print0)" || true
           echo "$result"
           result="${result//'%'/'%25'}"
           result="${result//$'\n'/'%0A'}"
@@ -130,7 +130,7 @@ jobs:
       - name: Format files
         id: format
         run: |
-          find . -type f -name "*.md" -not -path "./node_modules/*" -print0 | xargs -0 npx textlint --fix
+          npx textlint --fix $(find . -type f -name "*.md" -not -path "./node_modules/*" -print0)
         continue-on-error: true
       # 差分があったときは差分を出力する
       - name: Show diff
