@@ -157,7 +157,7 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            const HEAD_REF = process.env["HEAD_REF"];
+            const HEAD_REF = process.env["HEAD_REF"]
             const common_params = {
               owner: context.repo.owner,
               repo: context.repo.repo
@@ -205,8 +205,8 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            const HEAD_REF = process.env["HEAD_REF"];
-            const head_name = "fix-text-" + HEAD_REF;
+            const HEAD_REF = process.env["HEAD_REF"]
+            const head_name = "fix-text-" + HEAD_REF
             const common_params = {
               owner: context.repo.owner,
               repo: context.repo.repo
