@@ -157,13 +157,14 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
+            const HEAD_REF = process.env["HEAD_REF"];
             const common_params = {
               owner: context.repo.owner,
               repo: context.repo.repo
             }
             const pull_params = {
-              head: "dev-hato:fix-text-${HEAD_REF}",
-              base: "${HEAD_REF}",
+              head: "dev-hato:fix-text-" + HEAD_REF,
+              base: HEAD_REF,
               ...common_params
             }
             const pulls_list_params = {
@@ -204,14 +205,15 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            const head_name = "fix-text-${HEAD_REF}"
+            const HEAD_REF = process.env["HEAD_REF"];
+            const head_name = "fix-text-" + HEAD_REF;
             const common_params = {
               owner: context.repo.owner,
               repo: context.repo.repo
             }
             const pulls_list_params = {
               head: "dev-hato:" + head_name,
-              base: "${HEAD_REF}",
+              base: HEAD_REF,
               state: "open",
               ...common_params
             }
