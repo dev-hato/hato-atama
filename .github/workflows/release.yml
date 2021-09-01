@@ -100,7 +100,9 @@ jobs:
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v1
-      - run: echo "TAG_NAME=$(echo "${{github.head_ref}}" | sed -e "s:/:-:g")" >> "$GITHUB_ENV"
+      - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
+        env:
+          HEAD_REF: ${{github.head_ref}}
         if: ${{ github.event_name == 'pull_request' }}
       - run: echo 'TAG_NAME=latest' >> "$GITHUB_ENV"
         if: ${{ github.event_name == 'push' }}
@@ -137,7 +139,9 @@ jobs:
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v1
-      - run: echo "TAG_NAME=$(echo "${{github.head_ref}}" | sed -e "s:/:-:g")" >> "$GITHUB_ENV"
+      - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
+        env:
+          HEAD_REF: ${{github.head_ref}}
         if: ${{ github.event_name == 'pull_request' }}
       - run: echo 'TAG_NAME=latest' >> "$GITHUB_ENV"
         if: ${{ github.event_name == 'push' }}
@@ -218,7 +222,9 @@ jobs:
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v1
-      - run: echo "TAG_NAME=$(echo "${{github.head_ref}}" | sed -e "s:/:-:g")" >> "$GITHUB_ENV"
+      - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
+        env:
+          HEAD_REF: ${{github.head_ref}}
         if: ${{ github.event_name == 'pull_request' }}
       - run: echo 'TAG_NAME=latest' >> "$GITHUB_ENV"
         if: ${{ github.event_name == 'push' }}
