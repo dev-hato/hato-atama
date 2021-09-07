@@ -3,7 +3,6 @@ name: update package
 # npm installを実行し、package.jsonやpackage-lock.jsonに差分があればPRを作る
 on:
   pull_request:
-    branches: [ master ]
 
 jobs:
   update-package-frontend:
