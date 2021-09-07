@@ -6,7 +6,7 @@ COPY go.mod go.sum ./
 COPY server server
 
 WORKDIR /go/app/server
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o app && go get -u github.com/cosmtrek/air
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o app && go install github.com/cosmtrek/air@v1.27.3
 
 
 FROM scratch
