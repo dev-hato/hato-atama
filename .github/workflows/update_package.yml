@@ -17,6 +17,9 @@ jobs:
         working-directory: ${{ matrix.directory }}
     steps:
       - uses: actions/checkout@v2
+      - name: Get branch name
+        id: get_branch_name
+        run: echo "::set-output name=branch_name::$(echo '${{ matrix.directory }}' | sed -e 's:/:-:g')"
       - name: Get Node.js version
         id: get_node_version
         working-directory: frontend
@@ -33,9 +36,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.npm
-          key: npm-cache-${{ matrix.directory }}-${{ hashFiles('**/${{ matrix.directory }}/package-lock.json') }}
+          key: npm-cache-${{ steps.get_branch_name.outputs.branch_name }}-${{ hashFiles('**/${{ matrix.directory }}/package-lock.json') }}
           restore-keys: |
-            npm-cache-${{ matrix.directory }}-
+            npm-cache-${{ steps.get_branch_name.outputs.branch_name }}-
       - run: npm install
       # 差分があったときは差分を出力する
       - name: Show diff
@@ -53,7 +56,7 @@ jobs:
           git config user.email "hatohakaraage@example.com"
           git add -u
           git commit -m "鳩は唐揚げ！(自動で直してあげたよ！)"
-          git push -f https://${{github.actor}}:${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}.git "HEAD:refs/heads/fix-package-e2e-${HEAD_REF}"
+          git push -f https://${{github.actor}}:${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}.git "HEAD:refs/heads/fix-package-${{ steps.get_branch_name.outputs.branch_name }}-${HEAD_REF}"
       # pushしたブランチでPRを作る
       - name: Create PullRequest
         uses: actions/github-script@v4.1
@@ -69,7 +72,7 @@ jobs:
               repo: context.repo.repo
             }
             const pull_params = {
-              head: "dev-hato:fix-package-e2e-" + HEAD_REF,
+              head: "dev-hato:fix-package-${{ steps.get_branch_name.outputs.branch_name }}-" + HEAD_REF,
               base: HEAD_REF,
               ...common_params
             }
@@ -112,7 +115,7 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             const HEAD_REF = process.env["HEAD_REF"]
-            const head_name = "fix-package-e2e-" + HEAD_REF
+            const head_name = "fix-package-${{ steps.get_branch_name.outputs.branch_name }}-" + HEAD_REF
             const common_params = {
               owner: context.repo.owner,
               repo: context.repo.repo
