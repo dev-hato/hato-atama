@@ -176,8 +176,9 @@ jobs:
           docker build -t "${image_name}" --target build -f Dockerfile ..
           node_version=$(docker run ${image_name} sh -c "node --version | sed -e 's/^v//g'")
           echo "Node.js version:" "${node_version}"
+          echo "::set-output name=node_version::${node_version}"
       - name: Update version
-        run: echo "${node_version}" > .node-version
+        run: echo "${{steps.get_node_version.outputs.node_version}}" > .node-version
       # 差分があったときは差分を出力する
       - name: Show diff
         id: diff
