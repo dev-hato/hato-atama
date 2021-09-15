@@ -11,7 +11,7 @@ jobs:
       DOCKER_BUILDKIT: 1
     strategy:
       matrix:
-        directory: [ 'frontend', 'test/e2e' ]
+        directory: [ 'frontend', 'test/e2e', '.' ]
     defaults:
       run:
         working-directory: ${{ matrix.directory }}
@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Get branch name
         id: get_branch_name
-        run: echo "::set-output name=branch_name::$(echo '${{ matrix.directory }}' | sed -e 's:/:-:g')"
+        run: echo "::set-output name=branch_name::$(echo '${{ matrix.directory }}' | sed -e 's:/:-:g' | sed -e 's/\./root/g')"
       - name: Get Node.js version
         id: get_node_version
         run: |
@@ -156,7 +156,7 @@ jobs:
       DOCKER_BUILDKIT: 1
     strategy:
       matrix:
-        directory: [ 'frontend', 'test/e2e' ]
+        directory: [ 'frontend', 'test/e2e', '.' ]
     defaults:
       run:
         working-directory: ${{ matrix.directory }}
@@ -164,7 +164,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Get branch name
         id: get_branch_name
-        run: echo "::set-output name=branch_name::$(echo '${{ matrix.directory }}' | sed -e 's:/:-:g')"
+        run: echo "::set-output name=branch_name::$(echo '${{ matrix.directory }}' | sed -e 's:/:-:g' | sed -e 's/\./root/g')"
       - name: Get Node.js version
         id: get_node_version
         working-directory: frontend
