@@ -12,9 +12,9 @@ jobs:
     steps:
       - name: Check bot
         run: |
-          if("${{github.event.pull_request.user.login}}" === "dependabot[bot]") {
+          if ["${{github.event.pull_request.user.login}}" = "dependabot[bot]" ]; then
             exit 1
-          }
+          fi
 
   build-frontend:
     runs-on: ubuntu-latest
