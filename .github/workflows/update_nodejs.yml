@@ -7,8 +7,6 @@ jobs:
   # npm installを実行し、package.jsonやpackage-lock.jsonに差分があればPRを作る
   update-package:
     runs-on: ubuntu-latest
-    env:
-      DOCKER_BUILDKIT: 1
     strategy:
       matrix:
         directory: [ 'frontend', 'test/e2e', '.' ]

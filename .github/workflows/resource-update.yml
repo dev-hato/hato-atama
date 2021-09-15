@@ -11,8 +11,6 @@ on:
 jobs:
   update-frontend:
     runs-on: ubuntu-latest
-    env:
-      DOCKER_BUILDKIT: 1
     defaults:
       run:
         working-directory: frontend
@@ -49,8 +47,6 @@ jobs:
 
   update-test-e2e:
     runs-on: ubuntu-latest
-    env:
-      DOCKER_BUILDKIT: 1
     defaults:
       run:
         working-directory: test/e2e
