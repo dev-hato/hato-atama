@@ -22,7 +22,6 @@ jobs:
         run: echo "::set-output name=branch_name::$(echo '${{ matrix.directory }}' | sed -e 's:/:-:g')"
       - name: Get Node.js version
         id: get_node_version
-        working-directory: frontend
         run: |
           node_version=$(cat .node-version)
           echo "Node.js version:" "${node_version}"
