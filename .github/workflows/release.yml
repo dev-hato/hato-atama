@@ -221,6 +221,7 @@ jobs:
       COMPOSE_DOCKER_CLI_BUILD: 1
     permissions:
       packages: write
+    needs: check_bot
     steps:
       - uses: actions/checkout@v2
       - name: Login to GitHub Container Registry
