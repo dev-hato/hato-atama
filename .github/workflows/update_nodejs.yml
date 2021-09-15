@@ -22,11 +22,8 @@ jobs:
         run: echo "::set-output name=branch_name::$(echo '${{ matrix.directory }}' | sed -e 's:/:-:g')"
       - name: Get Node.js version
         id: get_node_version
-        working-directory: frontend
         run: |
-          image_name=hato_atama_frontend_build
-          docker build -t "${image_name}" --target build -f Dockerfile ..
-          node_version=$(docker run ${image_name} sh -c "node --version | sed -e 's/^v//g'")
+          node_version=$(cat .node-version)
           echo "Node.js version:" "${node_version}"
           echo "::set-output name=node_version::${node_version}"
       - uses: actions/setup-node@v2
