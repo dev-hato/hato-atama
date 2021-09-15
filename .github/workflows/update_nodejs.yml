@@ -11,7 +11,7 @@ jobs:
       DOCKER_BUILDKIT: 1
     strategy:
       matrix:
-        directory: [ 'frontend', 'test/e2e', './' ]
+        directory: [ 'frontend', 'test/e2e', '.' ]
     defaults:
       run:
         working-directory: ${{ matrix.directory }}
@@ -156,7 +156,7 @@ jobs:
       DOCKER_BUILDKIT: 1
     strategy:
       matrix:
-        directory: [ 'frontend', 'test/e2e', './' ]
+        directory: [ 'frontend', 'test/e2e', '.' ]
     defaults:
       run:
         working-directory: ${{ matrix.directory }}
