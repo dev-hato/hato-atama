@@ -45,5 +45,5 @@ jobs:
               return runs_res.data.workflow_runs.map(run => run.run_number)
             }))
             console.log(run_numbers)
-            return run_numbers.flat()
+            return run_numbers.flat().filter(Boolean)
       - run: echo "${{steps.get_run_numbers.outputs.result}}"
