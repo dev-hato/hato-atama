@@ -29,7 +29,7 @@ jobs:
             console.log("call actions.listRepoWorkflows:")
             console.log(common_params)
             const workflows_res = await github.actions.listRepoWorkflows(common_params)
-            const run_numbers = await (workflows_res.data.workflows.map(async workflow => {
+            const run_numbers = await workflows_res.data.workflows.map(async (workflow => {
               if (workflow.name !== 'release') {
                 return
               }
