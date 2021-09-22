@@ -22,7 +22,7 @@ jobs:
             console.log("call pulls.list:")
             console.log(list_workflow_runs_for_repo_params)
             github.actions.listWorkflowRunsForRepo(list_workflow_runs_for_repo_params).then(res => {
-              for (run of res.data.workfrow_runs) {
+              for (run of res.data.workflow_runs) {
                 console.log(run)
               }
             })
