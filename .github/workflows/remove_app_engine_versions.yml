@@ -29,9 +29,10 @@ jobs:
               repo: context.repo.repo
             }
             const running = 'running'
+            const retry_count = 10
             let result
 
-            for (const i = 0; i < 10; i++) {
+            for (const i = 0; i < retry_count; i++) {
               console.log("call actions.listRepoWorkflows:")
               console.log(common_params)
               const workflows_res = await github.actions.listRepoWorkflows(common_params)
@@ -58,7 +59,7 @@ jobs:
               }))
               result = run_numbers.flat().filter(Boolean)
 
-              if (!result.includes(running)) {
+              if (!result.includes(running) || i === retry_count - 1) {
                 break
               }
 
