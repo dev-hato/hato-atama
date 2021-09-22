@@ -46,4 +46,8 @@ jobs:
             }))
             console.log(run_numbers)
             return run_numbers.flat().filter(Boolean)
-      - run: echo "${{steps.get_run_numbers.outputs.result}}"
+      - name: Remove app engine environments
+        run: |
+          for run_number in $(echo "${{steps.get_run_numbers.outputs.result}}" | jq ".[]"); do
+            echo gcloud app versions delete --service=default v${run_number}
+          done
