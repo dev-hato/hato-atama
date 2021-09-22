@@ -71,6 +71,10 @@ jobs:
               setTimeout(() => console.log('retry'), sleep_seconds * 1000)
             }
 
+            if (result.includes(running)) {
+              core.setFailed('There are running runs.')
+            }
+
             return result
       - name: Remove app engine versions
         run: |
