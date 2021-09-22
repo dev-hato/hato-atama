@@ -1,10 +1,10 @@
-name: remove app engine environment
+name: Remove app engine versions
 
 on:
   pull_request:
 
 jobs:
-  remove_app_engine_environment:
+  remove_app_engine_versions:
     runs-on: ubuntu-latest
     steps:
       - name: Set up Cloud SDK
@@ -44,10 +44,10 @@ jobs:
               const runs_res = await github.actions.listWorkflowRuns(list_workflow_runs_params)
               return runs_res.data.workflow_runs.map(run => run.run_number)
             }))
-            console.log(run_numbers)
             return run_numbers.flat().filter(Boolean)
-      - name: Remove app engine environments
+      - name: Remove app engine versions
         run: |
           for run_number in $(echo "${{steps.get_run_numbers.outputs.result}}" | jq ".[]"); do
-            echo gcloud app versions delete --service=default v${run_number}
+            echo "Delete app engine version v${i}"
+            gcloud app versions delete --service=default v${run_number}
           done
