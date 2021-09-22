@@ -29,7 +29,7 @@ jobs:
             console.log("call actions.listRepoWorkflows:")
             console.log(common_params)
             const workflows_res = await github.actions.listRepoWorkflows(common_params)
-            const run_numbers = await workflows_res.data.workflows.map(async workflow => {
+            const run_numbers = await (workflows_res.data.workflows.map(async workflow => {
               if (workflow.name !== 'release') {
                 return
               }
@@ -43,7 +43,7 @@ jobs:
               console.log(list_workflow_runs_params)
               const runs_res = await github.actions.listWorkflowRuns(list_workflow_runs_params)
               return runs_res.data.workflow_runs.map(run => run.run_number)
-            })
+            }))
             console.log(run_numbers)
             return run_numbers.flat()
       - run: echo "${{steps.get_run_numbers.outputs.result}}"
