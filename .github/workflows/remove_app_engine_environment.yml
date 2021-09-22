@@ -14,15 +14,27 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             const HEAD_REF = process.env["HEAD_REF"]
-            const list_workflow_runs_for_repo_params = {
+            const common_params = {
               owner: context.repo.owner,
-              repo: context.repo.repo,
-              branch: HEAD_REF
+              repo: context.repo.repo
             }
-            console.log("call pulls.list:")
-            console.log(list_workflow_runs_for_repo_params)
-            github.actions.listWorkflowRunsForRepo(list_workflow_runs_for_repo_params).then(res => {
-              for (run of res.data.workflow_runs) {
-                console.log(run)
+            console.log("call actions.listRepoWorkflows:")
+            console.log(common_params)
+            github.actions.listRepoWorkflows(common_params).then(workflows_res => {
+              for (const workflow of workflows_res.data.workflows) {
+                if (workflow.name === 'release') {
+                  const list_workflow_runs_params = {
+                    workflow_id: workflow.id,
+                    branch: HEAD_REF,
+                    ...common_params
+                  }
+                  console.log("call actions.listWorkflowRuns:")
+                  console.log(list_workflow_runs_params)
+                  github.actions.listWorkflowRuns(list_workflow_runs_params).then(runs_res => {
+                    for (run of runs_res.data.workflow_runs) {
+                      console.log(run)
+                    }
+                  })
+                }
               }
             })
