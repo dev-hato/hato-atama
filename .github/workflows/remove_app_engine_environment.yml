@@ -32,7 +32,7 @@ jobs:
                   console.log(list_workflow_runs_params)
                   github.actions.listWorkflowRuns(list_workflow_runs_params).then(runs_res => {
                     for (run of runs_res.data.workflow_runs) {
-                      console.log(run)
+                      console.log(run.run_number)
                     }
                   })
                 }
