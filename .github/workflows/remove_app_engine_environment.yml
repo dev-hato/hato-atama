@@ -2,6 +2,8 @@ name: Remove app engine versions
 
 on:
   pull_request:
+    types:
+      - closed
 
 jobs:
   remove_app_engine_versions:
@@ -48,6 +50,5 @@ jobs:
       - name: Remove app engine versions
         run: |
           for run_number in $(echo "${{steps.get_run_numbers.outputs.result}}" | jq ".[]"); do
-            echo "Delete app engine version v${i}"
             gcloud app versions delete --service=default v${run_number}
           done
