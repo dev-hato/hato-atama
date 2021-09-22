@@ -1,4 +1,4 @@
-name: Remove app engine versions
+name: remove-app-engine-versions
 
 on:
   pull_request:
