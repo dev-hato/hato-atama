@@ -32,7 +32,7 @@ jobs:
             const retry_count = 10
             let result
 
-            for (const i = 0; i < retry_count; i++) {
+            for (let i = 0; i < retry_count; i++) {
               console.log("call actions.listRepoWorkflows:")
               console.log(common_params)
               const workflows_res = await github.actions.listRepoWorkflows(common_params)
