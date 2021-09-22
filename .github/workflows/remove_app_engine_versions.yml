@@ -68,7 +68,7 @@ jobs:
               // 参考: https://aws.typepad.com/sajp/2015/03/backoff.html
               const sleep_seconds = Math.random() * (Math.pow(2, i + 1) * 100)
               console.log(`sleep ${sleep_seconds}s`)
-              setTimeout(() => console.log('retry'), sleep_seconds * 1000)
+              await new Promise(r => setTimeout(r, sleep_seconds * 1000))
             }
 
             if (result.includes(running)) {
