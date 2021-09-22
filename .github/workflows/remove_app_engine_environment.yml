@@ -42,9 +42,8 @@ jobs:
               console.log("call actions.listWorkflowRuns:")
               console.log(list_workflow_runs_params)
               const runs_res = await github.actions.listWorkflowRuns(list_workflow_runs_params)
-              const ress = runs_res.data.workflow_runs.map(run => run.run_number)
-              console.log(ress)
-              return ress
+              return runs_res.data.workflow_runs.map(run => run.run_number)
             })
+            console.log(run_numbers)
             return run_numbers.flat()
       - run: echo "${{steps.get_run_numbers.outputs.result}}"
