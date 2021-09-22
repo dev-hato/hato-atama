@@ -1,0 +1,26 @@
+name: remove app engine environment
+
+on:
+  pull_request:
+
+jobs:
+  remove_app_engine_environment:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v4.1
+        env:
+          HEAD_REF: ${{github.event.pull_request.head.ref}}
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const HEAD_REF = process.env["HEAD_REF"]
+            const list_workflow_runs_for_repo_params = {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              branch: HEAD_REF
+            }
+            console.log("call pulls.list:")
+            console.log(list_workflow_runs_for_repo_params)
+            github.actions.listWorkflowRunsForRepo(list_workflow_runs_for_repo_params).then(res => {
+              console.log(res)
+            })
