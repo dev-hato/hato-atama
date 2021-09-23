@@ -286,11 +286,7 @@ jobs:
                 console.log("call actions.listWorkflowRuns:")
                 console.log(list_workflow_runs_params)
                 const runs_res = await github.actions.listWorkflowRuns(list_workflow_runs_params)
-                return runs_res.data.workflow_runs.map(run => {
-                  if (${{github.run_number}} <= run.run_number) {
-                    return
-                  }
-
+                return runs_res.data.workflow_runs.filter(run => run.run_number < ${{github.run_number}}).map(run => {
                   if (run.status !== 'completed') {
                     return running
                   }
