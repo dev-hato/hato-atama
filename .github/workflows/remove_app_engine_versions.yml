@@ -6,7 +6,7 @@ on:
       - closed
 
 jobs:
-  remove_app_engine_versions:
+  remove-app-engine-versions:
     runs-on: ubuntu-latest
     steps:
       - name: Set up Cloud SDK

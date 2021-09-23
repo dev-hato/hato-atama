@@ -1,4 +1,4 @@
-name: pr-textlint
+name: textlint
 
 # pull_requestで何かあった時に起動する
 on:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   # textlintをかけ、結果をPRにコメントとして表示する。
-  lint:
+  lint-textlint:
     runs-on: ubuntu-latest
 
     steps:
@@ -93,7 +93,7 @@ jobs:
         run: exit 1
 
   # PRが来たらtextlintをかけてみて、差分があればPRを作って、エラーで落ちるjob
-  format:
+  format-textlint:
     runs-on: ubuntu-latest
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
 
