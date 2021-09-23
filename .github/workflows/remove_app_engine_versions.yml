@@ -6,7 +6,7 @@ on:
       - closed
 
 jobs:
-  remove_app_engine_versions:
+  remove-app-engine-versions:
     runs-on: ubuntu-latest
     steps:
       - name: Set up Cloud SDK
@@ -36,11 +36,7 @@ jobs:
               console.log("call actions.listRepoWorkflows:")
               console.log(common_params)
               const workflows_res = await github.actions.listRepoWorkflows(common_params)
-              const run_numbers = await Promise.all(workflows_res.data.workflows.map(async workflow => {
-                if (workflow.name !== 'release') {
-                  return
-                }
-
+              const run_numbers = await Promise.all(workflows_res.data.workflows.filter(workflow => workflow.name === 'release').map(async workflow => {
                 const list_workflow_runs_params = {
                   workflow_id: workflow.id,
                   branch: HEAD_REF,
