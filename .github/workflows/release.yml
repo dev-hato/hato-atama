@@ -70,7 +70,7 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            github.issues.createComment({
+            await github.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -270,19 +270,17 @@ jobs:
             let result
 
             for (let i = 0; i < retry_count; i++) {
-              console.log("call actions.listRepoWorkflows:")
-              console.log(common_params)
-              const workflows_res = await github.actions.listRepoWorkflows(common_params)
-              const run_numbers = await Promise.all(workflows_res.data.workflows.filter(workflow => workflow.name === 'release').map(async workflow => {
+              console.log("call actions.listRepoWorkflows:", common_params)
+              const workflows = (await github.actions.listRepoWorkflows(common_params)).data
+              const run_numbers = await Promise.all(workflows.workflows.filter(workflow => workflow.name === 'release').map(async workflow => {
                 const list_workflow_runs_params = {
                   workflow_id: workflow.id,
                   branch: HEAD_REF,
                   ...common_params
                 }
-                console.log("call actions.listWorkflowRuns:")
-                console.log(list_workflow_runs_params)
-                const runs_res = await github.actions.listWorkflowRuns(list_workflow_runs_params)
-                return runs_res.data.workflow_runs.filter(run => run.run_number < ${{github.run_number}}).map(run => {
+                console.log("call actions.listWorkflowRuns:", list_workflow_runs_params)
+                const runs = (await github.actions.listWorkflowRuns(list_workflow_runs_params)).data
+                return runs.workflow_runs.filter(run => run.run_number < ${{github.run_number}}).map(run => {
                   if (run.status !== 'completed') {
                     return running
                   }
