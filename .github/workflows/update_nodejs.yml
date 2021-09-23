@@ -227,7 +227,7 @@ jobs:
             console.log(pulls_create_params)
             const create_res = await github.pulls.create(pulls_create_params)
 
-            if("${{github.event.pull_request.user.login}}" === "dependabot[bot]") {
+            if ("${{github.event.pull_request.user.login}}" === "dependabot[bot]") {
               return
             }
 
