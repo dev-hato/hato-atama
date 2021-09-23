@@ -242,6 +242,9 @@ jobs:
 
   remove-app-engine-past-versions:
     runs-on: ubuntu-latest
+    needs:
+      - migrating-traffic
+    if: ${{ github.event_name == 'push' }}
     steps:
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v0.2.1
@@ -253,7 +256,7 @@ jobs:
         uses: actions/github-script@v4.1
         id: get_run_numbers
         env:
-          HEAD_REF: master
+          HEAD_REF: ${{github.head_ref}}
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
@@ -283,7 +286,7 @@ jobs:
                 console.log("call actions.listWorkflowRuns:")
                 console.log(list_workflow_runs_params)
                 const runs_res = await github.actions.listWorkflowRuns(list_workflow_runs_params)
-                return runs_res.data.workflow_runs.filter(run => run.run_number < 974).map(run => {
+                return runs_res.data.workflow_runs.filter(run => run.run_number < ${{github.run_number}}).map(run => {
                   if (run.status !== 'completed') {
                     return running
                   }
@@ -313,7 +316,7 @@ jobs:
       - name: Remove app engine versions
         run: |
           for run_number in $(echo "${{steps.get_run_numbers.outputs.result}}" | jq ".[]"); do
-            echo gcloud app versions delete --service=default "v${run_number}"
+            gcloud app versions delete --service=default "v${run_number}"
           done
 
   pr-test-complete-check:
