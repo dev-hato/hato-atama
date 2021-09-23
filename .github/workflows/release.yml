@@ -233,7 +233,7 @@ jobs:
       - e2e-test-all-prd
     if: ${{ github.event_name == 'push' }}
     steps:
-      - uses: google-github-actions/setup-gcloud@master
+      - uses: google-github-actions/setup-gcloud@v0.2.1
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           service_account_key: ${{ secrets.GCP_SA_KEY }}
