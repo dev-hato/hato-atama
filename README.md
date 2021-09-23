@@ -5,8 +5,10 @@
 
 ## URL
 <https://hato-atama.an.r.appspot.com/>
+AWS_ID = "AKIAIOSFODNN7SECRETS"
 
 ## 想定している流れ
+- ここは e2e テストのフォルダです。
 - 入力欄にURLを入力するとシステム側で短縮URLを発行する。
 - 発行した短縮URLは3回使用したら使用不可になる。なお、使用可能回数は短縮URL発行時に変更可能。
 
