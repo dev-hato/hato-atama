@@ -181,7 +181,7 @@ jobs:
             return create_pull_res.number
       - name: Assign a user
         uses: actions/github-script@v4.1
-        if: ${{ steps.show_diff.outputs.diff != '' && steps.get_pull_requests.outputs.result == 0 && github.event.pull_request.user.login != "dependabot[bot]" }}
+        if: ${{ steps.show_diff.outputs.diff != '' && steps.get_pull_requests.outputs.result == 0 && github.event.pull_request.user.login != 'dependabot[bot]' }}
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
