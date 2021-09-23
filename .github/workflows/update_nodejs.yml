@@ -1,4 +1,4 @@
-name: update nodejs
+name: update-nodejs
 
 on:
   pull_request:
