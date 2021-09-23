@@ -256,7 +256,7 @@ jobs:
         uses: actions/github-script@v4.1
         id: get_run_numbers
         env:
-          HEAD_REF: ${{github.head_ref}}
+          HEAD_REF: master
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
