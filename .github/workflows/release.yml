@@ -240,6 +240,81 @@ jobs:
           export_default_credentials: true
       - run: gcloud app services set-traffic default --splits "v${GITHUB_RUN_NUMBER}=1"
 
+  remove-app-engine-past-versions:
+    runs-on: ubuntu-latest
+    needs:
+      - migrating-traffic
+    if: ${{ github.event_name == 'push' }}
+    steps:
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0.2.1
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+      - name: Get run numbers
+        uses: actions/github-script@v4.1
+        id: get_run_numbers
+        env:
+          HEAD_REF: master
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const HEAD_REF = process.env["HEAD_REF"]
+            const common_params = {
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            }
+            const running = 'running'
+            const retry_count = 10
+            let result
+
+            for (let i = 0; i < retry_count; i++) {
+              console.log("call actions.listRepoWorkflows:")
+              console.log(common_params)
+              const workflows_res = await github.actions.listRepoWorkflows(common_params)
+              const run_numbers = await Promise.all(workflows_res.data.workflows.filter(workflow => workflow.name === 'release').map(async workflow => {
+                const list_workflow_runs_params = {
+                  workflow_id: workflow.id,
+                  branch: HEAD_REF,
+                  ...common_params
+                }
+                console.log("call actions.listWorkflowRuns:")
+                console.log(list_workflow_runs_params)
+                const runs_res = await github.actions.listWorkflowRuns(list_workflow_runs_params)
+                return runs_res.data.workflow_runs.filter(run => run.run_number < ${{github.run_number}}).map(run => {
+                  if (run.status !== 'completed') {
+                    return running
+                  }
+
+                  return run.run_number
+                })
+              }))
+              result = run_numbers.flat().filter(Boolean)
+
+              if (!result.includes(running) || i === retry_count - 1) {
+                break
+              }
+
+              // 完了していないrunがあった場合はリトライ
+              // sleepする時間は exponential backoff and jitter で算出している
+              // 参考: https://aws.typepad.com/sajp/2015/03/backoff.html
+              const sleep_seconds = Math.random() * (Math.pow(2, i + 1) * 100)
+              console.log(`sleep ${sleep_seconds}s`)
+              await new Promise(r => setTimeout(r, sleep_seconds * 1000))
+            }
+
+            if (result.includes(running)) {
+              core.setFailed('There are running runs.')
+            }
+
+            return result
+      - name: Remove app engine versions
+        run: |
+          for run_number in $(echo "${{steps.get_run_numbers.outputs.result}}" | jq ".[]"); do
+            gcloud app versions delete --service=default "v${run_number}"
+          done
+
   pr-test-complete-check:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'pull_request' }}
@@ -266,7 +341,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'push' }}
     needs:
-      - migrating-traffic
+      - remove-app-engine-past-versions
       - docker-compose-build
     steps:
       - run: exit 0
