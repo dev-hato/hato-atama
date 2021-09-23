@@ -256,7 +256,7 @@ jobs:
         uses: actions/github-script@v4.1
         id: get_run_numbers
         env:
-          HEAD_REF: ${{github.head_ref}}
+          HEAD_REF: master
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
@@ -273,11 +273,7 @@ jobs:
               console.log("call actions.listRepoWorkflows:")
               console.log(common_params)
               const workflows_res = await github.actions.listRepoWorkflows(common_params)
-              const run_numbers = await Promise.all(workflows_res.data.workflows.map(async workflow => {
-                if (workflow.name !== 'release') {
-                  return
-                }
-
+              const run_numbers = await Promise.all(workflows_res.data.workflows.filter(workflow => workflow.name === 'release').map(async workflow => {
                 const list_workflow_runs_params = {
                   workflow_id: workflow.id,
                   branch: HEAD_REF,
@@ -286,11 +282,7 @@ jobs:
                 console.log("call actions.listWorkflowRuns:")
                 console.log(list_workflow_runs_params)
                 const runs_res = await github.actions.listWorkflowRuns(list_workflow_runs_params)
-                return runs_res.data.workflow_runs.map(run => {
-                  if (${{github.run_number}} <= run.run_number) {
-                    return
-                  }
-
+                return runs_res.data.workflow_runs.filter(run => run.run_number < ${{github.run_number}}).map(run => {
                   if (run.status !== 'completed') {
                     return running
                   }
