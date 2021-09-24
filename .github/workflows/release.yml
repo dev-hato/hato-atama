@@ -259,6 +259,7 @@ jobs:
           HEAD_REF: master
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
+          result-encoding: string
           script: |
             const HEAD_REF = process.env["HEAD_REF"]
             const common_params = {
@@ -285,7 +286,7 @@ jobs:
                     return running
                   }
 
-                  return run.run_number
+                  return `v${run.run_number}`
                 })
               }))
               result = run_numbers.flat().filter(Boolean)
@@ -306,12 +307,9 @@ jobs:
               core.setFailed('There are running runs.')
             }
 
-            return result
+            return result.join(' ')
       - name: Remove app engine versions
-        run: |
-          for run_number in $(echo "${{steps.get_run_numbers.outputs.result}}" | jq ".[]"); do
-            gcloud app versions delete --service=default "v${run_number}"
-          done
+        run: gcloud app versions delete --service=default ${{steps.get_run_numbers.outputs.result}}
 
   pr-test-complete-check:
     runs-on: ubuntu-latest
