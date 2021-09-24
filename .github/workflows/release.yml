@@ -308,10 +308,7 @@ jobs:
 
             return result
       - name: Remove app engine versions
-        run: |
-          for run_number in $(echo "${{steps.get_run_numbers.outputs.result}}" | jq ".[]"); do
-            gcloud app versions delete --service=default "v${run_number}"
-          done
+        run: gcloud app versions delete --service=default "$(echo '${{steps.get_run_numbers.outputs.result}}' | jq '.[]' | sed -e 's/^/v/g' | tr '\n' ' ')"
 
   pr-test-complete-check:
     runs-on: ubuntu-latest
