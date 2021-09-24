@@ -30,6 +30,23 @@ jobs:
             const retry_count = 10
             let result
 
+            const pulls_list_params = {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              head: "dev-hato:fix-format-" + HEAD_REF,
+              base: HEAD_REF,
+              state: "open"
+            }
+            const pulls = await github.paginate(github.pulls.list, pulls_list_params)
+            console.log(pulls)
+            const issues_listComments_params = {
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            }
+            const issue_comments = await github.paginate(github.issues.listComments, issues_listComments_params)
+            console.log(issue_comments)
+
             for (let i = 0; i < retry_count; i++) {
               console.log("call actions.listRepoWorkflows:", common_params)
               const workflows = await github.paginate(github.actions.listRepoWorkflows, common_params)
