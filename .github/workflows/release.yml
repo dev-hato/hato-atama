@@ -66,7 +66,7 @@ jobs:
     needs: deploy-app-engine
     if: ${{ github.event_name == 'pull_request' }}
     steps:
-      - uses: actions/github-script@v4.1
+      - uses: actions/github-script@v5
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
@@ -253,7 +253,7 @@ jobs:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
       - name: Get run numbers
-        uses: actions/github-script@v4.1
+        uses: actions/github-script@v5
         id: get_run_numbers
         env:
           HEAD_REF: master
