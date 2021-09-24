@@ -130,7 +130,7 @@ jobs:
               ...common_params
             }
             console.log("call pulls.list:",pulls_list_params)
-            const pulls = await github.paginate(github.pulls.list, pulls_list_params)
+            const pulls = await github.paginate(github.rest.pulls.list, pulls_list_params)
 
             for (const pull of pulls) {
               const pulls_update_params = {
@@ -140,13 +140,13 @@ jobs:
               }
               console.log("call pulls.update:")
               console.log(pulls_update_params)
-              await github.pulls.update(pulls_update_params)
+              await github.rest.pulls.update(pulls_update_params)
               const git_deleteRef_params = {
                 ref: "heads/" + head_name,
                 ...common_params
               }
               console.log("call git.deleteRef:", git_deleteRef_params)
-              await github.git.deleteRef(git_deleteRef_params)
+              await github.rest.git.deleteRef(git_deleteRef_params)
             }
       - name: Exit
         if: ${{ steps.diff.outputs.result != '' }}
@@ -208,7 +208,7 @@ jobs:
               state: "open"
             }
             console.log("call pulls.list:", pulls_list_params)
-            const pulls = await github.paginate(github.pulls.list, pulls_list_params)
+            const pulls = await github.paginate(github.rest.pulls.list, pulls_list_params)
             return pulls.length
       # pushしたブランチでPRを作る
       - name: Create PullRequest
@@ -230,7 +230,7 @@ jobs:
               body: "鳩の唐揚げおいしい！😋😋😋 #${{github.event.pull_request.number}}"
             }
             console.log("call pulls.create:", pulls_create_params)
-            const create_pull_res = (await github.pulls.create(pulls_create_params)).data
+            const create_pull_res = (await github.rest.pulls.create(pulls_create_params)).data
             return create_pull_res.number
       - name: Assign a user
         uses: actions/github-script@v5
@@ -245,7 +245,7 @@ jobs:
               assignees: ["${{github.event.pull_request.user.login}}"]
             }
             console.log("call issues.addAssignees:", issues_add_assignees_params)
-            await github.issues.addAssignees(issues_add_assignees_params)
+            await github.rest.issues.addAssignees(issues_add_assignees_params)
       # 既にformat修正のPRがある状態で、手動でformatを修正した場合、format修正のPRを閉じる
       - name: Close PullRequest
         uses: actions/github-script@v5
@@ -268,7 +268,7 @@ jobs:
               ...common_params
             }
             console.log("call pulls.list:", pulls_list_params)
-            const pulls = await github.paginate(github.pulls.list, pulls_list_params)
+            const pulls = await github.paginate(github.rest.pulls.list, pulls_list_params)
 
             for (const pull of pulls) {
               const pulls_update_params = {
@@ -277,13 +277,13 @@ jobs:
                 ...common_params
               }
               console.log("call pulls.update:", pulls_update_params)
-              await github.pulls.update(pulls_update_params)
+              await github.rest.pulls.update(pulls_update_params)
               const git_deleteRef_params = {
                 ref: "heads/" + head_name,
                 ...common_params
               }
               console.log("call git.deleteRef:", git_deleteRef_params)
-              await github.git.deleteRef(git_deleteRef_params)
+              await github.rest.git.deleteRef(git_deleteRef_params)
             }
       - name: Exit
         if: ${{ steps.diff.outputs.result != '' }}
