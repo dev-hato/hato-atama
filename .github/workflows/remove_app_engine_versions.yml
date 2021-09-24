@@ -35,7 +35,7 @@ jobs:
             for (let i = 0; i < retry_count; i++) {
               console.log("call actions.listRepoWorkflows:", common_params)
               const workflows = await github.paginate(github.actions.listRepoWorkflows, common_params)
-              const run_numbers = await Promise.all(workflows.workflows.filter(workflow => workflow.name === 'release').map(async workflow => {
+              const run_numbers = await Promise.all(workflows.filter(workflow => workflow.name === 'release').map(async workflow => {
                 const list_workflow_runs_params = {
                   workflow_id: workflow.id,
                   branch: HEAD_REF,
@@ -43,7 +43,7 @@ jobs:
                 }
                 console.log("call actions.listWorkflowRuns:", list_workflow_runs_params)
                 const runs = await github.paginate(github.actions.listWorkflowRuns, list_workflow_runs_params)
-                return runs.workflow_runs.map(run => {
+                return runs.map(run => {
                   if (run.status !== 'completed') {
                     return running
                   }
