@@ -47,7 +47,7 @@ jobs:
                     return running
                   }
 
-                  return "v${run.run_number}"
+                  return `v${run.run_number}`
                 })
               }))
               result = run_numbers.flat().filter(Boolean)
