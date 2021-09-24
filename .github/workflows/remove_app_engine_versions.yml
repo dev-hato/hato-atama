@@ -2,8 +2,6 @@ name: remove-app-engine-versions
 
 on:
   pull_request:
-    types:
-      - closed
 
 jobs:
   remove-app-engine-versions:
@@ -71,4 +69,4 @@ jobs:
 
             return result
       - name: Remove app engine versions
-        run: gcloud app versions delete --service=default "$(echo '${{steps.get_run_numbers.outputs.result}}' | jq '.[]' | sed -e 's/^/v/g' | tr '\n' ' ')"
+        run: echo gcloud app versions delete --service=default "$(echo '${{steps.get_run_numbers.outputs.result}}' | jq '.[]' | sed -e 's/^/v/g' | tr '\n' ' ')"
