@@ -2,8 +2,6 @@ name: remove-app-engine-versions
 
 on:
   pull_request:
-    types:
-      - closed
 
 jobs:
   remove-app-engine-versions:
@@ -35,6 +33,7 @@ jobs:
             for (let i = 0; i < retry_count; i++) {
               console.log("call actions.listRepoWorkflows:", common_params)
               const workflows = await github.paginate(github.actions.listRepoWorkflows, common_params)
+              console.log(workflows)
               const run_numbers = await Promise.all(workflows.workflows.filter(workflow => workflow.name === 'release').map(async workflow => {
                 const list_workflow_runs_params = {
                   workflow_id: workflow.id,
@@ -73,5 +72,5 @@ jobs:
       - name: Remove app engine versions
         run: |
           for run_number in $(echo "${{steps.get_run_numbers.outputs.result}}" | jq ".[]"); do
-            gcloud app versions delete --service=default "v${run_number}"
+            echo gcloud app versions delete --service=default "v${run_number}"
           done
