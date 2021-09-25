@@ -66,11 +66,11 @@ jobs:
     needs: deploy-app-engine
     if: ${{ github.event_name == 'pull_request' }}
     steps:
-      - uses: actions/github-script@v4.1
+      - uses: actions/github-script@v5
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            await github.issues.createComment({
+            await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -253,7 +253,7 @@ jobs:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
       - name: Get run numbers
-        uses: actions/github-script@v4.1
+        uses: actions/github-script@v5
         id: get_run_numbers
         env:
           HEAD_REF: master
@@ -272,7 +272,7 @@ jobs:
 
             for (let i = 0; i < retry_count; i++) {
               console.log("call actions.listRepoWorkflows:", common_params)
-              const workflows = await github.paginate(github.actions.listRepoWorkflows, common_params)
+              const workflows = await github.paginate(github.rest.actions.listRepoWorkflows, common_params)
               const run_numbers = await Promise.all(workflows.filter(workflow => workflow.name === 'release').map(async workflow => {
                 const list_workflow_runs_params = {
                   workflow_id: workflow.id,
@@ -280,7 +280,7 @@ jobs:
                   ...common_params
                 }
                 console.log("call actions.listWorkflowRuns:", list_workflow_runs_params)
-                const runs = await github.paginate(github.actions.listWorkflowRuns, list_workflow_runs_params)
+                const runs = await github.paginate(github.rest.actions.listWorkflowRuns, list_workflow_runs_params)
                 return runs.filter(run => run.run_number < ${{github.run_number}}).map(run => {
                   if (run.status !== 'completed') {
                     return running
