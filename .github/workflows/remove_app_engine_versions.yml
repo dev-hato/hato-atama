@@ -72,4 +72,5 @@ jobs:
 
             return result.join(' ')
       - name: Remove app engine versions
+        if: ${{ steps.get_run_numbers.outputs.result != '' }}
         run: gcloud app versions delete --service=default ${{steps.get_run_numbers.outputs.result}}
