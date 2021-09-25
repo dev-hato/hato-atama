@@ -16,7 +16,7 @@ jobs:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
       - name: Get run numbers
-        uses: actions/github-script@v4.1
+        uses: actions/github-script@v5
         id: get_run_numbers
         env:
           HEAD_REF: ${{github.event.pull_request.head.ref}}
