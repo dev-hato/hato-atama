@@ -6,6 +6,6 @@ require (
 	cloud.google.com/go/datastore v1.6.0
 	github.com/go-playground/validator/v10 v10.9.0
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
-	github.com/labstack/echo/v4 v4.6.0
+	github.com/labstack/echo/v4 v4.6.1
 	golang.org/x/sys v0.0.0-20210925032602-92d5a993a665 // indirect
 )
