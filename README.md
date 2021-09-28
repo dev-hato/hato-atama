@@ -12,33 +12,7 @@
 
 ## 開発環境
 ### 設定
-誤ってクレデンシャルをコミットしないよう、以下のhookを設定する。
-
-1. 以下のスクリプトを `.git/hooks/pre-commit` として保存する。
-    ```sh
-    #!/bin/bash
-
-    source `dirname ${0}`/_local-hook-exec
-    declare scriptDir=$(cd $(dirname $0);pwd)
-    declare parentDir="$(dirname "${scriptDir}")"
-    declare FILES=$(git diff --cached --name-only --diff-filter=ACMR | sed 's| |\\ |g')
-    [ -z "$FILES" ] && exit 0
-    echo "  ▶ Check credentials by secretlint"
-    npm install
-    # Secretlint all selected files
-    echo "$FILES" | xargs npx secretlint --maskSecrets
-    RET=$?
-    if [ $RET -eq 0 ] ;then
-        exit 0
-    else
-        exit 1
-    fi
-    EOF
-    ```
-1. `.git/hooks/pre-commit` に実行権限を付与する。
-    ```sh
-    chmod +x .git/hooks/pre-commit
-    ```
+誤ってクレデンシャルをコミットしないよう、https://pre-commit.com/ の手順に従って `pre-commit` をインストールする。
 
 ### 立ち上げ
 #### 編集するとhot reloadが走る、開発に適したバージョン
