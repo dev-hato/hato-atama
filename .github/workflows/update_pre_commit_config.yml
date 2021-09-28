@@ -44,7 +44,7 @@ jobs:
       - name: Show diff
         id: diff
         run: |
-          result=$(git diff)
+          result=$(git diff .pre-commit-config.yaml)
           echo "::set-output name=result::$result"
       # 差分があったときは、コミットを作りpushする
       - name: Push
