@@ -1,6 +1,3 @@
-# The revision doesn't get updated manually
-# check this https://github.com/zricethezav/gitleaks/releases
-# to see if there are newer versions
 repos:
   - repo: https://github.com/zricethezav/gitleaks
     rev: v7.6.1
