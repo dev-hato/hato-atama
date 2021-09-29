@@ -12,7 +12,8 @@
 
 ## 開発環境
 ### 設定
-誤ってクレデンシャルをコミットしないよう、 <https://pre-commit.com/> の手順に従って `pre-commit` をインストールする。
+<https://pre-commit.com/> の手順に従って `pre-commit` をインストールする。  
+これにより、[.pre-commit-config.yaml](.pre-commit-config.yaml)の設定に基づいて、コミット時にクレデンシャルが含まれていないかの検査が行われるようになる。
 
 ### 立ち上げ
 #### 編集するとhot reloadが走る、開発に適したバージョン
