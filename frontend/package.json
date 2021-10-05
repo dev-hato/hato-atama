@@ -20,7 +20,6 @@
   "license": "ISC",
   "devDependencies": {
     "browserslist": "^4.17.3",
-    "caniuse-lite": "^1.0.30001260",
     "clean-webpack-plugin": "^4.0.0",
     "elm-webpack-loader": "^8.0.0",
     "html-loader": "^2.1.2",
