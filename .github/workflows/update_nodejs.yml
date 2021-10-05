@@ -34,7 +34,9 @@ jobs:
           key: npm-cache-${{ steps.get_branch_name.outputs.branch_name }}-${{ hashFiles('**/${{ matrix.directory }}/package-lock.json') }}
           restore-keys: |
             npm-cache-${{ steps.get_branch_name.outputs.branch_name }}-
-      - run: npm install
+      - run: |
+          npm install
+          npx browserslist@latest --update-db
       # 差分があったときは差分を出力する
       - name: Show diff
         id: diff
