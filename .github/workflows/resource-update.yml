@@ -37,7 +37,7 @@ jobs:
         with:
           token: ${{secrets.GITHUB_TOKEN}}
           commit-message: Update frontend
-          committer: GitHub <noreply@github.com>
+          committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
           signoff: false
           branch: ${{ github.event.inputs.base-branch-name }}-update-frontend
@@ -76,7 +76,7 @@ jobs:
         with:
           token: ${{secrets.GITHUB_TOKEN}}
           commit-message: Update test/e2e
-          committer: GitHub <noreply@github.com>
+          committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
           signoff: false
           branch: ${{ github.event.inputs.base-branch-name }}-update-test-e2e
@@ -117,7 +117,7 @@ jobs:
         with:
           token: ${{secrets.GITHUB_TOKEN}}
           commit-message: Update go
-          committer: GitHub <noreply@github.com>
+          committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
           signoff: false
           branch: ${{ github.event.inputs.base-branch-name }}-update-go
