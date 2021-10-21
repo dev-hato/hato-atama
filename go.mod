@@ -7,5 +7,5 @@ require (
 	github.com/go-playground/validator/v10 v10.9.0
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/labstack/echo/v4 v4.6.1
-	golang.org/x/sys v0.0.0-20211019181941-9d821ace8654 // indirect
+	golang.org/x/sys v0.0.0-20211020174200-9d6173849985 // indirect
 )
