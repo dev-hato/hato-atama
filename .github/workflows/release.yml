@@ -77,9 +77,14 @@ jobs:
           service_account: 'actions-deploy@hato-atama.iam.gserviceaccount.com'
       - id: 'gcloud'
         name: 'gcloud'
-        run: |-
-          gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
-          gcloud app deploy --quiet app.yaml --version "v${{github.run_number}}" --no-promote --project hato-atama
+        run: gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
+      - name: Deploy to App Engine
+        uses: google-github-actions/deploy-appengine@v0.4.0
+        with:
+          deliverables: app.yaml
+          project_id: hato-atama
+          promote: false
+          version: "v${{github.run_number}}"
 
   create-pr-environment:
     runs-on: ubuntu-latest
