@@ -65,18 +65,23 @@ jobs:
         if: ${{ github.event_name == 'pull_request' }}
       - run: 'echo -e "env_variables:\n  ENV_NAME: \"prd\"" >> app.yaml'
         if: ${{ github.event_name == 'push' }}
+      - uses: 'google-github-actions/setup-gcloud@master'
+        with:
+          project_id: 'hato-atama'
       - id: 'auth'
         name: 'Authenticate to GCP'
         uses: google-github-actions/auth@v0.3.1
         with:
           create_credentials_file: 'true'
-          workload_identity_provider: 'hato-atama-workload-identity'
+          workload_identity_provider: 'projects/hato-atama/locations/global/workloadIdentityPools/hato-atama-workload-identity/providers/github'
           service_account: 'actions-deploy@hato-atama.iam.gserviceaccount.com'
+      - id: 'gcloud'
+        name: 'gcloud'
+        run: gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
       - name: Deploy to App Engine
         uses: google-github-actions/deploy-appengine@v0.4.0
         with:
           deliverables: app.yaml
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
           promote: false
           version: "v${{github.run_number}}"
 
