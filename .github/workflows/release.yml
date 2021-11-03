@@ -1,8 +1,5 @@
 name: release
 
-permissions:
-  id-token: write
-
 on:
   push:
     branches:
@@ -25,6 +22,8 @@ jobs:
       run:
         working-directory: frontend
     needs: check_bot
+    permissions:
+      id-token: write
     steps:
       - uses: actions/checkout@v2
       - name: Get Node.js version
