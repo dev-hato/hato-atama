@@ -12,6 +12,9 @@ on:
 jobs:
   remove-app-engine-versions:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - name: Get run numbers
         uses: actions/github-script@v5
