@@ -80,12 +80,7 @@ jobs:
         run: |-
           gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
           gcloud auth list
-      - name: Deploy to App Engine
-        uses: google-github-actions/deploy-appengine@v0.4.0
-        with:
-          deliverables: app.yaml
-          promote: false
-          version: "v${{github.run_number}}"
+          gcloud app deploy --quiet app.yaml --version "v${{github.run_number}}" --no-promote
 
   create-pr-environment:
     runs-on: ubuntu-latest
