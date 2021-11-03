@@ -79,7 +79,6 @@ jobs:
         name: 'gcloud'
         run: |-
           gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
-          gcloud auth list
           gcloud app deploy --quiet app.yaml --version "v${{github.run_number}}" --no-promote --project hato-atama
 
   create-pr-environment:
