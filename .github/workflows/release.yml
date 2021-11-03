@@ -77,7 +77,9 @@ jobs:
           service_account: 'actions-deploy@hato-atama.iam.gserviceaccount.com'
       - id: 'gcloud'
         name: 'gcloud'
-        run: gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
+        run: |-
+          gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
+          gcloud auth list
       - name: Deploy to App Engine
         uses: google-github-actions/deploy-appengine@v0.4.0
         with:
