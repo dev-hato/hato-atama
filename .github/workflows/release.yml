@@ -24,6 +24,7 @@ jobs:
     needs: check_bot
     permissions:
       id-token: write
+      contents: read
     steps:
       - uses: actions/checkout@v2
       - name: Get Node.js version
