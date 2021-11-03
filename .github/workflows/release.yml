@@ -1,5 +1,8 @@
 name: release
 
+permissions:
+  id-token: write
+
 on:
   push:
     branches:
@@ -62,12 +65,18 @@ jobs:
         if: ${{ github.event_name == 'pull_request' }}
       - run: 'echo -e "env_variables:\n  ENV_NAME: \"prd\"" >> app.yaml'
         if: ${{ github.event_name == 'push' }}
+      - id: 'auth'
+        name: 'Authenticate to GCP'
+        uses: google-github-actions/auth@v0.3.1
+        with:
+          create_credentials_file: 'true'
+          workload_identity_provider: 'hato-atama-workload-identity'
+          service_account: 'actions-deploy@hato-atama.iam.gserviceaccount.com'
       - name: Deploy to App Engine
         uses: google-github-actions/deploy-appengine@v0.4.0
         with:
           deliverables: app.yaml
           project_id: ${{ secrets.GCP_PROJECT_ID }}
-          credentials: ${{ secrets.GCP_SA_KEY }}
           promote: false
           version: "v${{github.run_number}}"
 
