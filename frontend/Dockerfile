@@ -1,4 +1,4 @@
-FROM node:17.0.1-alpine3.12 as build
+FROM node:17.1.0-alpine3.12 as build
 
 WORKDIR /usr/src/app
 
@@ -10,7 +10,7 @@ COPY frontend/src ./src
 RUN npm run build
 
 
-FROM nginx:1.21.3
+FROM nginx:1.21.4
 
 COPY frontend/nginx.conf /etc/nginx/nginx.conf
 
