@@ -36,7 +36,7 @@ jobs:
       # -v "/home/runner/work/_temp/_github_workflow":"/github/workflow"
       # ここに mv することで、super-linterのなかにnode_modulesを配置できる
       - name: Move the dependencies
-        run: mv node_modules /home/runner/work/_temp/_github_workflow/
+        run: mv node_modules /home/runner/work/hato-atama/hato-atama/
 
       - name: Super-Linter
         uses: github/super-linter@v4.8.3
