@@ -75,8 +75,8 @@ jobs:
           create_credentials_file: 'true'
           workload_identity_provider: 'projects/765091727073/locations/global/workloadIdentityPools/hato-atama-workload-identity/providers/github'
           service_account: 'actions-deploy@hato-atama.iam.gserviceaccount.com'
-      - id: 'gcloud'
-        name: 'gcloud'
+      - id: login_to_gcp
+        name: 'Login to GCP'
         run: gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
       - name: Deploy to App Engine
         uses: google-github-actions/deploy-appengine@v0.4.0
@@ -274,9 +274,8 @@ jobs:
           create_credentials_file: 'true'
           workload_identity_provider: 'projects/765091727073/locations/global/workloadIdentityPools/hato-atama-workload-identity/providers/github'
           service_account: 'actions-deploy@hato-atama.iam.gserviceaccount.com'
-      - run: |-
-          gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
-          gcloud app services set-traffic default --splits "v${GITHUB_RUN_NUMBER}=1"
+      - run: gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
+      - run: gcloud app services set-traffic default --splits "v${GITHUB_RUN_NUMBER}=1"
 
   remove-app-engine-past-versions:
     runs-on: ubuntu-latest
@@ -355,11 +354,10 @@ jobs:
           create_credentials_file: 'true'
           workload_identity_provider: 'projects/765091727073/locations/global/workloadIdentityPools/hato-atama-workload-identity/providers/github'
           service_account: 'actions-deploy@hato-atama.iam.gserviceaccount.com'
+      - run: gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
       - name: Remove app engine versions
         if: ${{ steps.get_run_numbers.outputs.result != '' }}
-        run: |-
-          gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
-          gcloud app versions delete --service=default ${{steps.get_run_numbers.outputs.result}}
+        run: gcloud app versions delete --service=default ${{steps.get_run_numbers.outputs.result}}
 
   pr-test-complete-check:
     runs-on: ubuntu-latest
