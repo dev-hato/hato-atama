@@ -52,6 +52,9 @@ jobs:
   deploy-app-engine:
     runs-on: ubuntu-latest
     needs: build-frontend
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - uses: actions/checkout@v2
       - uses: actions/download-artifact@v2
@@ -62,12 +65,24 @@ jobs:
         if: ${{ github.event_name == 'pull_request' }}
       - run: 'echo -e "env_variables:\n  ENV_NAME: \"prd\"" >> app.yaml'
         if: ${{ github.event_name == 'push' }}
+      - uses: google-github-actions/setup-gcloud@v0.2.1
+        with:
+          project_id: 'hato-atama'
+      - id: 'auth'
+        name: 'Authenticate to GCP'
+        uses: google-github-actions/auth@v0.3.1
+        with:
+          create_credentials_file: 'true'
+          workload_identity_provider: 'projects/765091727073/locations/global/workloadIdentityPools/hato-atama-workload-identity/providers/github'
+          service_account: 'actions-deploy@hato-atama.iam.gserviceaccount.com'
+      - id: login_to_gcp
+        name: 'Login to GCP'
+        run: gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
       - name: Deploy to App Engine
         uses: google-github-actions/deploy-appengine@v0.4.0
         with:
           deliverables: app.yaml
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          credentials: ${{ secrets.GCP_SA_KEY }}
+          project_id: hato-atama
           promote: false
           version: "v${{github.run_number}}"
 
@@ -245,12 +260,21 @@ jobs:
     needs:
       - e2e-test-all-prd
     if: ${{ github.event_name == 'push' }}
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - uses: google-github-actions/setup-gcloud@v0.2.1
         with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          export_default_credentials: true
+          project_id: 'hato-atama'
+      - id: 'auth'
+        name: 'Authenticate to GCP'
+        uses: google-github-actions/auth@v0.3.1
+        with:
+          create_credentials_file: 'true'
+          workload_identity_provider: 'projects/765091727073/locations/global/workloadIdentityPools/hato-atama-workload-identity/providers/github'
+          service_account: 'actions-deploy@hato-atama.iam.gserviceaccount.com'
+      - run: gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
       - run: gcloud app services set-traffic default --splits "v${GITHUB_RUN_NUMBER}=1"
 
   remove-app-engine-past-versions:
@@ -258,13 +282,10 @@ jobs:
     needs:
       - migrating-traffic
     if: ${{ github.event_name == 'push' }}
+    permissions:
+      id-token: write
+      contents: read
     steps:
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v0.2.1
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          export_default_credentials: true
       - name: Get run numbers
         uses: actions/github-script@v5
         id: get_run_numbers
@@ -321,6 +342,19 @@ jobs:
             }
 
             return result.join(' ')
+      - uses: google-github-actions/setup-gcloud@v0.2.1
+        if: ${{ steps.get_run_numbers.outputs.result != '' }}
+        with:
+          project_id: 'hato-atama'
+      - id: 'auth'
+        if: ${{ steps.get_run_numbers.outputs.result != '' }}
+        name: 'Authenticate to GCP'
+        uses: google-github-actions/auth@v0.3.1
+        with:
+          create_credentials_file: 'true'
+          workload_identity_provider: 'projects/765091727073/locations/global/workloadIdentityPools/hato-atama-workload-identity/providers/github'
+          service_account: 'actions-deploy@hato-atama.iam.gserviceaccount.com'
+      - run: gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
       - name: Remove app engine versions
         if: ${{ steps.get_run_numbers.outputs.result != '' }}
         run: gcloud app versions delete --service=default ${{steps.get_run_numbers.outputs.result}}
