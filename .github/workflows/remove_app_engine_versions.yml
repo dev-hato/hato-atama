@@ -84,9 +84,9 @@ jobs:
           create_credentials_file: 'true'
           workload_identity_provider: 'projects/765091727073/locations/global/workloadIdentityPools/hato-atama-workload-identity/providers/github'
           service_account: 'actions-deploy@hato-atama.iam.gserviceaccount.com'
-      - id: 'gcloud'
+      - id: login_to_gcp
+        name: 'Login to GCP'
         if: ${{ steps.get_run_numbers.outputs.result != '' }}
-        name: 'gcloud'
-        run: |-
-          gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
-          gcloud app versions delete --service=default ${{steps.get_run_numbers.outputs.result}}
+        run: gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
+      - if: ${{ steps.get_run_numbers.outputs.result != '' }}
+        run: gcloud app versions delete --service=default ${{steps.get_run_numbers.outputs.result}}
