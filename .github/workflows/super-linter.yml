@@ -31,15 +31,9 @@ jobs:
           restore-keys: |
             npm-cache-
       - run: npm install
-
-      # https://github.com/github/super-linter/issues/157#issuecomment-648850330
-      # -v "/home/runner/work/_temp/_github_workflow":"/github/workflow"
-      # ここに mv することで、super-linterのなかにnode_modulesを配置できる
-      - name: Move the dependencies
-        run: mv node_modules /home/runner/work/_temp/_github_home/
-
       - name: Super-Linter
         uses: github/super-linter@v4.8.3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FILTER_REGEX_EXCLUDE: test/e2e/cypress/integration/.*
+          NODE_PATH: "/:/github/workspace"
