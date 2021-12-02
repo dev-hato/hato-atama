@@ -19,15 +19,9 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
-      - name: Get Node.js version
-        id: get_node_version
-        run: |
-          node_version=$(cat .node-version)
-          echo "Node.js version:" "${node_version}"
-          echo "::set-output name=node_version::${node_version}"
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v2.5.0
         with:
-          node-version: ${{steps.get_node_version.outputs.node_version}}
+          node-version-file: .node-version
       - name: ncu install
         run: npx npm-check-updates -u
       - name: npm update
@@ -58,15 +52,9 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
-      - name: Get Node.js version
-        id: get_node_version
-        run: |
-          node_version=$(cat .node-version)
-          echo "Node.js version:" "${node_version}"
-          echo "::set-output name=node_version::${node_version}"
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v2.5.0
         with:
-          node-version: ${{steps.get_node_version.outputs.node_version}}
+          node-version-file: .node-version
       - name: ncu install
         run: npx npm-check-updates -u
       - name: npm update

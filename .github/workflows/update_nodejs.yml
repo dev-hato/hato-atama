@@ -21,22 +21,11 @@ jobs:
       - name: Get branch name
         id: get_branch_name
         run: echo "::set-output name=branch_name::$(echo '${{ matrix.directory }}' | sed -e 's:/:-:g' | sed -e 's/\./root/g')"
-      - name: Get Node.js version
-        id: get_node_version
-        run: |
-          node_version=$(cat .node-version)
-          echo "Node.js version:" "${node_version}"
-          echo "::set-output name=node_version::${node_version}"
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v2.5.0
         with:
-          node-version: ${{steps.get_node_version.outputs.node_version}}
-      - name: Cache node modules ${{ matrix.directory }}
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: npm-cache-${{ steps.get_branch_name.outputs.branch_name }}-${{ hashFiles('**/${{ matrix.directory }}/package-lock.json') }}
-          restore-keys: |
-            npm-cache-${{ steps.get_branch_name.outputs.branch_name }}-
+          node-version-file: .node-version
+          cache: npm
+          cache-dependency-path: ${{ matrix.directory }}/package-lock.json
       - run: |
           npm install
           npx browserslist@latest --update-db
