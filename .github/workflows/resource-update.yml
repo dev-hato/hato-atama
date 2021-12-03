@@ -22,6 +22,8 @@ jobs:
       - uses: actions/setup-node@v2.5.0
         with:
           node-version-file: .node-version
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
       - name: ncu install
         run: npx npm-check-updates -u
       - name: npm update
@@ -55,6 +57,8 @@ jobs:
       - uses: actions/setup-node@v2.5.0
         with:
           node-version-file: .node-version
+          cache: npm
+          cache-dependency-path: test/e2e/package-lock.json
       - name: ncu install
         run: npx npm-check-updates -u
       - name: npm update
