@@ -54,7 +54,7 @@ jobs:
         if: ${{ github.event_name == 'pull_request' }}
       - run: 'echo -e "env_variables:\n  ENV_NAME: \"prd\"" >> app.yaml'
         if: ${{ github.event_name == 'push' }}
-      - uses: google-github-actions/setup-gcloud@v0.2.1
+      - uses: google-github-actions/setup-gcloud@v0.3
         with:
           project_id: 'hato-atama'
       - id: 'auth'
@@ -253,7 +253,7 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - uses: google-github-actions/setup-gcloud@v0.2.1
+      - uses: google-github-actions/setup-gcloud@v0.3
         with:
           project_id: 'hato-atama'
       - id: 'auth'
@@ -331,7 +331,7 @@ jobs:
             }
 
             return result.join(' ')
-      - uses: google-github-actions/setup-gcloud@v0.2.1
+      - uses: google-github-actions/setup-gcloud@v0.3
         if: ${{ steps.get_run_numbers.outputs.result != '' }}
         with:
           project_id: 'hato-atama'
