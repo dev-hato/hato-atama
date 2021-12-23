@@ -79,7 +79,7 @@ jobs:
           # 最大10分待つ
           for i in $(seq 600); do
             serving_status=$(gcloud app versions describe "v${{github.run_number}}" --service "default" --format "value(servingStatus)")
-            echo "servingStatus: ${serving_status}"
+            echo "${i}: servingStatus: ${serving_status}"
           
             if [ "${serving_status}" = "SERVING" ]; then
               exit 0
