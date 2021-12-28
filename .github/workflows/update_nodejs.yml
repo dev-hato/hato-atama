@@ -21,7 +21,7 @@ jobs:
       - name: Get branch name
         id: get_branch_name
         run: echo "::set-output name=branch_name::$(echo '${{ matrix.directory }}' | sed -e 's:/:-:g' | sed -e 's/\./root/g')"
-      - uses: actions/setup-node@v2.5.0
+      - uses: actions/setup-node@v2.5.1
         with:
           node-version-file: ${{ matrix.directory }}/.node-version
           cache: npm
