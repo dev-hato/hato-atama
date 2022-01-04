@@ -31,7 +31,7 @@ module.exports = {
     filename: 'index.[contenthash].js'
   },
   plugins: [
-    new CopyPlugin({patterns: [{from: "public/", to: "."}]}),
+    new CopyPlugin({ patterns: [{ from: 'public/', to: '.' }] }),
     new HtmlWebpackPlugin({ template: './src/index.html' }),
     new CleanWebpackPlugin()
   ],
