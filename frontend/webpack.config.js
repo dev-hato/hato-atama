@@ -1,4 +1,5 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const CopyPlugin = require('copy-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const path = require('path')
 
@@ -30,6 +31,7 @@ module.exports = {
     filename: 'index.[contenthash].js'
   },
   plugins: [
+    new CopyPlugin({ patterns: [{ from: 'public/', to: '.' }] }),
     new HtmlWebpackPlugin({ template: './src/index.html' }),
     new CleanWebpackPlugin()
   ],
