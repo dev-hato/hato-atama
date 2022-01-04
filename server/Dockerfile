@@ -14,5 +14,6 @@ FROM scratch
 WORKDIR /app
 
 COPY --from=build /go/app/server/app .
+COPY --from=build /go/app/server/public/ .
 
 ENTRYPOINT ["./app"]

@@ -86,6 +86,8 @@ func createServer() (e *echo.Echo) {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Gzip())
 
+	e.Static("/robots.txt", "./public/robots.txt")
+
 	api := e.Group("/api")
 	api.POST("/create", createShortURL)
 
