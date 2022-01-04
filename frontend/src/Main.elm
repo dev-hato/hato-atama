@@ -66,7 +66,7 @@ view model =
         nowURL =
             model.url
     in
-    { title = ""
+    { title = "hato-atama"
     , body =
         [ let
             shortURLBase =
