@@ -9,9 +9,9 @@ handlers:
   - url: /l/.*
     script: auto
     secure: always
-  - url: /(.*/)*([^/]*\.(html|js))$
+  - url: /(.*/)*([^/]*\.(html|js|txt))$
     static_files: frontend/dist/\2
-    upload: frontend/dist/.*\.(html|js)$
+    upload: frontend/dist/.*\.(html|js|txt)$
     secure: always
   - url: /.*
     static_files: frontend/dist/index.html
