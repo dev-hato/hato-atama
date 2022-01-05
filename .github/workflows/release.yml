@@ -113,7 +113,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: echo "ARTIFACT_PATH=${{ github.workspace }}/tmp/artifacts" >> "$GITHUB_ENV"
-      - run: mkdir ${ARTIFACT_PATH}
+      - run: mkdir -p ${ARTIFACT_PATH}
       - uses: foo-software/lighthouse-check-action@v7.1.0
         with:
           gitAuthor: ${{ github.actor }}
