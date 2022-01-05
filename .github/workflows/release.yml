@@ -385,6 +385,7 @@ jobs:
       - e2e-test-mini-prd
       - e2e-test-all-docker-compose
       - docker-compose-build
+      - lighthouse
     steps:
       - run: exit 0
 
@@ -405,6 +406,7 @@ jobs:
     needs:
       - remove-app-engine-past-versions
       - docker-compose-build
+      - lighthouse
     steps:
       - run: exit 0
 
