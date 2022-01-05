@@ -112,6 +112,8 @@ jobs:
     needs: deploy-app-engine
     steps:
       - uses: actions/checkout@v2
+      - run: echo "ARTIFACT_PATH=${{ github.workspace }}/tmp/artifacts" >> "$GITHUB_ENV"
+      - run: mkdir ${ARTIFACT_PATH}
       - uses: foo-software/lighthouse-check-action@v7.1.0
         with:
           gitAuthor: ${{ github.actor }}
@@ -119,6 +121,11 @@ jobs:
           gitHubAccessToken: ${{ secrets.GITHUB_TOKEN }}
           urls: "https://v${{ github.run_number }}-dot-hato-atama.an.r.appspot.com"
           sha: ${{ github.sha }}
+          outputDirectory: ${{ env.ARTIFACT_PATH }}
+      - uses: actions/upload-artifact@v2.3.1
+        with:
+          name: Lighthouse reports
+          path: ${{ github.run_number }}
 
   e2e-test-mini-docker-compose:
     runs-on: ubuntu-latest
