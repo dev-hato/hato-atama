@@ -329,6 +329,7 @@ jobs:
                 })
               }))
               result = run_numbers.flat().filter(Boolean)
+              result.shift()
 
               if (!result.includes(running) || i === retry_count - 1) {
                 break
