@@ -116,11 +116,8 @@ jobs:
       - run: mkdir -p ${ARTIFACT_PATH}
       - uses: foo-software/lighthouse-check-action@v7.1.0
         with:
-          gitAuthor: ${{ github.actor }}
-          gitBranch: ${{ github.ref }}
           gitHubAccessToken: ${{ secrets.GITHUB_TOKEN }}
           urls: "https://v${{ github.run_number }}-dot-hato-atama.an.r.appspot.com"
-          sha: ${{ github.sha }}
           outputDirectory: ${{ env.ARTIFACT_PATH }}
       - uses: actions/upload-artifact@v2.3.1
         with:
