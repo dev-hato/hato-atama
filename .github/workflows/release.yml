@@ -125,7 +125,7 @@ jobs:
       - uses: actions/upload-artifact@v2.3.1
         with:
           name: Lighthouse reports
-          path: ${{ github.run_number }}
+          path: ${{ env.ARTIFACT_PATH }}
 
   e2e-test-mini-docker-compose:
     runs-on: ubuntu-latest
