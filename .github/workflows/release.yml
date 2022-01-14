@@ -112,6 +112,7 @@ jobs:
     needs: deploy-app-engine
     steps:
       - uses: actions/checkout@v2
+      - run: echo "ARTIFACT_NAME='Lighthouse reports'" >> "$GITHUB_ENV"
       - run: echo "ARTIFACT_PATH=${{ github.workspace }}/tmp/artifacts" >> "$GITHUB_ENV"
       - run: mkdir -p "${ARTIFACT_PATH}"
       - uses: foo-software/lighthouse-check-action@v7.1.0
@@ -121,8 +122,25 @@ jobs:
           outputDirectory: ${{ env.ARTIFACT_PATH }}
       - uses: actions/upload-artifact@v2.3.1
         with:
-          name: Lighthouse reports
+          name: ${{ env.ARTIFACT_NAME }}
           path: ${{ env.ARTIFACT_PATH }}
+      - uses: actions/github-script@v5
+        if: ${{ github.event_name == 'pull_request' }}
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const artifacts = await github.paginate(github.rest.actions.listWorkflowRunArtifacts, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: context.runId
+            })
+            const download_url = artifacts.artifacts.filter(artifact => artifact.name == process.env.ARTIFACT_NAME)[0].archive_download_url
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "lighthouseの詳細レポート: <a href=\""+ download_url +"\">ダウンロード</a>"
+            })
 
   e2e-test-mini-docker-compose:
     runs-on: ubuntu-latest
