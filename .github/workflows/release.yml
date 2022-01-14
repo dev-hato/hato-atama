@@ -134,13 +134,8 @@ jobs:
               repo: context.repo.repo,
               run_id: context.runId
             })
-            const download_url = artifacts.filter(artifact => artifact.name == process.env.ARTIFACT_NAME)[0].archive_download_url
-            await github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: "lighthouseの詳細レポート: <a href=\""+ download_url +"\">ダウンロード</a>"
-            })
+            const download_url = artifacts.filter(artifact => artifact.name == process.env.ARTIFACT_NAME)
+            console.log(download_url)
 
   e2e-test-mini-docker-compose:
     runs-on: ubuntu-latest
