@@ -132,7 +132,7 @@ jobs:
             const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              run_id: ${{ github.event.workflow_run.id }}
+              run_id: ${{ github.job }}
             })
             const download_url = artifacts
             console.log(download_url)
