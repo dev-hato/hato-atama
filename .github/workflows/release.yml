@@ -112,7 +112,7 @@ jobs:
     needs: deploy-app-engine
     steps:
       - uses: actions/checkout@v2
-      - run: echo "ARTIFACT_NAME='Lighthouse reports'" >> "$GITHUB_ENV"
+      - run: echo 'ARTIFACT_NAME="Lighthouse reports"' >> "$GITHUB_ENV"
       - run: echo "ARTIFACT_PATH=${{ github.workspace }}/tmp/artifacts" >> "$GITHUB_ENV"
       - run: mkdir -p "${ARTIFACT_PATH}"
       - uses: foo-software/lighthouse-check-action@v7.1.0
@@ -153,19 +153,12 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            const res=await github.rest.actions.getWorkflowRun({
+            const workflow_run = await github.rest.actions.getWorkflowRun({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              run_id: ${{ github.run_id }},
-            });
-            console.log(res)
-            const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              run_id: ${{ github.job }}
+              run_id: ${{ github.run_id }}
             })
-            const download_url = artifacts
-            console.log(download_url)
+            console.log("https://github.com/dev-hato/hato-atama/suites/" + workflow_run.data.check_suite_id + "/artifacts/${{ github.run_id }}")
 
   e2e-test-mini-docker-compose:
     runs-on: ubuntu-latest
