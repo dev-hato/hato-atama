@@ -112,7 +112,7 @@ jobs:
     needs: deploy-app-engine
     steps:
       - uses: actions/checkout@v2
-      - run: echo 'ARTIFACT_NAME="Lighthouse reports"' >> "$GITHUB_ENV"
+      - run: echo "ARTIFACT_NAME=lighthouse_reports" >> "$GITHUB_ENV"
       - run: echo "ARTIFACT_PATH=${{ github.workspace }}/tmp/artifacts" >> "$GITHUB_ENV"
       - run: mkdir -p "${ARTIFACT_PATH}"
       - uses: foo-software/lighthouse-check-action@v7.1.0
@@ -124,30 +124,6 @@ jobs:
         with:
           name: ${{ env.ARTIFACT_NAME }}
           path: ${{ env.ARTIFACT_PATH }}
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
-        run: echo "$GITHUB_CONTEXT"
-      - name: Dump job context
-        env:
-          JOB_CONTEXT: ${{ toJSON(job) }}
-        run: echo "$JOB_CONTEXT"
-      - name: Dump steps context
-        env:
-          STEPS_CONTEXT: ${{ toJSON(steps) }}
-        run: echo "$STEPS_CONTEXT"
-      - name: Dump runner context
-        env:
-          RUNNER_CONTEXT: ${{ toJSON(runner) }}
-        run: echo "$RUNNER_CONTEXT"
-      - name: Dump strategy context
-        env:
-          STRATEGY_CONTEXT: ${{ toJSON(strategy) }}
-        run: echo "$STRATEGY_CONTEXT"
-      - name: Dump matrix context
-        env:
-          MATRIX_CONTEXT: ${{ toJSON(matrix) }}
-        run: echo "$MATRIX_CONTEXT"
       - uses: actions/github-script@v5
         if: ${{ github.event_name == 'pull_request' }}
         with:
