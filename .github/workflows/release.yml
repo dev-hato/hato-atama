@@ -129,13 +129,12 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            const workflow_run = await github.rest.actions.getWorkflowRun({
+            const workflow_run = await github.rest.actions.listWorkflowRunArtifacts({
               owner: context.repo.owner,
               repo: context.repo.repo,
               run_id: ${{ github.run_id }}
             })
-            console.log(workflow_run.data)
-            console.log("https://github.com/dev-hato/hato-atama/suites/" + workflow_run.data.check_suite_id + "/artifacts/${{ github.run_id }}")
+            console.log(workflow_run)
 
   e2e-test-mini-docker-compose:
     runs-on: ubuntu-latest
