@@ -130,7 +130,6 @@ jobs:
     if: ${{ github.event_name == 'pull_request' }}
     steps:
       - uses: actions/github-script@v5
-        if: ${{ github.event_name == 'pull_request' }}
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
