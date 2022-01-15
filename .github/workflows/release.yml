@@ -129,12 +129,28 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            const workflow_run = await github.rest.actions.listWorkflowRunArtifacts({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              run_id: ${{ github.run_id }}
-            })
-            console.log(workflow_run)
+            const retry_count = 10
+
+            for (let i = 0; i < retry_count; i++) {
+              const artifacts = await github.paginate(github.rest.actions.listWorkflowRunArtifacts, {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                run_id: ${{ github.run_id }}
+              })
+              console.log(artifacts)
+            
+              if(0 < artifacts.length) {
+                console.log(artifacts)
+                return
+              }
+            
+              // 完了していないrunがあった場合はリトライ
+              // sleepする時間は exponential backoff and jitter で算出している
+              // 参考: https://aws.typepad.com/sajp/2015/03/backoff.html
+              const sleep_seconds = Math.random() * (Math.pow(2, i + 1) * 100)
+              console.log(`sleep ${sleep_seconds}s`)
+              await new Promise(r => setTimeout(r, sleep_seconds * 1000))
+            }
 
   e2e-test-mini-docker-compose:
     runs-on: ubuntu-latest
