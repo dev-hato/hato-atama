@@ -68,7 +68,7 @@ jobs:
             }
 
             return result.join(' ')
-      - uses: google-github-actions/setup-gcloud@v0.3
+      - uses: google-github-actions/setup-gcloud@v0.4.0
         if: ${{ steps.get_run_numbers.outputs.result != '' }}
         with:
           project_id: 'hato-atama'
