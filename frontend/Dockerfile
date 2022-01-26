@@ -11,7 +11,7 @@ COPY frontend/public ./public
 RUN npm run build
 
 
-FROM nginx:1.21.5
+FROM nginx:1.21.6
 
 COPY frontend/nginx.conf /etc/nginx/nginx.conf
 
