@@ -21,7 +21,7 @@ jobs:
       - run: npm install
       - name: Super-Linter
         uses: github/super-linter@v4.8.6
-        container:
+        with:
           entrypoint: /github/workspace/.github/linters/super_linter.sh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
