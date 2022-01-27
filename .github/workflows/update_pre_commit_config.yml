@@ -43,9 +43,10 @@ jobs:
 
                 return repo;
             })
+            const content = '---\n' + yaml.dump(config)
 
             try {
-                fs.writeFileSync(config_filename, '---\n' + yaml.dump(config), 'utf8')
+                fs.writeFileSync(config_filename, content, 'utf8')
             } catch (err) {
                 console.error(err.message)
                 process.exit(1)
