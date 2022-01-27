@@ -1,3 +1,4 @@
+---
 name: release
 
 on:
@@ -50,7 +51,9 @@ jobs:
         with:
           name: frontend
           path: frontend/dist
-      - run: 'echo -e "env_variables:\n  ENV_NAME: \"v${GITHUB_RUN_NUMBER}\"" >> app.yaml'
+      - run: |
+          echo -e "env_variables:\n" >> app.yaml
+          echo -e "  ENV_NAME: \"v${GITHUB_RUN_NUMBER}\"" >> app.yaml
         if: ${{ github.event_name == 'pull_request' }}
       - run: 'echo -e "env_variables:\n  ENV_NAME: \"prd\"" >> app.yaml'
         if: ${{ github.event_name == 'push' }}
@@ -66,7 +69,9 @@ jobs:
           service_account: 'actions-deploy@hato-atama.iam.gserviceaccount.com'
       - id: login_to_gcp
         name: 'Login to GCP'
-        run: gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
+        run: |
+          FILE_PATH="${{ steps.auth.outputs.credentials_file_path }}"
+          gcloud auth login --brief --cred-file="${FILE_PATH}"
       - name: Deploy to App Engine
         uses: google-github-actions/deploy-appengine@v0.5.0
         with:
@@ -78,7 +83,11 @@ jobs:
         run: |
           # 最大10分待つ
           for i in $(seq 600); do
-            serving_status=$(gcloud app versions describe "v${{github.run_number}}" --service "default" --format "value(servingStatus)")
+            serving_status=$(gcloud app versions describe \
+                                                 "v${{github.run_number}}" \
+                                                 --service "default" \
+                                                 --format \
+                                                   "value(servingStatus)")
             echo "${i}: servingStatus: ${serving_status}"
           
             if [ "${serving_status}" = "SERVING" ]; then
@@ -100,11 +109,20 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
+            let body = "${{github.event.pull_request.head.sha}} のPR用環境:"
+            body += " <a href=\"https://v" + process.env.GITHUB_RUN_NUMBER
+            body += "-dot-hato-atama.an.r.appspot.com\">サイト</a>,"
+            body += " <a href=\"https://console.cloud.google.com/logs/query;"
+            body += "query=resource.type%3D%22gae_app"
+            body += "%22%20resource.labels.module_id%3D%22default"
+            body += "%22%20resource.labels.version_id%3D%22v"
+            body += process.env.GITHUB_RUN_NUMBER
+            body += "%22?project=hato-atama\">ログ</a>"
             await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "${{github.event.pull_request.head.sha}} のPR用環境: <a href=\"https://v" + process.env.GITHUB_RUN_NUMBER + "-dot-hato-atama.an.r.appspot.com\">サイト</a>, <a href=\"https://console.cloud.google.com/logs/query;query=resource.type%3D%22gae_app%22%20resource.labels.module_id%3D%22default%22%20resource.labels.version_id%3D%22v" + process.env.GITHUB_RUN_NUMBER + "%22?project=hato-atama\">ログ</a>"
+              body,
             })
 
   lighthouse:
@@ -112,12 +130,17 @@ jobs:
     needs: deploy-app-engine
     steps:
       - uses: actions/checkout@v2
-      - run: echo "ARTIFACT_PATH=${{ github.workspace }}/tmp/artifacts" >> "$GITHUB_ENV"
+      - run: |
+          ARTIFACT_PATH="${{ github.workspace }}/tmp/artifacts"
+          echo "ARTIFACT_PATH=${ARTIFACT_PATH}" >> "$GITHUB_ENV"
+          URLS="https://"
+          URLS+="v${{ github.run_number }}-dot-hato-atama.an.r.appspot.com"
+          echo "URLS=${URLS}" >> "${GITHUB_ENV}"
       - run: mkdir -p "${ARTIFACT_PATH}"
       - uses: foo-software/lighthouse-check-action@v7.1.1
         with:
           gitHubAccessToken: ${{ secrets.GITHUB_TOKEN }}
-          urls: "https://v${{ github.run_number }}-dot-hato-atama.an.r.appspot.com"
+          urls: ${{ env.URLS }}
           outputDirectory: ${{ env.ARTIFACT_PATH }}
       - uses: actions/upload-artifact@v2.3.1
         with:
@@ -131,7 +154,7 @@ jobs:
       COMPOSE_DOCKER_CLI_BUILD: 1
     strategy:
       matrix:
-        browser: [ "chrome", "chromium", "firefox", "electron" ]
+        browser: ["chrome", "chromium", "firefox", "electron"]
     needs: check_bot
     steps:
       - uses: actions/checkout@v2
@@ -152,16 +175,22 @@ jobs:
         if: ${{ github.event_name == 'push' }}
       - run: docker-compose -f staging.docker-compose.yml build
       - run: docker-compose -f staging.docker-compose.yml up -d
+      - run: |
+          FILE_PATH="**/test/e2e/package-lock.json"
+          echo "FILE_PATH=${FILE_PATH}" >> "${GITHUB_ENV}"
       - name: Cache node modules e2e
         uses: actions/cache@v2
         with:
           path: ~/.npm
-          key: npm-cache-test-e2e-${{ hashFiles('**/test/e2e/package-lock.json') }}
+          key: npm-cache-test-e2e-${{ hashFiles(env.FILE_PATH) }}
           restore-keys: |
             npm-cache-test-e2e-
       - run: npm i
         working-directory: ./test/e2e
-      - run: npm run test -- --env API_HOST=http://localhost:8080/ --spec cypress/integration/mini/*.js --browser ${{ matrix.browser }}
+      - run: |
+          npm run test -- --env API_HOST=http://localhost:8080/ \
+                          --spec cypress/integration/mini/*.js \
+                          --browser ${{ matrix.browser }}
         working-directory: ./test/e2e
 
   e2e-test-all-docker-compose:
@@ -171,7 +200,7 @@ jobs:
       COMPOSE_DOCKER_CLI_BUILD: 1
     strategy:
       matrix:
-        browser: [ "chrome", "chromium", "firefox", "electron" ]
+        browser: ["chrome", "chromium", "firefox", "electron"]
     needs: check_bot
     steps:
       - uses: actions/checkout@v2
@@ -192,16 +221,21 @@ jobs:
         if: ${{ github.event_name == 'push' }}
       - run: docker-compose -f staging.docker-compose.yml build
       - run: docker-compose -f staging.docker-compose.yml up -d
+      - run: |
+          FILE_PATH="**/test/e2e/package-lock.json"
+          echo "FILE_PATH=${FILE_PATH}" >> "${GITHUB_ENV}"
       - name: Cache node modules e2e
         uses: actions/cache@v2
         with:
           path: ~/.npm
-          key: npm-cache-test-e2e-${{ hashFiles('**/test/e2e/package-lock.json') }}
+          key: npm-cache-test-e2e-${{ hashFiles(env.FILE_PATH) }}
           restore-keys: |
             npm-cache-test-e2e-
       - run: npm i
         working-directory: ./test/e2e
-      - run: npm run test -- --env API_HOST=http://localhost:8080/ --browser ${{ matrix.browser }}
+      - run: |
+          ENV="API_HOST=http://localhost:8080/"
+          npm run test -- --env "${ENV}" --browser ${{ matrix.browser }}
         working-directory: ./test/e2e
 
   e2e-test-mini-prd:
@@ -211,19 +245,27 @@ jobs:
       - e2e-test-mini-docker-compose
     strategy:
       matrix:
-        browser: [ "chrome", "chromium", "firefox", "electron" ]
+        browser: ["chrome", "chromium", "firefox", "electron"]
     steps:
       - uses: actions/checkout@v2
+      - run: |
+          FILE_PATH="**/test/e2e/package-lock.json"
+          echo "FILE_PATH=${FILE_PATH}" >> "${GITHUB_ENV}"
       - name: Cache node modules e2e
         uses: actions/cache@v2
         with:
           path: ~/.npm
-          key: npm-cache-test-e2e-${{ hashFiles('**/test/e2e/package-lock.json') }}
+          key: npm-cache-test-e2e-${{ hashFiles(env.FILE_PATH) }}
           restore-keys: |
             npm-cache-test-e2e-
       - run: npm i
         working-directory: ./test/e2e
-      - run: npm run test -- --env "API_HOST=https://v${GITHUB_RUN_NUMBER}-dot-hato-atama.an.r.appspot.com" --spec cypress/integration/mini/*.js --browser ${{ matrix.browser }}
+      - run: |
+          API_HOST="https://"
+          API_HOST+="v${GITHUB_RUN_NUMBER}-dot-hato-atama.an.r.appspot.com"
+          npm run test -- --env "API_HOST=${API_HOST}" \
+                          --spec cypress/integration/mini/*.js \
+                          --browser ${{ matrix.browser }}
         working-directory: ./test/e2e
 
   e2e-test-all-prd:
@@ -233,20 +275,26 @@ jobs:
       - e2e-test-mini-prd
     strategy:
       matrix:
-        browser: [ "chrome", "chromium", "firefox", "electron" ]
+        browser: ["chrome", "chromium", "firefox", "electron"]
     if: ${{ github.event_name == 'push' }}
     steps:
       - uses: actions/checkout@v2
+      - run: |
+          FILE_PATH="**/test/e2e/package-lock.json"
+          echo "FILE_PATH=${FILE_PATH}" >> "${GITHUB_ENV}"
       - name: Cache node modules e2e
         uses: actions/cache@v2
         with:
           path: ~/.npm
-          key: npm-cache-test-e2e-${{ hashFiles('**/test/e2e/package-lock.json') }}
+          key: npm-cache-test-e2e-${{ hashFiles(env.FILE_PATH) }}
           restore-keys: |
             npm-cache-test-e2e-
       - run: npm i
         working-directory: ./test/e2e
-      - run: npm run test -- --env "API_HOST=https://v${GITHUB_RUN_NUMBER}-dot-hato-atama.an.r.appspot.com" --browser ${{ matrix.browser }}
+      - run: |
+          ENV="API_HOST="
+          ENV+="https://v${GITHUB_RUN_NUMBER}-dot-hato-atama.an.r.appspot.com"
+          npm run test -- --env "${ENV}" --browser ${{ matrix.browser }}
         working-directory: ./test/e2e
 
   docker-compose-build:
@@ -274,7 +322,9 @@ jobs:
         if: ${{ github.event_name == 'pull_request' }}
       - run: echo 'TAG_NAME=latest' >> "$GITHUB_ENV"
         if: ${{ github.event_name == 'push' }}
-      - run: docker-compose -f staging.docker-compose.yml build --build-arg BUILDKIT_INLINE_CACHE=1
+      - run: |
+          docker-compose -f staging.docker-compose.yml build \
+                         --build-arg BUILDKIT_INLINE_CACHE=1
       - run: docker-compose -f staging.docker-compose.yml push
 
   migrating-traffic:
@@ -296,8 +346,12 @@ jobs:
           create_credentials_file: 'true'
           workload_identity_provider: 'projects/765091727073/locations/global/workloadIdentityPools/hato-atama-workload-identity/providers/github'
           service_account: 'actions-deploy@hato-atama.iam.gserviceaccount.com'
-      - run: gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
-      - run: gcloud app services set-traffic default --splits "v${GITHUB_RUN_NUMBER}=1"
+      - run: |
+          FILE_PATH="${{ steps.auth.outputs.credentials_file_path }}"
+          gcloud auth login --brief --cred-file="${FILE_PATH}"
+      - run: |
+          VALUE="v${GITHUB_RUN_NUMBER}=1"
+          gcloud app services set-traffic default --splits "${VALUE}"
 
   remove-app-engine-past-versions:
     runs-on: ubuntu-latest
@@ -328,21 +382,30 @@ jobs:
 
             for (let i = 0; i < retry_count; i++) {
               console.log("call actions.listRepoWorkflows:", common_params)
-              const workflows = await github.paginate(github.rest.actions.listRepoWorkflows, common_params)
-              const run_numbers = await Promise.all(workflows.filter(workflow => workflow.name === 'release').map(async workflow => {
+              let workflows = await github.paginate(
+                                github.rest.actions.listRepoWorkflows,
+                                common_params
+                              )
+              workflows = workflows.filter(w => w.name === 'release')
+              const run_numbers = await Promise.all(workflows.map(async w => {
                 const list_workflow_runs_params = {
-                  workflow_id: workflow.id,
+                  workflow_id: w.id,
                   branch: HEAD_REF,
                   ...common_params
                 }
-                console.log("call actions.listWorkflowRuns:", list_workflow_runs_params)
-                const runs = await github.paginate(github.rest.actions.listWorkflowRuns, list_workflow_runs_params)
-                return runs.filter(run => run.run_number < ${{github.run_number}}).map(run => {
-                  if (run.status !== 'completed') {
+                console.log("call actions.listWorkflowRuns:")
+                console.log(list_workflow_runs_params)
+                let runs = await github.paginate(
+                             github.rest.actions.listWorkflowRuns,
+                             list_workflow_runs_params
+                           )
+                runs = runs.filter(r => r.run_number < ${{github.run_number}})
+                return runs.map(r => {
+                  if (r.status !== 'completed') {
                     return running
                   }
 
-                  return `v${run.run_number}`
+                  return `v${r.run_number}`
                 })
               }))
               result = run_numbers.flat().filter(Boolean)
@@ -377,10 +440,14 @@ jobs:
           create_credentials_file: 'true'
           workload_identity_provider: 'projects/765091727073/locations/global/workloadIdentityPools/hato-atama-workload-identity/providers/github'
           service_account: 'actions-deploy@hato-atama.iam.gserviceaccount.com'
-      - run: gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
+      - run: |
+          FILE_PATH="${{ steps.auth.outputs.credentials_file_path }}"
+          gcloud auth login --brief --cred-file="${FILE_PATH}"
       - name: Remove app engine versions
         if: ${{ steps.get_run_numbers.outputs.result != '' }}
-        run: gcloud app versions delete --service=default ${{steps.get_run_numbers.outputs.result}}
+        run: |
+          NUMBER="${{steps.get_run_numbers.outputs.result}}"
+          gcloud app versions delete --service=default "${NUMBER}"
 
   pr-test-complete-check:
     runs-on: ubuntu-latest

@@ -1,10 +1,11 @@
+---
 name: super-linter
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
   workflow_dispatch:
 
@@ -20,8 +21,8 @@ jobs:
           cache: npm
       - run: npm install
       - name: Super-Linter
-        uses: github/super-linter@v4.8.5
+        uses: github/super-linter@v4.8.6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FILTER_REGEX_EXCLUDE: test/e2e/cypress/integration/.*
-          PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/var/cache/dotnet/tools:/usr/share/dotnet:/github/workspace/node_modules/.bin:/node_modules/.bin
+          PATH: /github/workspace/node_modules/.bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/node_modules/.bin:/venvs/ansible-lint/bin:/venvs/black/bin:/venvs/cfn-lint/bin:/venvs/cpplint/bin:/venvs/flake8/bin:/venvs/isort/bin:/venvs/mypy/bin:/venvs/pylint/bin:/venvs/snakefmt/bin:/venvs/snakemake/bin:/venvs/sqlfluff/bin:/venvs/yamllint/bin:/venvs/yq/bin:/var/cache/dotnet/tools:/usr/share/dotnet

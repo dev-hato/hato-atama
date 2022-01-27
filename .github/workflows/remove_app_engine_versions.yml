@@ -1,3 +1,4 @@
+---
 name: remove-app-engine-versions
 
 on:
@@ -32,15 +33,23 @@ jobs:
 
             for (let i = 0; i < retry_count; i++) {
               console.log("call actions.listRepoWorkflows:", common_params)
-              const workflows = await github.paginate(github.rest.actions.listRepoWorkflows, common_params)
-              const run_numbers = await Promise.all(workflows.filter(workflow => workflow.name === 'release').map(async workflow => {
+              let workflows = await github.paginate(
+                                github.rest.actions.listRepoWorkflows,
+                                common_params
+                              )
+              workflows = workflows.filter(w => w.name === 'release')
+              const run_numbers = await Promise.all(workflows.map(async w => {
                 const list_workflow_runs_params = {
-                  workflow_id: workflow.id,
+                  workflow_id: w.id,
                   branch: HEAD_REF,
                   ...common_params
                 }
-                console.log("call actions.listWorkflowRuns:", list_workflow_runs_params)
-                const runs = await github.paginate(github.rest.actions.listWorkflowRuns, list_workflow_runs_params)
+                console.log("call actions.listWorkflowRuns:")
+                console.log(list_workflow_runs_params)
+                const runs = await github.paginate(
+                               github.rest.actions.listWorkflowRuns,
+                               list_workflow_runs_params
+                             )
                 return runs.map(run => {
                   if (run.status !== 'completed') {
                     return running
@@ -83,6 +92,10 @@ jobs:
       - id: login_to_gcp
         name: 'Login to GCP'
         if: ${{ steps.get_run_numbers.outputs.result != '' }}
-        run: gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
+        run: |
+          FILE_PATH="${{ steps.auth.outputs.credentials_file_path }}"
+          gcloud auth login --brief --cred-file="${FILE_PATH}"
       - if: ${{ steps.get_run_numbers.outputs.result != '' }}
-        run: gcloud app versions delete --service=default ${{steps.get_run_numbers.outputs.result}}
+        run: |
+          NUMBER="${{steps.get_run_numbers.outputs.result}}"
+          gcloud app versions delete --service=default "${NUMBER}"
