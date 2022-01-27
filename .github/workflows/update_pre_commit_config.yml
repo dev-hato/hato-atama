@@ -73,7 +73,7 @@ jobs:
           git commit -m "鳩は唐揚げ！(自動で直してあげたよ！)"
           REPO_URL="https://"
           REPO_URL+="${{github.actor}}:${{secrets.GITHUB_TOKEN}}@github.com/"
-          REPO_URL=+"${{github.repository}}.git"
+          REPO_URL+="${{github.repository}}.git"
           GITHUB_HEAD="HEAD:refs/heads/fix-version-pre-commit-config-${HEAD_REF}"
           git push -f "${REPO_URL}" "${GITHUB_HEAD}"
       - name: Get PullRequests
