@@ -21,7 +21,8 @@ jobs:
       - run: npm install
       - name: Super-Linter
         uses: github/super-linter@v4.8.6
+        container:
+          entrypoint: /github/workspace/.github/linters/super_linter.sh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FILTER_REGEX_EXCLUDE: test/e2e/cypress/integration/.*
-          PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/var/cache/dotnet/tools:/usr/share/dotnet:/github/workspace/node_modules/.bin:/node_modules/.bin
