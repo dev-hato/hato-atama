@@ -19,9 +19,9 @@ jobs:
           node-version-file: .node-version
           cache: npm
       - run: npm install
-      - run: echo "/github/workspace/node_modules/.bin" >> $GITHUB_PATH
       - name: Super-Linter
         uses: github/super-linter@v4.8.6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FILTER_REGEX_EXCLUDE: test/e2e/cypress/integration/.*
+          PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/var/cache/dotnet/tools:/usr/share/dotnet:/github/workspace/node_modules/.bin:/node_modules/.bin
