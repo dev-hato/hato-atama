@@ -86,7 +86,7 @@ jobs:
           
           # 最大10分待つ
           for i in $(seq 600); do
-            serving_status=$(gcloud app versions describe "${ARGS}")
+            serving_status=$(gcloud app versions describe ${ARGS})
             echo "${i}: servingStatus: ${serving_status}"
           
             if [ "${serving_status}" = "SERVING" ]; then
@@ -190,7 +190,7 @@ jobs:
           ENV="--env API_HOST=http://localhost:8080/"
           SPEC="--spec cypress/integration/mini/*.js"
           BROWSER="--browser ${{ matrix.browser }}"
-          npm run test -- "${ENV}" "${SPEC}" "${BROWSER}"
+          npm run test -- ${ENV} ${SPEC} ${BROWSER}
         working-directory: ./test/e2e
 
   e2e-test-all-docker-compose:
@@ -265,7 +265,7 @@ jobs:
           ENV+="https://v${GITHUB_RUN_NUMBER}-dot-hato-atama.an.r.appspot.com"
           SPEC="--spec cypress/integration/mini/*.js"
           BROWSER="--browser ${{ matrix.browser }}"
-          npm run test -- "${ENV}" "${SPEC}" "${BROWSER}"
+          npm run test -- ${ENV} ${SPEC} ${BROWSER}
         working-directory: ./test/e2e
 
   e2e-test-all-prd:
