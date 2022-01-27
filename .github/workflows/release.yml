@@ -82,7 +82,7 @@ jobs:
       - name: Wait for the deployment to complete
         run: |
           ARGS="v${{github.run_number}}"
-          ARGS+="--service 'default' --format 'value(servingStatus)'"
+          ARGS+=" --service 'default' --format 'value(servingStatus)'"
           
           # 最大10分待つ
           for i in $(seq 600); do
