@@ -1,3 +1,4 @@
+---
 name: update-nodejs
 
 on:
@@ -9,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        directory: [ 'frontend', 'test/e2e', '.' ]
+        directory: ['frontend', 'test/e2e', '.']
     defaults:
       run:
         working-directory: ${{ matrix.directory }}
@@ -20,7 +21,10 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Get branch name
         id: get_branch_name
-        run: echo "::set-output name=branch_name::$(echo '${{ matrix.directory }}' | sed -e 's:/:-:g' | sed -e 's/\./root/g')"
+        run: |
+          BRANCH_NAME="$(echo '${{ matrix.directory }}' | sed -e 's:/:-:g')"
+          BRANCH_NAME="$(echo "${BRANCH_NAME}" | sed -e 's/\./root/g')"
+          echo "::set-output name=branch_name::${BRANCH_NAME}"
       - uses: actions/setup-node@v2.5.1
         with:
           node-version-file: ${{ matrix.directory }}/.node-version
@@ -39,58 +43,85 @@ jobs:
       - name: Push
         env:
           HEAD_REF: ${{github.event.pull_request.head.ref}}
-        if: ${{ github.event.pull_request.head.repo.full_name == github.repository && steps.diff.outputs.result != '' }}
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository
+          && steps.diff.outputs.result != '' }}
         run: |
           git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          EMAIL="41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.email "${EMAIL}"
           git add -u
           git commit -m "鳩は唐揚げ！(自動で直してあげたよ！)"
-          git push -f https://${{github.actor}}:${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}.git "HEAD:refs/heads/fix-package-${{ steps.get_branch_name.outputs.branch_name }}-${HEAD_REF}"
+          REPO_URL="https://"
+          REPO_URL+="${{github.actor}}:${{secrets.GITHUB_TOKEN}}@github.com/"
+          REPO_URL+="${{github.repository}}.git"
+          GITHUB_HEAD="HEAD:refs/heads/fix-package-"
+          GITHUB_HEAD+="${{ steps.get_branch_name.outputs.branch_name }}-"
+          GITHUB_HEAD+="${HEAD_REF}"
+          git push -f "${REPO_URL}" "${GITHUB_HEAD}"
       - name: Get PullRequests
         uses: actions/github-script@v5
         env:
           HEAD_REF: ${{github.event.pull_request.head.ref}}
-        if: ${{ github.event.pull_request.head.repo.full_name == github.repository && steps.diff.outputs.result != '' }}
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository
+          && steps.diff.outputs.result != '' }}
         id: get_pull_requests
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             const HEAD_REF = process.env["HEAD_REF"]
+            let head = "dev-hato:fix-package-"
+            head += "${{ steps.get_branch_name.outputs.branch_name }}-"
+            head += HEAD_REF
             const pulls_list_params = {
               owner: context.repo.owner,
               repo: context.repo.repo,
-              head: "dev-hato:fix-package-${{ steps.get_branch_name.outputs.branch_name }}-" + HEAD_REF,
+              head,
               base: HEAD_REF,
               state: "open"
             }
             console.log("call pulls.list:", pulls_list_params)
-            const pulls = await github.paginate(github.rest.pulls.list, pulls_list_params)
+            const pulls = await github.paginate(github.rest.pulls.list,
+                                                pulls_list_params)
             return pulls.length
       # pushしたブランチでPRを作る
       - name: Create PullRequest
         uses: actions/github-script@v5
         env:
           HEAD_REF: ${{github.event.pull_request.head.ref}}
-        if: ${{ github.event.pull_request.head.repo.full_name == github.repository && steps.diff.outputs.result != '' && steps.get_pull_requests.outputs.result == 0 }}
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository
+          && steps.diff.outputs.result != ''
+          && steps.get_pull_requests.outputs.result == 0 }}
         id: create_pull_request
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             const HEAD_REF = process.env["HEAD_REF"]
+            let head = "dev-hato:fix-package-"
+            head += "${{ steps.get_branch_name.outputs.branch_name }}-"
+            head += HEAD_REF
+            let title = "${{ matrix.directory }}の"
+            title += "package.jsonやpackage-lock.jsonを直してあげたよ！PRをマージしてね！"
+            title += " #${{github.event.pull_request.number}}"
             const pulls_create_params = {
               owner: context.repo.owner,
               repo: context.repo.repo,
-              head: "dev-hato:fix-package-${{ steps.get_branch_name.outputs.branch_name }}-" + HEAD_REF,
+              head,
               base: HEAD_REF,
-              title: "${{ matrix.directory }}のpackage.jsonやpackage-lock.jsonを直してあげたよ！PRをマージしてね！ #${{github.event.pull_request.number}}",
+              title,
               body: "鳩の唐揚げおいしい！😋😋😋 #${{github.event.pull_request.number}}"
             }
             console.log("call pulls.create:", pulls_create_params)
-            const create_pull_res = (await github.rest.pulls.create(pulls_create_params)).data
-            return create_pull_res.number
+            const create_pull_res = await github.rest.pulls.create(
+                                        pulls_create_params
+                                    )
+            const create_pull_res_data = create_pull_res.data
+            return create_pull_res_data.number
       - name: Assign a user
         uses: actions/github-script@v5
-        if: ${{ github.event.pull_request.head.repo.full_name == github.repository && steps.diff.outputs.result != '' && steps.get_pull_requests.outputs.result == 0 && github.event.pull_request.user.login != 'dependabot[bot]' }}
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository
+          && steps.diff.outputs.result != ''
+          && steps.get_pull_requests.outputs.result == 0
+          && github.event.pull_request.user.login != 'dependabot[bot]' }}
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
@@ -100,19 +131,23 @@ jobs:
               issue_number: ${{steps.create_pull_request.outputs.result}},
               assignees: ["${{github.event.pull_request.user.login}}"]
             }
-            console.log("call issues.addAssignees:", issues_add_assignees_params)
+            console.log("call issues.addAssignees:")
+            console.log(issues_add_assignees_params)
             await github.rest.issues.addAssignees(issues_add_assignees_params)
       # 既にformat修正のPRがある状態で、手動でformatを修正した場合、format修正のPRを閉じる
       - name: Close PullRequest
         uses: actions/github-script@v5
         env:
           HEAD_REF: ${{github.event.pull_request.head.ref}}
-        if: ${{ github.event.pull_request.head.repo.full_name == github.repository && steps.diff.outputs.result == '' }}
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository
+          && steps.diff.outputs.result == '' }}
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             const HEAD_REF = process.env["HEAD_REF"]
-            const head_name = "fix-package-${{ steps.get_branch_name.outputs.branch_name }}-" + HEAD_REF
+            let head_name = "fix-package-"
+            head_name += "${{ steps.get_branch_name.outputs.branch_name }}-"
+            head_name += HEAD_REF
             const common_params = {
               owner: context.repo.owner,
               repo: context.repo.repo
@@ -124,7 +159,8 @@ jobs:
               ...common_params
             }
             console.log("call pulls.list:",pulls_list_params)
-            const pulls = await github.paginate(github.rest.pulls.list, pulls_list_params)
+            const pulls = await github.paginate(github.rest.pulls.list,
+                                                pulls_list_params)
 
             for (const pull of pulls) {
               const pulls_update_params = {
@@ -162,13 +198,15 @@ jobs:
         run: |
           image_name=hato_atama_frontend_build
           docker build -t "${image_name}" --target build -f Dockerfile ..
-          node_version=$(docker run ${image_name} sh -c "node --version | sed -e 's/^v//g'")
+          DOCKER_CMD="node --version | sed -e 's/^v//g'"
+          node_version=$(docker run ${image_name} sh -c "${DOCKER_CMD}")
           echo "Node.js version:" "${node_version}"
           echo "::set-output name=node_version::${node_version}"
       - name: Update versions
         run: |
+          NODE_VERSION="${{steps.get_node_version.outputs.node_version}}"
           for path in "frontend" "test/e2e" "."; do
-            echo "${{steps.get_node_version.outputs.node_version}}" > ${path}/.node-version
+            echo "${NODE_VERSION}" > ${path}/.node-version
           done
       # 差分があったときは差分を出力する
       - name: Show diff
@@ -180,18 +218,25 @@ jobs:
       - name: Push
         env:
           HEAD_REF: ${{github.event.pull_request.head.ref}}
-        if: ${{ github.event.pull_request.head.repo.full_name == github.repository && steps.diff.outputs.result != '' }}
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository
+          && steps.diff.outputs.result != '' }}
         run: |
           git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          EMAIL="41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.email "${EMAIL}"
           git add -u
           git commit -m "鳩は唐揚げ！(自動で直してあげたよ！)"
-          git push -f https://${{github.actor}}:${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}.git "HEAD:refs/heads/fix-version-${HEAD_REF}"
+          REPO_URL="https://"
+          REPO_URL+="${{github.actor}}:${{secrets.GITHUB_TOKEN}}@github.com/"
+          REPO_URL+="${{github.repository}}.git"
+          GITHUB_HEAD="HEAD:refs/heads/fix-version-${HEAD_REF}"
+          git push -f "${REPO_URL}" "${GITHUB_HEAD}"
       - name: Get PullRequests
         uses: actions/github-script@v5
         env:
           HEAD_REF: ${{github.event.pull_request.head.ref}}
-        if: ${{ github.event.pull_request.head.repo.full_name == github.repository && steps.diff.outputs.result != '' }}
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository
+          && steps.diff.outputs.result != '' }}
         id: get_pull_requests
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
@@ -205,33 +250,44 @@ jobs:
               state: "open"
             }
             console.log("call pulls.list:", pulls_list_params)
-            const pulls = await github.paginate(github.rest.pulls.list, pulls_list_params)
+            const pulls = await github.paginate(github.rest.pulls.list,
+                                                pulls_list_params)
             return pulls.length
       # pushしたブランチでPRを作る
       - name: Create PullRequest
         uses: actions/github-script@v5
         env:
           HEAD_REF: ${{github.event.pull_request.head.ref}}
-        if: ${{ github.event.pull_request.head.repo.full_name == github.repository && steps.diff.outputs.result != '' && steps.get_pull_requests.outputs.result == 0 }}
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository
+          && steps.diff.outputs.result != ''
+          && steps.get_pull_requests.outputs.result == 0 }}
         id: create_pull_request
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             const HEAD_REF = process.env["HEAD_REF"]
+            let title = ".node-versionを直してあげたよ！PRをマージしてね！"
+            title += " #${{github.event.pull_request.number}}"
             const pulls_create_params = {
               owner: context.repo.owner,
               repo: context.repo.repo,
               head: "dev-hato:fix-version-" + HEAD_REF,
               base: HEAD_REF,
-              title: ".node-versionを直してあげたよ！PRをマージしてね！ #${{github.event.pull_request.number}}",
+              title,
               body: "鳩の唐揚げおいしい！😋😋😋 #${{github.event.pull_request.number}}"
             }
             console.log("call pulls.create:", pulls_create_params)
-            const create_pull_res = (await github.rest.pulls.create(pulls_create_params)).data
-            return create_pull_res.number
+            const create_pull_res = await github.rest.pulls.create(
+                                        pulls_create_params
+                                    )
+            const create_pull_res_data = create_pull_res.data
+            return create_pull_res_data.number
       - name: Assign a user
         uses: actions/github-script@v5
-        if: ${{ github.event.pull_request.head.repo.full_name == github.repository && steps.diff.outputs.result != '' && steps.get_pull_requests.outputs.result == 0 && github.event.pull_request.user.login != 'dependabot[bot]' }}
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository
+          && steps.diff.outputs.result != ''
+          && steps.get_pull_requests.outputs.result == 0
+          && github.event.pull_request.user.login != 'dependabot[bot]' }}
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
@@ -241,14 +297,16 @@ jobs:
               issue_number: ${{steps.create_pull_request.outputs.result}},
               assignees: ["${{github.event.pull_request.user.login}}"]
             }
-            console.log("call issues.addAssignees:", issues_add_assignees_params)
+            console.log("call issues.addAssignees:")
+            console.log(issues_add_assignees_params)
             await github.rest.issues.addAssignees(issues_add_assignees_params)
       # 既にformat修正のPRがある状態で、手動でformatを修正した場合、format修正のPRを閉じる
       - name: Close PullRequest
         uses: actions/github-script@v5
         env:
           HEAD_REF: ${{github.event.pull_request.head.ref}}
-        if: ${{ github.event.pull_request.head.repo.full_name == github.repository && steps.diff.outputs.result == '' }}
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository
+          && steps.diff.outputs.result == '' }}
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
@@ -265,7 +323,8 @@ jobs:
               ...common_params
             }
             console.log("call pulls.list:", pulls_list_params)
-            const pulls = await github.paginate(github.rest.pulls.list, pulls_list_params)
+            const pulls = await github.paginate(github.rest.pulls.list,
+                                                pulls_list_params)
 
             for (const pull of pulls) {
               const pulls_update_params = {
