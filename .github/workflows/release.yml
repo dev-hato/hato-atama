@@ -324,7 +324,7 @@ jobs:
         if: ${{ github.event_name == 'push' }}
       - run: |
           VALUE="--build-arg BUILDKIT_INLINE_CACHE=1"
-          docker-compose -f staging.docker-compose.yml build "${VALUE}"
+          docker-compose -f staging.docker-compose.yml build ${VALUE}
       - run: docker-compose -f staging.docker-compose.yml push
 
   migrating-traffic:
