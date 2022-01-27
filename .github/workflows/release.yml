@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Check bot
         run: |
-          if ["${{github.actor}}" = "dependabot[bot]"]; then
+          if [ "${{github.actor}}" = "dependabot[bot]" ]; then
             exit 1
           fi
 
@@ -89,7 +89,7 @@ jobs:
             serving_status=$(gcloud app versions describe "${ARGS}")
             echo "${i}: servingStatus: ${serving_status}"
           
-            if ["${serving_status}" = "SERVING"]; then
+            if [ "${serving_status}" = "SERVING" ]; then
               exit 0
             fi
           
@@ -134,7 +134,7 @@ jobs:
           echo "ARTIFACT_PATH=${ARTIFACT_PATH}" >> "$GITHUB_ENV"
           URLS="https://"
           URLS+="v${{ github.run_number }}-dot-hato-atama.an.r.appspot.com"
-          echo "URLS=${URL}" >> "${GITHUB_ENV}"
+          echo "URLS=${URLS}" >> "${GITHUB_ENV}"
       - run: mkdir -p "${ARTIFACT_PATH}"
       - uses: foo-software/lighthouse-check-action@v7.1.1
         with:

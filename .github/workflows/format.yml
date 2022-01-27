@@ -42,11 +42,14 @@ jobs:
         run: |
           result=$(git diff)
           echo "::set-output name=result::$result"
+      - run: |
+          REPO_NAME="${{ github.event.pull_request.head.repo.full_name }}"
+          echo "REPO_NAME=${REPO_NAME}" >> "${GITHUB_ENV}"
       # 差分があったときは、コミットを作りpushする
       - name: Push
         env:
           HEAD_REF: ${{github.event.pull_request.head.ref}}
-        if: ${{ github.event.pull_request.head.repo.full_name == github.repository
+        if: ${{ env.REPO_NAME == github.repository
           && steps.diff.outputs.result != '' }}
         run: |
           git config user.name "github-actions[bot]"
@@ -63,7 +66,7 @@ jobs:
         uses: actions/github-script@v5
         env:
           HEAD_REF: ${{github.event.pull_request.head.ref}}
-        if: ${{ github.event.pull_request.head.repo.full_name == github.repository
+        if: ${{ env.REPO_NAME == github.repository
           && steps.diff.outputs.result != '' }}
         id: get_pull_requests
         with:
@@ -86,7 +89,7 @@ jobs:
         uses: actions/github-script@v5
         env:
           HEAD_REF: ${{github.event.pull_request.head.ref}}
-        if: ${{ github.event.pull_request.head.repo.full_name == github.repository
+        if: ${{ env.REPO_NAME == github.repository
           && steps.diff.outputs.result != ''
           && steps.get_pull_requests.outputs.result == 0 }}
         id: create_pull_request
@@ -112,7 +115,7 @@ jobs:
             return create_pull_res_data.number
       - name: Assign a user
         uses: actions/github-script@v5
-        if: ${{ github.event.pull_request.head.repo.full_name == github.repository
+        if: ${{ env.REPO_NAME == github.repository
           && steps.diff.outputs.result != ''
           && steps.get_pull_requests.outputs.result == 0
           && github.event.pull_request.user.login != 'dependabot[bot]' }}
@@ -133,7 +136,7 @@ jobs:
         uses: actions/github-script@v5
         env:
           HEAD_REF: ${{github.event.pull_request.head.ref}}
-        if: ${{ github.event.pull_request.head.repo.full_name == github.repository
+        if: ${{ env.REPO_NAME == github.repository
           && steps.diff.outputs.result == '' }}
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
