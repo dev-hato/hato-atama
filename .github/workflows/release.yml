@@ -83,7 +83,11 @@ jobs:
         run: |
           # 最大10分待つ
           for i in $(seq 600); do
-            serving_status=$(gcloud app versions describe "v${{github.run_number}}" --service "default" --format "value(servingStatus)")
+            serving_status=$(gcloud app versions describe \
+                                                 "v${{github.run_number}}" \
+                                                 --service "default" \
+                                                 --format \
+                                                   "value(servingStatus)")
             echo "${i}: servingStatus: ${serving_status}"
           
             if [ "${serving_status}" = "SERVING" ]; then
@@ -184,10 +188,9 @@ jobs:
       - run: npm i
         working-directory: ./test/e2e
       - run: |
-          ENV="--env API_HOST=http://localhost:8080/"
-          SPEC="--spec cypress/integration/mini/*.js"
-          BROWSER="--browser ${{ matrix.browser }}"
-          npm run test -- ${ENV} ${SPEC} ${BROWSER}
+          npm run test -- --env API_HOST=http://localhost:8080/ \
+                          --spec cypress/integration/mini/*.js \
+                          --browser ${{ matrix.browser }}
         working-directory: ./test/e2e
 
   e2e-test-all-docker-compose:
@@ -258,11 +261,11 @@ jobs:
       - run: npm i
         working-directory: ./test/e2e
       - run: |
-          ENV="--env API_HOST="
-          ENV+="https://v${GITHUB_RUN_NUMBER}-dot-hato-atama.an.r.appspot.com"
-          SPEC="--spec cypress/integration/mini/*.js"
-          BROWSER="--browser ${{ matrix.browser }}"
-          npm run test -- ${ENV} ${SPEC} ${BROWSER}
+          API_HOST="https://"
+          API_HOST+="v${GITHUB_RUN_NUMBER}-dot-hato-atama.an.r.appspot.com"
+          npm run test -- --env "API_HOST=${API_HOST}" \
+                          --spec cypress/integration/mini/*.js \
+                          --browser ${{ matrix.browser }}
         working-directory: ./test/e2e
 
   e2e-test-all-prd:
@@ -320,8 +323,8 @@ jobs:
       - run: echo 'TAG_NAME=latest' >> "$GITHUB_ENV"
         if: ${{ github.event_name == 'push' }}
       - run: |
-          VALUE="--build-arg BUILDKIT_INLINE_CACHE=1"
-          docker-compose -f staging.docker-compose.yml build ${VALUE}
+          docker-compose -f staging.docker-compose.yml build \
+                         --build-arg BUILDKIT_INLINE_CACHE=1
       - run: docker-compose -f staging.docker-compose.yml push
 
   migrating-traffic:
