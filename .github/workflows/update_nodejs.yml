@@ -115,7 +115,7 @@ jobs:
             }
             console.log("call pulls.create:", pulls_create_params)
             const create_pull_res = await github.rest.pulls.create(
-                                        pulls_create_params
+                                      pulls_create_params
                                     )
             const create_pull_res_data = create_pull_res.data
             return create_pull_res_data.number
@@ -284,7 +284,7 @@ jobs:
             }
             console.log("call pulls.create:", pulls_create_params)
             const create_pull_res = await github.rest.pulls.create(
-                                        pulls_create_params
+                                      pulls_create_params
                                     )
             const create_pull_res_data = create_pull_res.data
             return create_pull_res_data.number

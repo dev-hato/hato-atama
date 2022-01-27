@@ -383,8 +383,8 @@ jobs:
             for (let i = 0; i < retry_count; i++) {
               console.log("call actions.listRepoWorkflows:", common_params)
               let workflows = await github.paginate(
-                                  github.rest.actions.listRepoWorkflows,
-                                  common_params
+                                github.rest.actions.listRepoWorkflows,
+                                common_params
                               )
               workflows = workflows.filter(w => w.name === 'release')
               const run_numbers = await Promise.all(workflows.map(async w => {
@@ -396,8 +396,8 @@ jobs:
                 console.log("call actions.listWorkflowRuns:")
                 console.log(list_workflow_runs_params)
                 let runs = await github.paginate(
-                               github.rest.actions.listWorkflowRuns,
-                               list_workflow_runs_params
+                             github.rest.actions.listWorkflowRuns,
+                             list_workflow_runs_params
                            )
                 runs = runs.filter(r => r.run_number < ${{github.run_number}})
                 return runs.map(r => {
