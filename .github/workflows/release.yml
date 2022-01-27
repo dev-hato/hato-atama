@@ -81,12 +81,9 @@ jobs:
           version: "v${{github.run_number}}"
       - name: Wait for the deployment to complete
         run: |
-          ARGS='"v${{github.run_number}}"'
-          ARGS+=' --service "default" --format "value(servingStatus)"'
-          
           # 最大10分待つ
           for i in $(seq 600); do
-            serving_status=$(gcloud app versions describe ${ARGS})
+            serving_status=$(gcloud app versions describe "v${{github.run_number}}" --service "default" --format "value(servingStatus)")
             echo "${i}: servingStatus: ${serving_status}"
           
             if [ "${serving_status}" = "SERVING" ]; then
