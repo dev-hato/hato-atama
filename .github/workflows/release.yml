@@ -175,16 +175,11 @@ jobs:
         if: ${{ github.event_name == 'push' }}
       - run: docker-compose -f staging.docker-compose.yml build
       - run: docker-compose -f staging.docker-compose.yml up -d
-      - run: |
-          FILE_PATH="**/test/e2e/package-lock.json"
-          echo "FILE_PATH=${FILE_PATH}" >> "${GITHUB_ENV}"
-      - name: Cache node modules e2e
-        uses: actions/cache@v2
+      - uses: actions/setup-node@v2.5.1
         with:
-          path: ~/.npm
-          key: npm-cache-test-e2e-${{ hashFiles(env.FILE_PATH) }}
-          restore-keys: |
-            npm-cache-test-e2e-
+          node-version-file: test/e2e/.node-version
+          cache: npm
+          cache-dependency-path: test/e2e/package-lock.json
       - run: npm i
         working-directory: ./test/e2e
       - run: |
@@ -221,16 +216,11 @@ jobs:
         if: ${{ github.event_name == 'push' }}
       - run: docker-compose -f staging.docker-compose.yml build
       - run: docker-compose -f staging.docker-compose.yml up -d
-      - run: |
-          FILE_PATH="**/test/e2e/package-lock.json"
-          echo "FILE_PATH=${FILE_PATH}" >> "${GITHUB_ENV}"
-      - name: Cache node modules e2e
-        uses: actions/cache@v2
+      - uses: actions/setup-node@v2.5.1
         with:
-          path: ~/.npm
-          key: npm-cache-test-e2e-${{ hashFiles(env.FILE_PATH) }}
-          restore-keys: |
-            npm-cache-test-e2e-
+          node-version-file: test/e2e/.node-version
+          cache: npm
+          cache-dependency-path: test/e2e/package-lock.json
       - run: npm i
         working-directory: ./test/e2e
       - run: |
@@ -248,16 +238,11 @@ jobs:
         browser: ["chrome", "chromium", "firefox", "electron"]
     steps:
       - uses: actions/checkout@v2
-      - run: |
-          FILE_PATH="**/test/e2e/package-lock.json"
-          echo "FILE_PATH=${FILE_PATH}" >> "${GITHUB_ENV}"
-      - name: Cache node modules e2e
-        uses: actions/cache@v2
+      - uses: actions/setup-node@v2.5.1
         with:
-          path: ~/.npm
-          key: npm-cache-test-e2e-${{ hashFiles(env.FILE_PATH) }}
-          restore-keys: |
-            npm-cache-test-e2e-
+          node-version-file: test/e2e/.node-version
+          cache: npm
+          cache-dependency-path: test/e2e/package-lock.json
       - run: npm i
         working-directory: ./test/e2e
       - run: |
@@ -279,16 +264,11 @@ jobs:
     if: ${{ github.event_name == 'push' }}
     steps:
       - uses: actions/checkout@v2
-      - run: |
-          FILE_PATH="**/test/e2e/package-lock.json"
-          echo "FILE_PATH=${FILE_PATH}" >> "${GITHUB_ENV}"
-      - name: Cache node modules e2e
-        uses: actions/cache@v2
+      - uses: actions/setup-node@v2.5.1
         with:
-          path: ~/.npm
-          key: npm-cache-test-e2e-${{ hashFiles(env.FILE_PATH) }}
-          restore-keys: |
-            npm-cache-test-e2e-
+          node-version-file: test/e2e/.node-version
+          cache: npm
+          cache-dependency-path: test/e2e/package-lock.json
       - run: npm i
         working-directory: ./test/e2e
       - run: |

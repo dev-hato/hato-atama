@@ -4,12 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "cypress run -q"
+    "test": "NODE_OPTIONS=--openssl-legacy-provider cypress run -q"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "cypress": "^9.0.0",
     "eslint-plugin-cypress": "^2.11.3"
+  },
+  "engines": {
+    "node": "^17.3.0",
+    "npm": "^8.3.0"
   }
 }
