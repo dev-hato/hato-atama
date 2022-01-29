@@ -187,7 +187,7 @@ jobs:
       - run: npm i
         working-directory: ./test/e2e
       - run: |
-          npm run test -- --env API_HOST=http://localhost:8080/ \
+          DEBUG=cypress* npm run test -- --env API_HOST=http://localhost:8080/ \
                           --spec cypress/integration/mini/*.js \
                           --browser ${{ matrix.browser }}
         working-directory: ./test/e2e
@@ -233,7 +233,7 @@ jobs:
         working-directory: ./test/e2e
       - run: |
           ENV="API_HOST=http://localhost:8080/"
-          npm run test -- --env "${ENV}" --browser ${{ matrix.browser }}
+          DEBUG=cypress* npm run test -- --env "${ENV}" --browser ${{ matrix.browser }}
         working-directory: ./test/e2e
 
   e2e-test-mini-prd:
