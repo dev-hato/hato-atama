@@ -154,7 +154,7 @@ jobs:
       COMPOSE_DOCKER_CLI_BUILD: 1
     strategy:
       matrix:
-        browser: [ "chrome", "chromium", "firefox", "electron" ]
+        browser: ["chrome", "chromium", "firefox", "electron"]
     needs: check_bot
     steps:
       - uses: actions/checkout@v2
@@ -196,7 +196,7 @@ jobs:
       COMPOSE_DOCKER_CLI_BUILD: 1
     strategy:
       matrix:
-        browser: [ "chrome", "chromium", "firefox", "electron" ]
+        browser: ["chrome", "chromium", "firefox", "electron"]
     needs: check_bot
     steps:
       - uses: actions/checkout@v2
@@ -237,7 +237,7 @@ jobs:
       - e2e-test-mini-docker-compose
     strategy:
       matrix:
-        browser: [ "chrome", "chromium", "firefox", "electron" ]
+        browser: ["chrome", "chromium", "firefox", "electron"]
     steps:
       - uses: actions/checkout@v2
       - run: |
@@ -267,7 +267,7 @@ jobs:
       - e2e-test-mini-prd
     strategy:
       matrix:
-        browser: [ "chrome", "chromium", "firefox", "electron" ]
+        browser: ["chrome", "chromium", "firefox", "electron"]
     if: ${{ github.event_name == 'push' }}
     steps:
       - uses: actions/checkout@v2
