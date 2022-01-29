@@ -175,10 +175,6 @@ jobs:
         if: ${{ github.event_name == 'push' }}
       - run: docker-compose -f staging.docker-compose.yml build
       - run: docker-compose -f staging.docker-compose.yml up -d
-      - run: |
-          sudo apt-get install -y libgtk2.0-0 libgtk-3-0 libgbm-dev \
-                                  libnotify-dev libgconf-2-4 libnss3 \
-                                  libxss1 libasound2 libxtst6 xauth xvfb
       - uses: actions/setup-node@v2.5.1
         with:
           node-version-file: test/e2e/.node-version
@@ -221,10 +217,6 @@ jobs:
         if: ${{ github.event_name == 'push' }}
       - run: docker-compose -f staging.docker-compose.yml build
       - run: docker-compose -f staging.docker-compose.yml up -d
-      - run: |
-          sudo apt-get install -y libgtk2.0-0 libgtk-3-0 libgbm-dev \
-                                  libnotify-dev libgconf-2-4 libnss3 \
-                                  libxss1 libasound2 libxtst6 xauth xvfb
       - uses: actions/setup-node@v2.5.1
         with:
           node-version-file: test/e2e/.node-version
