@@ -221,6 +221,11 @@ jobs:
         if: ${{ github.event_name == 'push' }}
       - run: docker-compose -f staging.docker-compose.yml build
       - run: docker-compose -f staging.docker-compose.yml up -d
+      - uses: actions/setup-node@v2.5.1
+        with:
+          node-version-file: test/e2e/.node-version
+          cache: npm
+          cache-dependency-path: test/e2e/package-lock.json
       - run: |
           FILE_PATH="**/test/e2e/package-lock.json"
           echo "FILE_PATH=${FILE_PATH}" >> "${GITHUB_ENV}"
