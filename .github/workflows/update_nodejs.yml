@@ -203,8 +203,7 @@ jobs:
           image_name=hato_atama_frontend_build
           docker build -t "${image_name}" --target build -f Dockerfile ..
           DOCKER_CMD="node --version && npm --version"
-          result="$(docker run ${image_name} sh -c "${DOCKER_CMD}")"
-          result=($(echo -e "${result}" | tr "\n" " "))
+          result=($(docker run ${image_name} sh -c "${DOCKER_CMD}"))
           node_version=$(echo "${result[1]}" | sed -e 's/^v//g')
           npm_version=${result[2]}
           echo "Node.js version:" "${node_version}"
