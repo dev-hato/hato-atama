@@ -8,6 +8,7 @@ jobs:
   # npm installを実行し、package.jsonやpackage-lock.jsonに差分があればPRを作る
   update-package:
     runs-on: ubuntu-latest
+    needs: update-version
     strategy:
       matrix:
         directory: ['frontend', 'test/e2e', '.']
