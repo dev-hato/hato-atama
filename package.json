@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "preinstall": "npx npm-force-resolutions"
+  },
   "devDependencies": {
     "@textlint-ja/textlint-rule-no-insert-dropping-sa": "^2.0.1",
     "textlint": "^12.1.0",
