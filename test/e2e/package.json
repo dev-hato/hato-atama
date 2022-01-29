@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "cypress run -q"
+    "test": "NODE_OPTIONS=--openssl-legacy-provider cypress run -q"
   },
   "author": "",
   "license": "ISC",
