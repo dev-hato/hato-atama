@@ -103,23 +103,23 @@ jobs:
             let head = "dev-hato:fix-package-"
             head += "${{ steps.get_branch_name.outputs.branch_name }}-"
             head += HEAD_REF
+            const number = "#${{github.event.pull_request.number}}"
             let title = "${{ matrix.directory }}の"
-            title += "package.jsonやpackage-lock.jsonを直してあげたよ！PRをマージしてね！"
-            title += " #${{github.event.pull_request.number}}"
+            title += "package.jsonやpackage-lock.jsonを直してあげたよ！PRをマージしてね！ "
+            title += number
             const pulls_create_params = {
               owner: context.repo.owner,
               repo: context.repo.repo,
               head,
               base: HEAD_REF,
               title,
-              body: "鳩の唐揚げおいしい！😋😋😋 #${{github.event.pull_request.number}}"
+              body: "鳩の唐揚げおいしい！😋😋😋 " + number
             }
             console.log("call pulls.create:", pulls_create_params)
             const create_pull_res = await github.rest.pulls.create(
                                       pulls_create_params
                                     )
-            const create_pull_res_data = create_pull_res.data
-            return create_pull_res_data.number
+            return create_pull_res.data.number
       - name: Assign a user
         uses: actions/github-script@v5
         if: ${{ env.REPO_NAME == github.repository
@@ -273,22 +273,22 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             const HEAD_REF = process.env["HEAD_REF"]
-            let title = ".node-versionを直してあげたよ！PRをマージしてね！"
-            title += " #${{github.event.pull_request.number}}"
+            const number = "#${{github.event.pull_request.number}}"
+            let title = ".node-versionを直してあげたよ！PRをマージしてね！ "
+            title += number
             const pulls_create_params = {
               owner: context.repo.owner,
               repo: context.repo.repo,
               head: "dev-hato:fix-version-" + HEAD_REF,
               base: HEAD_REF,
               title,
-              body: "鳩の唐揚げおいしい！😋😋😋 #${{github.event.pull_request.number}}"
+              body: "鳩の唐揚げおいしい！😋😋😋 " + number
             }
             console.log("call pulls.create:", pulls_create_params)
             const create_pull_res = await github.rest.pulls.create(
                                       pulls_create_params
                                     )
-            const create_pull_res_data = create_pull_res.data
-            return create_pull_res_data.number
+            return create_pull_res.data.number
       - name: Assign a user
         uses: actions/github-script@v5
         if: ${{ env.REPO_NAME == github.repository
