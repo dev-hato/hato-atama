@@ -204,8 +204,8 @@ jobs:
           docker build -t "${image_name}" --target build -f Dockerfile ..
           DOCKER_CMD="node --version && npm --version"
           result=($(docker run ${image_name} sh -c "${DOCKER_CMD}"))
-          node_version=$(echo "${result[1]}" | sed -e 's/^v//g')
-          npm_version=${result[2]}
+          node_version=$(echo "${result[0]}" | sed -e 's/^v//g')
+          npm_version=${result[1]}
           echo "Node.js version:" "${node_version}"
           echo "npm version:" "${npm_version}"
           echo "::set-output name=node_version::${node_version}"
