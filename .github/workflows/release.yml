@@ -154,7 +154,7 @@ jobs:
       COMPOSE_DOCKER_CLI_BUILD: 1
     strategy:
       matrix:
-        browser: ["chrome", "chromium", "firefox", "electron"]
+        browser: [ "chrome", "chromium", "firefox", "electron" ]
     needs: check_bot
     steps:
       - uses: actions/checkout@v2
@@ -175,6 +175,10 @@ jobs:
         if: ${{ github.event_name == 'push' }}
       - run: docker-compose -f staging.docker-compose.yml build
       - run: docker-compose -f staging.docker-compose.yml up -d
+      - run: |
+          sudo apt-get install -y libgtk2.0-0 libgtk-3-0 libgbm-dev \
+                                  libnotify-dev libgconf-2-4 libnss3 \
+                                  libxss1 libasound2 libxtst6 xauth xvfb
       - uses: actions/setup-node@v2.5.1
         with:
           node-version-file: test/e2e/.node-version
@@ -195,7 +199,7 @@ jobs:
       COMPOSE_DOCKER_CLI_BUILD: 1
     strategy:
       matrix:
-        browser: ["chrome", "chromium", "firefox", "electron"]
+        browser: [ "chrome", "chromium", "firefox", "electron" ]
     needs: check_bot
     steps:
       - uses: actions/checkout@v2
@@ -216,6 +220,10 @@ jobs:
         if: ${{ github.event_name == 'push' }}
       - run: docker-compose -f staging.docker-compose.yml build
       - run: docker-compose -f staging.docker-compose.yml up -d
+      - run: |
+          sudo apt-get install -y libgtk2.0-0 libgtk-3-0 libgbm-dev \
+                                  libnotify-dev libgconf-2-4 libnss3 \
+                                  libxss1 libasound2 libxtst6 xauth xvfb
       - uses: actions/setup-node@v2.5.1
         with:
           node-version-file: test/e2e/.node-version
@@ -235,7 +243,7 @@ jobs:
       - e2e-test-mini-docker-compose
     strategy:
       matrix:
-        browser: ["chrome", "chromium", "firefox", "electron"]
+        browser: [ "chrome", "chromium", "firefox", "electron" ]
     steps:
       - uses: actions/checkout@v2
       - run: |
@@ -265,7 +273,7 @@ jobs:
       - e2e-test-mini-prd
     strategy:
       matrix:
-        browser: ["chrome", "chromium", "firefox", "electron"]
+        browser: [ "chrome", "chromium", "firefox", "electron" ]
     if: ${{ github.event_name == 'push' }}
     steps:
       - uses: actions/checkout@v2
