@@ -203,13 +203,21 @@ jobs:
           docker build -t "${image_name}" --target build -f Dockerfile ..
           DOCKER_CMD="node --version | sed -e 's/^v//g'"
           node_version=$(docker run ${image_name} sh -c "${DOCKER_CMD}")
+          npm_version=$(docker run ${image_name} sh -c "npm --version")
           echo "Node.js version:" "${node_version}"
+          echo "npm version:" "${npm_version}"
           echo "::set-output name=node_version::${node_version}"
+          echo "::set-output name=npm_version::${npm_version}"
       - name: Update versions
         run: |
           NODE_VERSION="${{steps.get_node_version.outputs.node_version}}"
+          NPM_VERSION="${{steps.get_node_version.outputs.npm_version}}"
           for path in "frontend" "test/e2e" "."; do
             echo "${NODE_VERSION}" > ${path}/.node-version
+            NODE_PATTERN="s/\"node\": \".*\"/\"node\": \"^${NODE_VERSION}\"/g"
+            sed -i -e "${NODE_PATTERN}" ${path}/package.json
+            NPM_PATTERN="s/\"npm\": \".*\"/\"npm\": \"^${NPM_VERSION}\"/g"
+            sed -i -e "${NPM_PATTERN}" ${path}/package.json
           done
       # 差分があったときは差分を出力する
       - name: Show diff
