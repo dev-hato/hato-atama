@@ -231,6 +231,9 @@ jobs:
           key: npm-cache-test-e2e-${{ hashFiles(env.FILE_PATH) }}
           restore-keys: |
             npm-cache-test-e2e-
+      - run: |
+          node --version
+          npm --version
       - run: npm i
         working-directory: ./test/e2e
       - run: |
