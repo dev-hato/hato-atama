@@ -32,13 +32,12 @@ jobs:
             const latest_release = await github.rest.repos.getLatestRelease(
                                      common_params
                                    )
-            const latest_release_data = latest_release.data
             config.repos = config.repos.map(repo => {
                 let repo_name = 'https://github.com/'
                 repo_name += common_params.owner + '/' + common_params.repo
 
                 if (repo.repo === repo_name) {
-                    repo.rev = latest_release_data.tag_name
+                    repo.rev = latest_release.data.tag_name
                 }
 
                 return repo;
@@ -112,22 +111,22 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             const HEAD_REF = process.env["HEAD_REF"]
-            let title = ".pre-commit-config.yamlを直してあげたよ！PRをマージしてね！"
-            title += " #${{github.event.pull_request.number}}"
+            const number = "#${{github.event.pull_request.number}}"
+            let title = ".pre-commit-config.yamlを直してあげたよ！PRをマージしてね！ "
+            title += number
             const pulls_create_params = {
               owner: context.repo.owner,
               repo: context.repo.repo,
               head: "dev-hato:fix-version-pre-commit-config-" + HEAD_REF,
               base: HEAD_REF,
               title,
-              body: "鳩の唐揚げおいしい！😋😋😋 #${{github.event.pull_request.number}}"
+              body: "鳩の唐揚げおいしい！😋😋😋 " + number
             }
             console.log("call pulls.create:", pulls_create_params)
             const create_pull_res = await github.rest.pulls.create(
                                       pulls_create_params
                                     )
-            const create_pull_res_data = create_pull_res.data
-            return create_pull_res_data.number
+            return create_pull_res.data.number
       - name: Assign a user
         uses: actions/github-script@v5
         if: ${{ env.REPO_NAME == github.repository
