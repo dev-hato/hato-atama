@@ -180,16 +180,6 @@ jobs:
           node-version-file: test/e2e/.node-version
           cache: npm
           cache-dependency-path: test/e2e/package-lock.json
-      - run: |
-          FILE_PATH="**/test/e2e/package-lock.json"
-          echo "FILE_PATH=${FILE_PATH}" >> "${GITHUB_ENV}"
-      - name: Cache node modules e2e
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: npm-cache-test-e2e-${{ hashFiles(env.FILE_PATH) }}
-          restore-keys: |
-            npm-cache-test-e2e-
       - run: npm i
         working-directory: ./test/e2e
       - run: |
@@ -231,16 +221,6 @@ jobs:
           node-version-file: test/e2e/.node-version
           cache: npm
           cache-dependency-path: test/e2e/package-lock.json
-      - run: |
-          FILE_PATH="**/test/e2e/package-lock.json"
-          echo "FILE_PATH=${FILE_PATH}" >> "${GITHUB_ENV}"
-      - name: Cache node modules e2e
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: npm-cache-test-e2e-${{ hashFiles(env.FILE_PATH) }}
-          restore-keys: |
-            npm-cache-test-e2e-
       - run: npm i
         working-directory: ./test/e2e
       - run: |
