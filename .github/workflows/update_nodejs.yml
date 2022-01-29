@@ -202,10 +202,10 @@ jobs:
         run: |
           image_name=hato_atama_frontend_build
           docker build -t "${image_name}" --target build -f Dockerfile ..
-          DOCKER_CMD="echo \"::set-output name=node_version::"
-          DOCKER_CMD+="$(node --version | sed -e 's/^v//g')\""
-          DOCKER_CMD+=" && echo \"::set-output name=npm_version::"
-          DOCKER_CMD+="$(npm --version)\""
+          DOCKER_CMD='echo "::set-output name=node_version::'
+          DOCKER_CMD+='$(node --version | sed -e \'s/^v//g\')"'
+          DOCKER_CMD+=' && echo "::set-output name=npm_version::'
+          DOCKER_CMD+='$(npm --version)"'
           docker run ${image_name} sh -c "${DOCKER_CMD}"
       - name: Update versions
         run: |
