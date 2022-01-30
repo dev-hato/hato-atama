@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "preinstall": "npx npm-force-resolutions"
+  },
   "devDependencies": {
     "@textlint-ja/textlint-rule-no-insert-dropping-sa": "^2.0.1",
     "textlint": "^12.1.0",
@@ -17,6 +20,9 @@
     "textlint-rule-preset-ja-technical-writing": "^7.0.0",
     "textlint-rule-preset-jtf-style": "^2.3.12",
     "textlint-rule-spellcheck-tech-word": "^5.0.0"
+  },
+  "resolutions": {
+    "ansi-regex": "^5.0.1"
   },
   "engines": {
     "node": "^17.3.0",
