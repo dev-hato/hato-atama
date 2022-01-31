@@ -2,7 +2,6 @@ FROM node:17.3.0-alpine3.12 as build
 
 WORKDIR /usr/src/app
 
-COPY .npmrc .
 COPY frontend/package*.json ./
 RUN npm install
 
