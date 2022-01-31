@@ -37,7 +37,7 @@ jobs:
           AUTHOR+=" <${{ github.actor }}@users.noreply.github.com>"
           echo "AUTHOR=${AUTHOR}" >> "${GITHUB_ENV}"
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v3.12.0
+        uses: peter-evans/create-pull-request@v3.12.1
         with:
           token: ${{secrets.GITHUB_TOKEN}}
           commit-message: Update frontend
@@ -79,7 +79,7 @@ jobs:
           AUTHOR+=" <${{ github.actor }}@users.noreply.github.com>"
           echo "AUTHOR=${AUTHOR}" >> "${GITHUB_ENV}"
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v3.12.0
+        uses: peter-evans/create-pull-request@v3.12.1
         with:
           token: ${{secrets.GITHUB_TOKEN}}
           commit-message: Update test/e2e
@@ -128,7 +128,7 @@ jobs:
           AUTHOR+=" <${{ github.actor }}@users.noreply.github.com>"
           echo "AUTHOR=${AUTHOR}" >> "${GITHUB_ENV}"
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v3.12.0
+        uses: peter-evans/create-pull-request@v3.12.1
         with:
           token: ${{secrets.GITHUB_TOKEN}}
           commit-message: Update go
