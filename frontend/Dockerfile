@@ -1,9 +1,13 @@
-FROM node:17.3.0-buster as build
+FROM node:17.3.0-bullseye-slim as build
 
 WORKDIR /usr/src/app
 
 COPY frontend/package*.json ./
-RUN npm install
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends ca-certificates \
+    && npm install \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY frontend/elm.json frontend/webpack.config.js ./
 COPY frontend/src ./src
