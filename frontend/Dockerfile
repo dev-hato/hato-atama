@@ -1,4 +1,4 @@
-FROM node:17.3.0-alpine3.12 as build
+FROM node:17.3.0-buster-slim as build
 
 WORKDIR /usr/src/app
 
