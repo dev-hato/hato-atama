@@ -1,4 +1,4 @@
-FROM node:17.3.0-bullseye-slim as build
+FROM node:17.5.0-bullseye-slim as build
 
 WORKDIR /usr/src/app
 
