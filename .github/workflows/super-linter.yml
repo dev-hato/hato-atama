@@ -21,7 +21,7 @@ jobs:
           cache: npm
       - run: npm install
       - name: Super-Linter
-        uses: github/super-linter@v4.9.0
+        uses: github/super-linter/slim@v4.9.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FILTER_REGEX_EXCLUDE: test/e2e/cypress/integration/.*
