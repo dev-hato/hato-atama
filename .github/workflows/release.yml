@@ -8,21 +8,11 @@ on:
   pull_request:
 
 jobs:
-  check_bot:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check bot
-        run: |
-          if [ "${{github.actor}}" = "dependabot[bot]" ]; then
-            exit 1
-          fi
-
   build-frontend:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: frontend
-    needs: check_bot
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2.5.1
@@ -155,7 +145,6 @@ jobs:
     strategy:
       matrix:
         browser: ["chrome", "chromium", "firefox", "electron"]
-    needs: check_bot
     steps:
       - uses: actions/checkout@v2
       - name: Login to GitHub Container Registry
@@ -196,7 +185,6 @@ jobs:
     strategy:
       matrix:
         browser: ["chrome", "chromium", "firefox", "electron"]
-    needs: check_bot
     steps:
       - uses: actions/checkout@v2
       - name: Login to GitHub Container Registry
@@ -284,7 +272,6 @@ jobs:
       COMPOSE_DOCKER_CLI_BUILD: 1
     permissions:
       packages: write
-    needs: check_bot
     steps:
       - uses: actions/checkout@v2
       - name: Login to GitHub Container Registry
