@@ -8,5 +8,5 @@ require (
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/labstack/echo/v4 v4.6.3
 	golang.org/x/net v0.0.0-20211015210444-4f30a5c0130f // indirect
-	golang.org/x/sys v0.0.0-20220222160653-b146bcec3beb // indirect
+	golang.org/x/sys v0.0.0-20220222200937-f2425489ef4c // indirect
 )
