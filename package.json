@@ -18,5 +18,9 @@
     "textlint-rule-preset-ja-spacing": "^2.2.0",
     "textlint-rule-preset-ja-technical-writing": "^7.0.0",
     "textlint-rule-preset-jtf-style": "^2.3.12"
+  },
+  "engines": {
+    "node": ">=16.14.0 <18.0.0",
+    "npm": "^8.5.1"
   }
 }
