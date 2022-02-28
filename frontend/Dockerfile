@@ -2,6 +2,7 @@ FROM node:17.6.0-bullseye-slim as build
 
 WORKDIR /usr/src/app
 
+COPY .npmrc .
 COPY frontend/package*.json ./
 RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates \
