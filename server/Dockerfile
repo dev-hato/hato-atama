@@ -1,4 +1,4 @@
-FROM golang:1.17.7-bullseye as build
+FROM golang:1.18rc1-bullseye as build
 
 WORKDIR /go/app
 
