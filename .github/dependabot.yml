@@ -19,6 +19,10 @@ updates:
     directory: "/server"
     schedule:
       interval: "daily"
+    ignore:
+      - dependency-name: golang
+        versions:
+          - 1.18rc1-bullseye
     open-pull-requests-limit: 1
   - package-ecosystem: "elm"
     directory: "/frontend"
