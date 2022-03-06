@@ -145,7 +145,7 @@ jobs:
       COMPOSE_DOCKER_CLI_BUILD: 1
     strategy:
       matrix:
-        browser: [ "chrome", "chromium", "firefox", "electron" ]
+        browser: ["chrome", "chromium", "firefox", "electron"]
     steps:
       - uses: actions/checkout@v3
       - name: Login to GitHub Container Registry
@@ -186,7 +186,7 @@ jobs:
       COMPOSE_DOCKER_CLI_BUILD: 1
     strategy:
       matrix:
-        browser: [ "chrome", "chromium", "firefox", "electron" ]
+        browser: ["chrome", "chromium", "firefox", "electron"]
     steps:
       - uses: actions/checkout@v3
       - name: Login to GitHub Container Registry
@@ -226,7 +226,7 @@ jobs:
       - e2e-test-mini-docker-compose
     strategy:
       matrix:
-        browser: [ "chrome", "chromium", "firefox", "electron" ]
+        browser: ["chrome", "chromium", "firefox", "electron"]
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3.0.0
@@ -251,7 +251,7 @@ jobs:
       - e2e-test-mini-prd
     strategy:
       matrix:
-        browser: [ "chrome", "chromium", "firefox", "electron" ]
+        browser: ["chrome", "chromium", "firefox", "electron"]
     if: ${{ github.event_name == 'push' }}
     steps:
       - uses: actions/checkout@v3
