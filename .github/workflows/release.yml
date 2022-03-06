@@ -32,7 +32,7 @@ jobs:
   deploy-app-engine:
     runs-on: ubuntu-latest
     needs: build-frontend
-    if: github.repository == 'dev-hato/hato-atama' && github.repository == github.event.pull_request.head.repo.full_name
+    if: github.repository == github.event.pull_request.head.repo.full_name && github.repository == 'dev-hato/hato-atama'
     permissions:
       id-token: write
       contents: read
