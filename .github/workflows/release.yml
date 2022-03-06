@@ -455,9 +455,9 @@ jobs:
       - pr-test-complete-check-all
       - pr-test-complete-check-origin-repository
     steps:
-      - if: ${{ needs.pr-test-complete-check-all.result == 'success' && (github.event.pull_request.head.repo.full_name != 'dev-hato/hato-atama' || needs.pr-test-complete-check-origin-repository.result == 'success') && (github.event.pull_request.head.repo.full_name != github.repository || needs.pr-test-complete-check-in-forked-repository.result == 'success') }}
+      - if: ${{ needs.pr-test-complete-check-all.result == 'success' && (needs.pr-test-complete-check-origin-repository.result == 'success' || needs.pr-test-complete-check-origin-repository.result == 'skipped') && (needs.pr-test-complete-check-in-forked-repository.result == 'success' || needs.pr-test-complete-check-in-forked-repository.result == 'skipped') }}
         run: exit 0
-      - if: ${{ needs.pr-test-complete-check-all.result != 'success' || (github.event.pull_request.head.repo.full_name == 'dev-hato/hato-atama' && needs.pr-test-complete-check-origin-repository.result != 'success') || (github.event.pull_request.head.repo.full_name == github.repository && needs.pr-test-complete-check-in-forked-repository.result != 'success') }}
+      - if: ${{ needs.pr-test-complete-check-all.result != 'success' || (needs.pr-test-complete-check-origin-repository.result != 'success' && needs.pr-test-complete-check-origin-repository.result != 'skipped') || (needs.pr-test-complete-check-in-forked-repository.result != 'success' && needs.pr-test-complete-check-in-forked-repository.result != 'skipped') }}
         run: exit 1
 
   release-complete-check:
