@@ -145,7 +145,7 @@ jobs:
       COMPOSE_DOCKER_CLI_BUILD: 1
     strategy:
       matrix:
-        browser: ["chrome", "chromium", "firefox", "electron"]
+        browser: [ "chrome", "chromium", "firefox", "electron" ]
     steps:
       - uses: actions/checkout@v3
       - name: Login to GitHub Container Registry
@@ -186,7 +186,7 @@ jobs:
       COMPOSE_DOCKER_CLI_BUILD: 1
     strategy:
       matrix:
-        browser: ["chrome", "chromium", "firefox", "electron"]
+        browser: [ "chrome", "chromium", "firefox", "electron" ]
     steps:
       - uses: actions/checkout@v3
       - name: Login to GitHub Container Registry
@@ -226,7 +226,7 @@ jobs:
       - e2e-test-mini-docker-compose
     strategy:
       matrix:
-        browser: ["chrome", "chromium", "firefox", "electron"]
+        browser: [ "chrome", "chromium", "firefox", "electron" ]
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3.0.0
@@ -251,7 +251,7 @@ jobs:
       - e2e-test-mini-prd
     strategy:
       matrix:
-        browser: ["chrome", "chromium", "firefox", "electron"]
+        browser: [ "chrome", "chromium", "firefox", "electron" ]
     if: ${{ github.event_name == 'push' }}
     steps:
       - uses: actions/checkout@v3
@@ -421,16 +421,8 @@ jobs:
           NUMBER="${{steps.get_run_numbers.outputs.result}}"
           gcloud app versions delete --service=default "${NUMBER}"
 
-  pr-test-complete-check-all:
-    runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'pull_request' }}
-    needs:
-      - e2e-test-all-docker-compose
-    steps:
-      - run: exit 0
-
-  # 元のリポジトリ上にPRを立てたとき
-  pr-test-complete-check-origin-repository:
+  # deploy-app-engineに依存しているjobが完了したか
+  pr-test-complete-check-deploy-app-engine:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'pull_request' }}
     needs:
@@ -440,26 +432,20 @@ jobs:
     steps:
       - run: exit 0
 
-  # 元のリポジトリ上にPRを立てたとき、もしくは、forkされたリポジトリ上にPRを立てたとき
-  pr-test-complete-check-in-forked-repository:
-    runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'pull_request' }}
-    needs:
-      - docker-compose-build
-    steps:
-      - run: exit 0
-
+  # 以下がskipされていても完了したものと見なす
+  # * forkしたリポジトリからdev-hato/hato-atamaへPRを出した場合: docker-compose-build, deploy-app-engine
+  # * forkしたリポジトリ上でPRを立てた場合: deploy-app-engine
   pr-test-complete:
     runs-on: ubuntu-latest
     if: ${{ always() && github.event_name == 'pull_request' }}
     needs:
-      - pr-test-complete-check-all
-      - pr-test-complete-check-origin-repository
-      - pr-test-complete-check-in-forked-repository
+      - e2e-test-all-docker-compose
+      - docker-compose-build
+      - pr-test-complete-check-deploy-app-engine
     steps:
-      - if: ${{ needs.pr-test-complete-check-all.result == 'success' && (github.repository != github.event.pull_request.head.repo.full_name || (needs.pr-test-complete-check-in-forked-repository.result == 'success' && (github.repository != 'dev-hato/hato-atama' || needs.pr-test-complete-check-origin-repository.result == 'success'))) }}
+      - if: ${{ needs.e2e-test-all-docker-compose.result == 'success' && (github.repository != github.event.pull_request.head.repo.full_name || (needs.docker-compose-build.result == 'success' && (github.repository != 'dev-hato/hato-atama' || needs.pr-test-complete-check-deploy-app-engine.result == 'success'))) }}
         run: exit 0
-      - if: ${{ needs.pr-test-complete-check-all.result != 'success' || (github.repository == github.event.pull_request.head.repo.full_name && (needs.pr-test-complete-check-in-forked-repository.result != 'success' || (github.repository == 'dev-hato/hato-atama' && needs.pr-test-complete-check-origin-repository.result != 'success'))) }}
+      - if: ${{ needs.e2e-test-all-docker-compose.result != 'success' || (github.repository == github.event.pull_request.head.repo.full_name && (needs.docker-compose-build.result != 'success' || (github.repository == 'dev-hato/hato-atama' && needs.pr-test-complete-check-deploy-app-engine.result != 'success'))) }}
         run: exit 1
 
   release-complete-check:
