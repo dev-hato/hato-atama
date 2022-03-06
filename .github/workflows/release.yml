@@ -454,6 +454,7 @@ jobs:
     needs:
       - pr-test-complete-check-all
       - pr-test-complete-check-origin-repository
+      - pr-test-complete-check-in-forked-repository
     steps:
       - if: ${{ needs.pr-test-complete-check-all.result == 'success' && (github.event.pull_request.head.repo.full_name != github.repository || (needs.pr-test-complete-check-in-forked-repository.result == 'success' && (github.event.pull_request.head.repo.full_name != 'dev-hato/hato-atama' || needs.pr-test-complete-check-origin-repository.result == 'success'))) }}
         run: exit 0
