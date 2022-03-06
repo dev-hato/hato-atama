@@ -419,14 +419,21 @@ jobs:
           NUMBER="${{steps.get_run_numbers.outputs.result}}"
           gcloud app versions delete --service=default "${NUMBER}"
 
-  pr-test-complete-check:
+  pr-test-complete-check-all:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'pull_request' }}
+    needs:
+      - e2e-test-all-docker-compose
+      - docker-compose-build
+    steps:
+      - run: exit 0
+
+  pr-test-complete-check-origin-repository:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'pull_request' }}
     needs:
       - create-pr-environment
       - e2e-test-mini-prd
-      - e2e-test-all-docker-compose
-      - docker-compose-build
       - lighthouse
     steps:
       - run: exit 0
@@ -435,11 +442,12 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ always() && github.event_name == 'pull_request' }}
     needs:
-      - pr-test-complete-check
+      - pr-test-complete-check-all
+      - pr-test-complete-check-origin-repository
     steps:
-      - if: ${{ needs.pr-test-complete-check.result == 'success' }}
+      - if: ${{ needs.pr-test-complete-check-all.result == 'success' && (github.repository != 'dev-hato/hato-atama' || needs.pr-test-complete-check-origin-repository.result == 'success') }}
         run: exit 0
-      - if: ${{ needs.pr-test-complete-check.result != 'success' }}
+      - if: ${{ needs.pr-test-complete-check-all.result != 'success' || (github.repository == 'dev-hato/hato-atama' && needs.pr-test-complete-check-origin-repository.result != 'success') }}
         run: exit 1
 
   release-complete-check:
