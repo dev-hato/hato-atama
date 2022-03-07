@@ -32,6 +32,7 @@ jobs:
   deploy-app-engine:
     runs-on: ubuntu-latest
     needs: build-frontend
+    if: github.repository == github.event.pull_request.head.repo.full_name && github.repository == 'dev-hato/hato-atama'
     permissions:
       id-token: write
       contents: read
@@ -162,6 +163,7 @@ jobs:
         if: ${{ github.event_name == 'pull_request' }}
       - run: echo 'TAG_NAME=latest' >> "$GITHUB_ENV"
         if: ${{ github.event_name == 'push' }}
+      - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
       - run: docker-compose -f staging.docker-compose.yml build
       - run: docker-compose -f staging.docker-compose.yml up -d
       - uses: actions/setup-node@v3.0.0
@@ -202,6 +204,7 @@ jobs:
         if: ${{ github.event_name == 'pull_request' }}
       - run: echo 'TAG_NAME=latest' >> "$GITHUB_ENV"
         if: ${{ github.event_name == 'push' }}
+      - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
       - run: docker-compose -f staging.docker-compose.yml build
       - run: docker-compose -f staging.docker-compose.yml up -d
       - uses: actions/setup-node@v3.0.0
@@ -272,6 +275,7 @@ jobs:
       COMPOSE_DOCKER_CLI_BUILD: 1
     permissions:
       packages: write
+    if: github.repository == github.event.pull_request.head.repo.full_name
     steps:
       - uses: actions/checkout@v3
       - name: Login to GitHub Container Registry
@@ -289,6 +293,7 @@ jobs:
         if: ${{ github.event_name == 'pull_request' }}
       - run: echo 'TAG_NAME=latest' >> "$GITHUB_ENV"
         if: ${{ github.event_name == 'push' }}
+      - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
       - run: |
           docker-compose -f staging.docker-compose.yml build \
                          --build-arg BUILDKIT_INLINE_CACHE=1
@@ -416,27 +421,31 @@ jobs:
           NUMBER="${{steps.get_run_numbers.outputs.result}}"
           gcloud app versions delete --service=default "${NUMBER}"
 
-  pr-test-complete-check:
+  # deploy-app-engineに依存しているjobが完了したか
+  pr-test-complete-check-deploy-app-engine:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'pull_request' }}
     needs:
       - create-pr-environment
       - e2e-test-mini-prd
-      - e2e-test-all-docker-compose
-      - docker-compose-build
       - lighthouse
     steps:
       - run: exit 0
 
+  # 以下がskipされていても完了したものと見なす
+  # * forkしたリポジトリからdev-hato/hato-atamaへPRを出した場合: docker-compose-build, deploy-app-engine
+  # * forkしたリポジトリ上でPRを立てた場合: deploy-app-engine
   pr-test-complete:
     runs-on: ubuntu-latest
     if: ${{ always() && github.event_name == 'pull_request' }}
     needs:
-      - pr-test-complete-check
+      - e2e-test-all-docker-compose
+      - docker-compose-build
+      - pr-test-complete-check-deploy-app-engine
     steps:
-      - if: ${{ needs.pr-test-complete-check.result == 'success' }}
+      - if: ${{ needs.e2e-test-all-docker-compose.result == 'success' && (github.repository != github.event.pull_request.head.repo.full_name || (needs.docker-compose-build.result == 'success' && (github.repository != 'dev-hato/hato-atama' || needs.pr-test-complete-check-deploy-app-engine.result == 'success'))) }}
         run: exit 0
-      - if: ${{ needs.pr-test-complete-check.result != 'success' }}
+      - if: ${{ needs.e2e-test-all-docker-compose.result != 'success' || (github.repository == github.event.pull_request.head.repo.full_name && (needs.docker-compose-build.result != 'success' || (github.repository == 'dev-hato/hato-atama' && needs.pr-test-complete-check-deploy-app-engine.result != 'success'))) }}
         run: exit 1
 
   release-complete-check:
