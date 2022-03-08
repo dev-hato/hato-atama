@@ -12,6 +12,7 @@ jobs:
     permissions:
       id-token: write
       contents: read
+    if: github.repository == github.event.pull_request.head.repo.full_name && github.repository == 'dev-hato/hato-atama'
     steps:
       - name: Get run numbers
         uses: actions/github-script@v6
