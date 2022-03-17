@@ -3,8 +3,6 @@ name: remove-app-engine-versions
 
 on:
   pull_request:
-    types:
-      - closed
 
 jobs:
   remove-app-engine-versions:
@@ -100,4 +98,4 @@ jobs:
       - if: ${{ steps.get_run_numbers.outputs.result != '' }}
         run: |
           gcloud app versions delete --service=default \
-                                     ${{steps.get_run_numbers.outputs.result}}
+                                     v1783 v1782 v1781 v1780
