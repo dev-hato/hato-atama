@@ -420,8 +420,8 @@ jobs:
       - name: Remove app engine versions
         if: ${{ steps.get_run_numbers.outputs.result != '' }}
         run: |
-          NUMBER="${{steps.get_run_numbers.outputs.result}}"
-          gcloud app versions delete --service=default "${NUMBER}"
+          gcloud app versions delete --service=default \
+                                     ${{steps.get_run_numbers.outputs.result}}
 
   # deploy-app-engineに依存しているjobが完了したか
   pr-test-complete-check-deploy-app-engine:

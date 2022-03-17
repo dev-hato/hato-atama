@@ -99,5 +99,5 @@ jobs:
           gcloud auth login --brief --cred-file="${FILE_PATH}"
       - if: ${{ steps.get_run_numbers.outputs.result != '' }}
         run: |
-          NUMBER="${{steps.get_run_numbers.outputs.result}}"
-          gcloud app versions delete --service=default "${NUMBER}"
+          gcloud app versions delete --service=default \
+                                     ${{steps.get_run_numbers.outputs.result}}
