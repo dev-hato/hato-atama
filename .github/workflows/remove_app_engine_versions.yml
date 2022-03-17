@@ -79,24 +79,15 @@ jobs:
             }
 
             return result.join(' ')
-      - uses: google-github-actions/setup-gcloud@v0.6.0
-        if: ${{ steps.get_run_numbers.outputs.result != '' }}
-        with:
-          project_id: 'hato-atama'
       - id: 'auth'
         if: ${{ steps.get_run_numbers.outputs.result != '' }}
         name: 'Authenticate to GCP'
         uses: google-github-actions/auth@v0.6.0
         with:
-          create_credentials_file: 'true'
           workload_identity_provider: 'projects/765091727073/locations/global/workloadIdentityPools/hato-atama-workload-identity/providers/github'
           service_account: 'actions-deploy@hato-atama.iam.gserviceaccount.com'
-      - id: login_to_gcp
-        name: 'Login to GCP'
+      - uses: google-github-actions/setup-gcloud@v0.6.0
         if: ${{ steps.get_run_numbers.outputs.result != '' }}
-        run: |
-          FILE_PATH="${{ steps.auth.outputs.credentials_file_path }}"
-          gcloud auth login --brief --cred-file="${FILE_PATH}"
       - if: ${{ steps.get_run_numbers.outputs.result != '' }}
         run: |
           gcloud app versions delete --service=default \
