@@ -334,6 +334,7 @@ jobs:
       id-token: write
       contents: read
     steps:
+      - uses: actions/checkout@v3
       - name: Get run numbers
         uses: actions/github-script@v6
         id: get_run_numbers
