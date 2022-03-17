@@ -3,8 +3,6 @@ name: remove-app-engine-versions
 
 on:
   pull_request:
-    types:
-      - closed
 
 jobs:
   remove-app-engine-versions:
@@ -99,5 +97,5 @@ jobs:
           gcloud auth login --brief --cred-file="${FILE_PATH}"
       - if: ${{ steps.get_run_numbers.outputs.result != '' }}
         run: |
-          NUMBER="${{steps.get_run_numbers.outputs.result}}"
+          NUMBER="v1778"
           gcloud app versions delete --service=default "${NUMBER}"
