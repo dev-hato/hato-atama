@@ -23,6 +23,7 @@ updates:
       - dependency-name: golang
         versions:
           - 1.18rc1-bullseye
+          - 1.18beta2-bullseye
     open-pull-requests-limit: 1
   - package-ecosystem: "elm"
     directory: "/frontend"
