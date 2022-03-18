@@ -31,7 +31,7 @@ jobs:
       - name: Install goimports
         run: |
           echo "$(go env GOPATH)/bin" >> "${GITHUB_PATH}"
-          go get -u golang.org/x/tools/cmd/goimports
+          go install golang.org/x/tools/cmd/goimports@latest
       - name: Format files
         run: |
           go mod tidy
