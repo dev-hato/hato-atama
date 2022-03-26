@@ -37,7 +37,7 @@ jobs:
       - name: Update elm.json
         if: matrix.directory == 'frontend'
         run: |
-          sed -i -e "s/\"elm-version\": \"[0-9.-]*\"/\"elm-version\": \"$( npm ls elm | grep "elm@" | sed -e 's/.*elm@\([0-9.]*\)/\1/g')\"/g" elm.json
+          sed -i -e "s/\"elm-version\": \"[0-9.-]*\"/\"elm-version\": \"$( npm ls elm | grep "elm@" | sed -e 's/.*elm@\([0-9.]*\).*/\1/g')\"/g" elm.json
       # 差分があったときは差分を出力する
       - name: Show diff
         id: diff
