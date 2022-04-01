@@ -20,6 +20,23 @@ jobs:
           node-version-file: .node-version
           cache: npm
       - run: npm install
+      - name: Get Go version
+        id: get_go_version
+        run: |
+          image_name=hato_atama_server_build
+          docker build -t "${image_name}" --target build -f server/Dockerfile .
+          CMD="go version | awk '{print \$3}' | sed -e 's/^go//g'"
+          go_version=$(docker run ${image_name} sh -c "${CMD}")
+          echo "Go version:" "${go_version}"
+          echo "::set-output name=go_version::${go_version}"
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{steps.get_go_version.outputs.go_version}}
+      - name: Install Go packages
+        run: |
+          echo "$(go env GOPATH)/bin" >> "${GITHUB_PATH}"
+          go mod vendor
       - name: Super-Linter
         uses: github/super-linter/slim@v4.9.1
         env:
