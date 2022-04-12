@@ -19,7 +19,7 @@ jobs:
         working-directory: frontend
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3.1.0
+      - uses: actions/setup-node@v3.1.1
         with:
           node-version-file: frontend/.node-version
           cache: npm
@@ -162,7 +162,7 @@ jobs:
       - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
       - run: docker-compose -f staging.docker-compose.yml build
       - run: docker-compose -f staging.docker-compose.yml up -d
-      - uses: actions/setup-node@v3.1.0
+      - uses: actions/setup-node@v3.1.1
         with:
           node-version-file: test/e2e/.node-version
           cache: npm
@@ -203,7 +203,7 @@ jobs:
       - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
       - run: docker-compose -f staging.docker-compose.yml build
       - run: docker-compose -f staging.docker-compose.yml up -d
-      - uses: actions/setup-node@v3.1.0
+      - uses: actions/setup-node@v3.1.1
         with:
           node-version-file: test/e2e/.node-version
           cache: npm
@@ -225,7 +225,7 @@ jobs:
         browser: ["chrome", "chromium", "firefox", "electron"]
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3.1.0
+      - uses: actions/setup-node@v3.1.1
         with:
           node-version-file: test/e2e/.node-version
           cache: npm
@@ -251,7 +251,7 @@ jobs:
     if: ${{ github.event_name == 'push' }}
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3.1.0
+      - uses: actions/setup-node@v3.1.1
         with:
           node-version-file: test/e2e/.node-version
           cache: npm
