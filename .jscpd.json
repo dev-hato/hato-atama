@@ -1,3 +1,11 @@
 {
+  "threshold": 0,
+  "reporters": [
+    "consoleFull"
+  ],
+  "ignore": [
+    "**/__snapshots__/**"
+  ],
+  "absolute": true,
   "min-lines": 15
 }
