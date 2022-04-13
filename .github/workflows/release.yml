@@ -28,7 +28,7 @@ jobs:
         run: npm install
       - name: build
         run: npm run build
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: frontend
           path: frontend/dist
@@ -129,7 +129,7 @@ jobs:
           gitHubAccessToken: ${{ secrets.GITHUB_TOKEN }}
           urls: ${{ env.URLS }}
           outputDirectory: ${{ env.ARTIFACT_PATH }}
-      - uses: actions/upload-artifact@v2.3.1
+      - uses: actions/upload-artifact@v3
         with:
           name: Lighthouse reports
           path: ${{ env.ARTIFACT_PATH }}
