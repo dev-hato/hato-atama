@@ -198,7 +198,7 @@ jobs:
         if: ${{ steps.diff.outputs.result != '' }}
         run: exit 1
 
-  # .node-version をDockerイメージと同期させる
+  # .node-version や package.json のNode.js・npmのバージョンをDockerイメージと同期させる
   update-version:
     runs-on: ubuntu-latest
     env:
@@ -208,22 +208,43 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
+      - name: Get Dependabot Node.js version
+        id: get_dependabot_node_version
+        run: |
+          DOCKER_CMD="node --version && npm --version"
+          mapfile -t result < <(docker run ghcr.io/dependabot/dependabot-core sh -c "${DOCKER_CMD}")
+          node_version="${result[0]//v/}"
+          npm_version=${result[1]}
+          echo "Node.js version:" "${node_version}"
+          echo "npm version:" "${npm_version}"
+          echo "::set-output name=node_version::${node_version}"
+          echo "::set-output name=npm_version::${npm_version}"
       - name: Get Node.js version
         id: get_node_version
         working-directory: frontend
         run: |
           image_name=hato_atama_frontend_build
           docker build -t "${image_name}" --target build -f Dockerfile ..
-          DOCKER_CMD="node --version"
+          DOCKER_CMD="node --version && npm --version"
           mapfile -t result < <(docker run ${image_name} sh -c "${DOCKER_CMD}")
           node_version="${result[0]//v/}"
+          npm_version=${result[1]}
           echo "Node.js version:" "${node_version}"
+          echo "npm version:" "${npm_version}"
           echo "::set-output name=node_version::${node_version}"
+          echo "::set-output name=npm_version::${npm_version}"
       - name: Update versions
         run: |
+          DEPENDABOT_NODE_VERSION="${{steps.get_dependabot_node_version.outputs.node_version}}"
+          DEPENDABOT_NPM_VERSION="${{steps.get_dependabot_node_version.outputs.npm_version}}"
           NODE_VERSION="${{steps.get_node_version.outputs.node_version}}"
+          NPM_VERSION="${{steps.get_node_version.outputs.npm_version}}"
           for path in "frontend" "test/e2e" "."; do
             echo "${NODE_VERSION}" > ${path}/.node-version
+            NODE_PATTERN="s/\"node\": \".*\"/\"node\": \"^${DEPENDABOT_NODE_VERSION} || ^${NODE_VERSION}\"/g"
+            sed -i -e "${NODE_PATTERN}" ${path}/package.json
+            NPM_PATTERN="s/\"npm\": \".*\"/\"npm\": \"^${DEPENDABOT_NPM_VERSION} || ^${NPM_VERSION}\"/g"
+            sed -i -e "${NPM_PATTERN}" ${path}/package.json
           done
       # 差分があったときは差分を出力する
       - name: Show diff
