@@ -32,6 +32,7 @@ jobs:
           cache: npm
           cache-dependency-path: ${{ matrix.directory }}/package-lock.json
       - run: |
+          npm config --userconfig=~/.npmrc set cache "${PWD}/.npm"
           npm ci --prefer-offline
           npx browserslist@latest --update-db
       - name: Update elm.json

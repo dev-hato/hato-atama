@@ -19,6 +19,7 @@ jobs:
         with:
           node-version-file: .node-version
           cache: npm
+      - run: npm config --userconfig=~/.npmrc set cache "${PWD}/.npm"
       - run: npm ci --prefer-offline
       - name: Super-Linter
         uses: github/super-linter@v4.9.2
