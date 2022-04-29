@@ -35,9 +35,11 @@ RUN apt-get update \
         cabal-install \
         libmpfr-dev
 
+WORKDIR /
+
 RUN git clone https://github.com/elm/compiler.git
 
-WORKDIR compiler
+WORKDIR /compiler
 
 RUN git checkout 0.19.1 \
     && rm worker/elm.cabal \
