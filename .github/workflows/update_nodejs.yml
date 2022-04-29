@@ -31,13 +31,20 @@ jobs:
           node-version-file: ${{ matrix.directory }}/.node-version
           cache: npm
           cache-dependency-path: ${{ matrix.directory }}/package-lock.json
-      - run: |
-          npm install
+      - if: matrix.directory != 'frontend'
+        run: npm install
+      - if: matrix.directory == 'frontend'
+        run: |
+          npm install --legacy-peer-deps
           npx browserslist@latest --update-db
       - name: Update elm.json
         if: matrix.directory == 'frontend'
         run: |
-          sed -i -e "s/\"elm-version\": \"[0-9.-]*\"/\"elm-version\": \"$(npm ls elm | grep "elm@" | sed -e 's/.*elm@\([0-9.]*\).*/\1/g')\"/g" elm.json
+          image_name=hato_atama_frontend_elm_compiler
+          docker build -t "${image_name}" --target elm_compiler -f frontend/Dockerfile .
+          CMD="elm --version"
+          elm_version=$(docker run ${image_name} sh -c "${CMD}")
+          sed -i -e "s/\"elm-version\": \"[0-9.-]*\"/\"elm-version\": \"${elm_version}\"/g" elm.json
       # 差分があったときは差分を出力する
       - name: Show diff
         id: diff
