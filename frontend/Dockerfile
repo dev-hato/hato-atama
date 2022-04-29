@@ -46,7 +46,7 @@ RUN git checkout 0.19.1 \
     && cabal new-update \
     && cabal new-configure \
     && cabal new-build \
-    && cp ./dist-newstyle/build/aarch64-linux/ghc-*/elm-*/x/elm/build/elm/elm /usr/local/bin/elm
+    && cp ./dist-newstyle/build/*-linux/ghc-*/elm-*/x/elm/build/elm/elm /usr/local/bin/elm
 
 
 FROM base as build
