@@ -53,12 +53,12 @@ WORKDIR /usr/src/app
 
 COPY .npmrc .
 COPY frontend/package*.json ./
+COPY --from=elm_compiler /usr/local/bin/elm /usr/local/bin/elm
 RUN npm install --legacy-peer-deps
 
 COPY frontend/elm.json frontend/webpack.config.js ./
 COPY frontend/src ./src
 COPY frontend/public ./public
-COPY --from=elm_compiler /usr/local/bin/elm /usr/local/bin/elm
 RUN npm run build
 
 
