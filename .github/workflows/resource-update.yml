@@ -28,7 +28,7 @@ jobs:
       - name: ncu install
         run: npx npm-check-updates -u
       - name: npm update
-        run: npm install
+        run: npm install --legacy-peer-deps
       - run: |
           COMMITTER="github-actions[bot]"
           COMMITTER+=" <41898282+github-actions[bot]@users.noreply.github.com>"

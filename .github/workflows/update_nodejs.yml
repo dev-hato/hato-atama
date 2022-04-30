@@ -31,8 +31,11 @@ jobs:
           node-version-file: ${{ matrix.directory }}/.node-version
           cache: npm
           cache-dependency-path: ${{ matrix.directory }}/package-lock.json
-      - run: |
-          npm install
+      - if: matrix.directory != 'frontend'
+        run: npm install
+      - if: matrix.directory == 'frontend'
+        run: |
+          npm install --legacy-peer-deps
           npx browserslist@latest --update-db
       - name: Update elm.json
         if: matrix.directory == 'frontend'
