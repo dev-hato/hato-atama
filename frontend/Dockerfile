@@ -58,12 +58,12 @@ WORKDIR /usr/src/app
 
 COPY .npmrc .
 COPY frontend/package*.json ./
-COPY --from=elm_compiler /usr/local/bin/elm /usr/local/bin/elm
 RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates \
     && npm install --legacy-peer-deps \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+COPY --from=elm_compiler /usr/local/bin/elm /usr/local/bin/elm
 
 COPY frontend/elm.json frontend/webpack.config.js ./
 COPY frontend/src ./src
