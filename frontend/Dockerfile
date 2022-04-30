@@ -56,7 +56,7 @@ FROM base as build
 
 WORKDIR /usr/src/app
 
-COPY .npmrc .
+COPY frontend/.npmrc .
 COPY frontend/package*.json ./
 RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates \
