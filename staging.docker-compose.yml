@@ -10,6 +10,10 @@ services:
       cache_from:
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/gcloud_datastore:${TAG_NAME}
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/gcloud_datastore
+      x-bake:
+        platforms:
+          - linux/amd64
+          - linux/arm64
     image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/gcloud_datastore:${TAG_NAME}
     tty: true
     environment:
@@ -23,6 +27,10 @@ services:
       cache_from:
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server:${TAG_NAME}
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server
+      x-bake:
+        platforms:
+          - linux/amd64
+          - linux/arm64
     image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server:${TAG_NAME}
     environment:
       PROJECT_ID: app
@@ -38,6 +46,10 @@ services:
       cache_from:
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend:${TAG_NAME}
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend
+      x-bake:
+        platforms:
+          - linux/amd64
+          - linux/arm64
     image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend:${TAG_NAME}
     ports:
       - "8080:8080"

@@ -301,8 +301,6 @@ jobs:
         with:
           push: true
           files: staging.docker-compose.yml
-          set: |
-            *.platform=linux/arm64,linux/amd64
 
   migrating-traffic:
     runs-on: ubuntu-latest
