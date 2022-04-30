@@ -35,7 +35,7 @@ jobs:
         run: npm install
       - if: matrix.directory == 'frontend'
         run: |
-          npm install --legacy-peer-deps
+          npm install
           npx browserslist@latest --update-db
       - name: Update elm.json
         if: matrix.directory == 'frontend'
