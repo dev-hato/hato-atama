@@ -294,10 +294,13 @@ jobs:
       - run: echo 'TAG_NAME=latest' >> "$GITHUB_ENV"
         if: ${{ github.event_name == 'push' }}
       - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
-      - run: |
-          docker-compose -f staging.docker-compose.yml build \
-                         --build-arg BUILDKIT_INLINE_CACHE=1
-      - run: docker-compose -f staging.docker-compose.yml push
+      - name: Build and push
+        uses: docker/bake-action@v1.7.0
+        with:
+          push: true
+          files: staging.docker-compose.yml
+          set: |
+            *.platform=linux/arm64,linux/amd64
 
   migrating-traffic:
     runs-on: ubuntu-latest
