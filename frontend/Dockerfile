@@ -1,13 +1,12 @@
 FROM node:18.0.0-bullseye-slim as base
 
-RUN apt-get update
-
 
 FROM base as elm_compiler
 
 ENV ELM_VERSION 0.19.1
 
-RUN apt-get install -y --no-install-recommends build-essential \
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends build-essential \
         automake \
         autotools-dev \
         make \
@@ -60,7 +59,8 @@ WORKDIR /usr/src/app
 COPY .npmrc .
 COPY frontend/package*.json ./
 COPY --from=elm_compiler /usr/local/bin/elm /usr/local/bin/elm
-RUN apt-get install -y --no-install-recommends ca-certificates \
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends ca-certificates \
     && npm install --legacy-peer-deps \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
