@@ -1,10 +1,13 @@
 FROM node:18.0.0-bullseye-slim as base
 
+RUN apt-get update
+
 
 FROM base as elm_compiler
 
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends build-essential \
+ENV ELM_VERSION 0.19.1
+
+RUN apt-get install -y --no-install-recommends build-essential \
         automake \
         autotools-dev \
         make \
@@ -33,16 +36,17 @@ RUN apt-get update \
         musl-dev \
         ghc \
         cabal-install \
-        libmpfr-dev
+        libmpfr-dev \
+       && apt-get clean \
+       && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /
 
-RUN git clone https://github.com/elm/compiler.git
+RUN git clone -b ${ELM_VERSION} https://github.com/elm/compiler.git
 
 WORKDIR /compiler
 
-RUN git checkout 0.19.1 \
-    && rm worker/elm.cabal \
+RUN rm worker/elm.cabal \
     && cabal new-update \
     && cabal new-configure \
     && cabal new-build \
@@ -56,7 +60,10 @@ WORKDIR /usr/src/app
 COPY .npmrc .
 COPY frontend/package*.json ./
 COPY --from=elm_compiler /usr/local/bin/elm /usr/local/bin/elm
-RUN npm install --legacy-peer-deps
+RUN apt-get install -y --no-install-recommends ca-certificates \
+    && npm install --legacy-peer-deps \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY frontend/elm.json frontend/webpack.config.js ./
 COPY frontend/src ./src
