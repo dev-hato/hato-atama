@@ -31,9 +31,9 @@ jobs:
           node-version-file: ${{ matrix.directory }}/.node-version
           cache: npm
           cache-dependency-path: ${{ matrix.directory }}/package-lock.json
-      - run: |
-          npm install
-          npx browserslist@latest --update-db
+      - run: npm install
+      - if: matrix.directory == 'frontend'
+        run: npx browserslist@latest --update-db
       # 差分があったときは差分を出力する
       - name: Show diff
         id: diff
