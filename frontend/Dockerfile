@@ -14,7 +14,7 @@ COPY elm/elm_arm64 elm
 
 RUN if [ "${TARGETPLATFORM}" != "linux/arm64" ]; then \
         curl -L -o elm.gz https://github.com/elm/compiler/releases/download/${ELM_VERSION}/binary-for-linux-64-bit.gz; \
-        gunzip elm.gz; \
+        gunzip -f elm.gz; \
         chmod +x elm; \
     fi
 RUN apt-get remove -y curl
