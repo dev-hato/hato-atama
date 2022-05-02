@@ -224,7 +224,7 @@ jobs:
         working-directory: frontend
         run: |
           image_name=hato_atama_frontend_build
-          docker build -t "${image_name}" --target build -f Dockerfile ..
+          docker build -t "${image_name}" --target build ..
           DOCKER_CMD="node --version && npm --version"
           mapfile -t result < <(docker run ${image_name} sh -c "${DOCKER_CMD}")
           node_version="${result[0]//v/}"
