@@ -8,7 +8,7 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-COPY elm/elm_arm64 /usr/local/bin/
+COPY elm/elm_arm64 /usr/local/bin/elm
 
 WORKDIR /usr/src/app
 
