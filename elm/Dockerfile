@@ -1,4 +1,6 @@
-FROM --platform=linux/arm64 debian:bullseye-slim
+FROM debian:bullseye-slim
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends build-essential \

@@ -1,5 +1,6 @@
 FROM node:18.0.0-bullseye-slim as build
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 ARG TARGETPLATFORM
 
 RUN apt-get update \
