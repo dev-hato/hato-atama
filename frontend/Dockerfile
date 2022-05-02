@@ -13,8 +13,8 @@ WORKDIR /usr/local/bin/
 COPY elm/elm_arm64 elm
 
 RUN if [ "${TARGETPLATFORM}" -ne "linux/arm64" ]; then \
-        curl -L https://github.com/elm/compiler/releases/download/${ELM_VERSION}/binary-for-linux-64-bit.gz; \
-        gunzip binary-for-linux-64-bit.gz; \
+        curl -L -o elm.gz https://github.com/elm/compiler/releases/download/${ELM_VERSION}/binary-for-linux-64-bit.gz; \
+        gunzip elm.gz; \
         chmod +x elm; \
     fi
 RUN apt-get remove -y curl
