@@ -34,13 +34,6 @@ jobs:
       - run: |
           npm install
           npx browserslist@latest --update-db
-      - name: Update elm.json
-        if: matrix.directory == 'frontend'
-        run: |
-          curl -L -o elm.gz https://github.com/elm/compiler/releases/download/0.19.1/binary-for-linux-64-bit.gz
-          gunzip elm.gz
-          chmod +x elm
-          sed -i -e "s/\"elm-version\": \"[0-9.-]*\"/\"elm-version\": \"$(./elm --version)\"/g" elm.json
       # 差分があったときは差分を出力する
       - name: Show diff
         id: diff

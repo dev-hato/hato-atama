@@ -1,6 +1,4 @@
-FROM debian:bullseye-slim
-
-ENV ELM_VERSION 0.19.1
+FROM --platform=linux/arm64 debian:bullseye-slim
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends build-essential \
@@ -38,7 +36,9 @@ RUN apt-get update \
 
 WORKDIR /
 
-RUN git clone -b ${ELM_VERSION} https://github.com/elm/compiler.git
+COPY frontend/elm.json ./
+RUN elm_version="$(grep elm-version elm.json | sed -e 's/ *"elm-version": "\(.*\)",$/\1/g')" \
+    && git clone -b "${elm_version}" https://github.com/elm/compiler.git
 
 WORKDIR /compiler
 
