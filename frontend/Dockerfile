@@ -8,20 +8,20 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /usr/local/bin/
-
-COPY frontend/elm.json /usr/src/app/elm.json
-COPY elm/elm_arm64 elm
-
-RUN if [ "${TARGETPLATFORM}" != "linux/arm64" ]; then \
-        elm_version="$(grep elm-version /usr/src/app/elm.json | sed -e 's/ *"elm-version": "\(.*\)",$/\1/g')"; \
-        curl -L -o elm.gz "https://github.com/elm/compiler/releases/download/${elm_version}/binary-for-linux-64-bit.gz"; \
-        gunzip -f elm.gz; \
-        chmod +x elm; \
-    fi
-RUN apt-get remove -y curl
+COPY elm/elm_arm64 /usr/local/bin/
 
 WORKDIR /usr/src/app
+
+COPY frontend/elm.json ./
+
+RUN if [ "${TARGETPLATFORM}" != "linux/arm64" ]; then \
+        elm_version="$(grep elm-version elm.json | sed -e 's/ *"elm-version": "\(.*\)",$/\1/g')"; \
+        curl -L -o elm.gz "https://github.com/elm/compiler/releases/download/${elm_version}/binary-for-linux-64-bit.gz"; \
+        gunzip elm.gz; \
+        chmod +x elm; \
+        mv elm /usr/local/bin/; \
+    fi
+RUN apt-get remove -y curl
 
 COPY frontend/.npmrc .
 COPY frontend/package*.json ./
