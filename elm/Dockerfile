@@ -1,3 +1,5 @@
+# https://dev.to/csaltos/elm-for-linux-arm64-32bc
+# CIで実行するとうまく行かないため、手元で動かす前提
 FROM debian:bullseye-slim
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
