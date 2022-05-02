@@ -31,20 +31,18 @@ jobs:
           node-version-file: ${{ matrix.directory }}/.node-version
           cache: npm
           cache-dependency-path: ${{ matrix.directory }}/package-lock.json
-      - if: matrix.directory != 'frontend'
-        run: npm install
-      - if: matrix.directory == 'frontend'
-        run: |
+      - run: |
           npm install
           npx browserslist@latest --update-db
+      - run: |
+          curl -L https://github.com/elm/compiler/releases/download/0.19.1/binary-for-linux-64-bit.gz
+          gunzip binary-for-linux-64-bit.gz
+          chmod +x elm
+          mv elm /usr/local/bin/
       - name: Update elm.json
         if: matrix.directory == 'frontend'
         run: |
-          image_name=hato_atama_frontend_elm_compiler
-          docker build -t "${image_name}" --target elm_compiler .
-          CMD="elm --version"
-          elm_version=$(docker run ${image_name} sh -c "${CMD}")
-          sed -i -e "s/\"elm-version\": \"[0-9.-]*\"/\"elm-version\": \"${elm_version}\"/g" elm.json
+          sed -i -e "s/\"elm-version\": \"[0-9.-]*\"/\"elm-version\": \"$(elm --version)\"/g" elm.json
       # 差分があったときは差分を出力する
       - name: Show diff
         id: diff
