@@ -9,11 +9,11 @@ RUN apt-get update \
 
 WORKDIR /usr/local/bin/
 
-COPY frontend/elm.json ./
+COPY frontend/elm.json /usr/src/app/elm.json
 COPY elm/elm_arm64 elm
 
 RUN if [ "${TARGETPLATFORM}" != "linux/arm64" ]; then \
-        elm_version="$(grep elm-version elm.json | sed -e 's/ *"elm-version": "\(.*\)",$/\1/g')"; \
+        elm_version="$(grep elm-version /usr/src/app/elm.json | sed -e 's/ *"elm-version": "\(.*\)",$/\1/g')"; \
         curl -L -o elm.gz "https://github.com/elm/compiler/releases/download/${elm_version}/binary-for-linux-64-bit.gz"; \
         gunzip -f elm.gz; \
         chmod +x elm; \
