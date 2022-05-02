@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 image_tag='hato_atama_elm_compiler'
 docker build -t "${image_tag}" .
 container_id=$(docker create "${image_tag}")
