@@ -1,16 +1,34 @@
 FROM node:18.0.0-bullseye-slim as build
 
-WORKDIR /usr/src/app
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+ARG TARGETPLATFORM
 
-COPY .npmrc .
-COPY frontend/package*.json ./
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends ca-certificates \
-    && npm install \
+    && apt-get install -y --no-install-recommends ca-certificates curl \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-COPY frontend/elm.json frontend/webpack.config.js ./
+COPY elm/elm_arm64 /usr/local/bin/elm
+
+WORKDIR /usr/src/app
+
+COPY frontend/elm.json ./
+
+# https://github.com/elm/compiler/blob/24d3a89469e75cf7aa579442ecaf5ddfdd192ab2/installers/linux/README.md
+RUN if [ "${TARGETPLATFORM}" != "linux/arm64" ]; then \
+        elm_version="$(grep elm-version elm.json | sed -e 's/ *"elm-version": "\(.*\)",$/\1/g')"; \
+        curl -L -o elm.gz "https://github.com/elm/compiler/releases/download/${elm_version}/binary-for-linux-64-bit.gz"; \
+        gunzip elm.gz; \
+        chmod +x elm; \
+        mv elm /usr/local/bin/; \
+    fi
+RUN apt-get remove -y curl
+
+COPY frontend/.npmrc .
+COPY frontend/package*.json ./
+RUN npm install
+
+COPY frontend/webpack.config.js ./
 COPY frontend/src ./src
 COPY frontend/public ./public
 RUN npm run build
