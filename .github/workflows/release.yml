@@ -174,7 +174,7 @@ jobs:
           node-version-file: test/e2e/.node-version
           cache: npm
           cache-dependency-path: test/e2e/package-lock.json
-      - run: npm i
+      - run: npm ci --prefer-offline
         working-directory: ./test/e2e
       - run: |
           npm run test -- --env API_HOST=http://localhost:8080/ \
@@ -215,7 +215,7 @@ jobs:
           node-version-file: test/e2e/.node-version
           cache: npm
           cache-dependency-path: test/e2e/package-lock.json
-      - run: npm i
+      - run: npm ci --prefer-offline
         working-directory: ./test/e2e
       - run: |
           ENV="API_HOST=http://localhost:8080/"
@@ -237,7 +237,7 @@ jobs:
           node-version-file: test/e2e/.node-version
           cache: npm
           cache-dependency-path: test/e2e/package-lock.json
-      - run: npm i
+      - run: npm ci --prefer-offline
         working-directory: ./test/e2e
       - run: |
           API_HOST="https://"
@@ -263,7 +263,7 @@ jobs:
           node-version-file: test/e2e/.node-version
           cache: npm
           cache-dependency-path: test/e2e/package-lock.json
-      - run: npm i
+      - run: npm ci --prefer-offline
         working-directory: ./test/e2e
       - run: |
           ENV="API_HOST="
