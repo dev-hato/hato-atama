@@ -42,6 +42,7 @@ jobs:
           push: true
           files: staging.docker-compose.yml
           set: |
+            *.cache-to.type=registry
             *.cache-to.mode=max
       - run: docker images --filter 'label=stage=frontend_build' -q
       - run: docker images --filter 'label=stage=server_build' -q
