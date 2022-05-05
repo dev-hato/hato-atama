@@ -1,5 +1,7 @@
 FROM golang:1.18.0-bullseye as build
 
+LABEL stage=server_build
+
 WORKDIR /go/app
 
 COPY go.mod go.sum ./
