@@ -149,6 +149,7 @@ jobs:
     strategy:
       matrix:
         browser: ["chrome", "chromium", "firefox", "electron"]
+    needs: docker-compose-build
     steps:
       - uses: actions/checkout@v3
       - name: Login to GitHub Container Registry
@@ -157,9 +158,6 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v2
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
         env:
           HEAD_REF: ${{github.head_ref}}
@@ -167,7 +165,6 @@ jobs:
       - run: echo 'TAG_NAME=latest' >> "$GITHUB_ENV"
         if: ${{ github.event_name == 'push' }}
       - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
-      - run: docker-compose -f staging.docker-compose.yml build
       - run: docker-compose -f staging.docker-compose.yml up -d
       - uses: actions/setup-node@v3.1.1
         with:
@@ -190,6 +187,7 @@ jobs:
     strategy:
       matrix:
         browser: ["chrome", "chromium", "firefox", "electron"]
+    needs: docker-compose-build
     steps:
       - uses: actions/checkout@v3
       - name: Login to GitHub Container Registry
@@ -198,9 +196,6 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v2
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
         env:
           HEAD_REF: ${{github.head_ref}}
@@ -208,7 +203,6 @@ jobs:
       - run: echo 'TAG_NAME=latest' >> "$GITHUB_ENV"
         if: ${{ github.event_name == 'push' }}
       - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
-      - run: docker-compose -f staging.docker-compose.yml build
       - run: docker-compose -f staging.docker-compose.yml up -d
       - uses: actions/setup-node@v3.1.1
         with:
@@ -270,6 +264,40 @@ jobs:
           ENV+="https://v${GITHUB_RUN_NUMBER}-dot-hato-atama.an.r.appspot.com"
           npm run test -- --env "${ENV}" --browser ${{ matrix.browser }}
         working-directory: ./test/e2e
+
+  docker-compose-build:
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_BUILDKIT: 1
+      COMPOSE_DOCKER_CLI_BUILD: 1
+    permissions:
+      packages: write
+    if: github.event_name == 'push' || github.repository == github.event.pull_request.head.repo.full_name
+    steps:
+      - uses: actions/checkout@v3
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v2
+      - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
+        env:
+          HEAD_REF: ${{github.head_ref}}
+        if: ${{ github.event_name == 'pull_request' }}
+      - run: echo 'TAG_NAME=latest' >> "$GITHUB_ENV"
+        if: ${{ github.event_name == 'push' }}
+      - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
+      - name: Build and push
+        uses: docker/bake-action@v1.7.0
+        with:
+          push: true
+          files: staging.docker-compose.yml
 
   migrating-traffic:
     runs-on: ubuntu-latest
