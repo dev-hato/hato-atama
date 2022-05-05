@@ -15,6 +15,7 @@ services:
           - linux/amd64
           - linux/arm64
         cache-to:
+          - type=registry
           - mode=max
     image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/gcloud_datastore:${TAG_NAME}
     tty: true
@@ -34,6 +35,7 @@ services:
           - linux/amd64
           - linux/arm64
         cache-to:
+          - type=registry
           - mode=max
     image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server:${TAG_NAME}
     environment:
@@ -55,6 +57,7 @@ services:
           - linux/amd64
           - linux/arm64
         cache-to:
+          - type=registry
           - mode=max
     image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend:${TAG_NAME}
     ports:
