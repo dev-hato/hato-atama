@@ -144,8 +144,8 @@ jobs:
   e2e-test-mini-docker-compose:
     runs-on: ubuntu-latest
     env:
-     DOCKER_BUILDKIT: 1
-     COMPOSE_DOCKER_CLI_BUILD: 1
+      DOCKER_BUILDKIT: 1
+      COMPOSE_DOCKER_CLI_BUILD: 1
     strategy:
       matrix:
         browser: ["chrome", "chromium", "firefox", "electron"]
