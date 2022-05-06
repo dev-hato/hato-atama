@@ -10,7 +10,7 @@ COPY server server
 
 WORKDIR /go/app/server
 RUN mapfile -t PLATFORM < <(echo "${TARGETPLATFORM}" | tr '/' ' ') \
-    && CGO_ENABLED=0 GOOS=${PLATFORM[1]} GOARCH=${PLATFORM[2]} go build -o app \
+    && CGO_ENABLED=0 GOOS=linux GOARCH=${PLATFORM[2]} go build -o app \
     && go install github.com/cosmtrek/air@v1.27.3
 
 
