@@ -301,8 +301,8 @@ jobs:
           push: true
           pull: true
           files: |
-            staging.docker-compose.yml
             dev.docker-compose.yml
+            staging.docker-compose.yml
 
   migrating-traffic:
     runs-on: ubuntu-latest
