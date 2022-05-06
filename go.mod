@@ -6,6 +6,7 @@ require (
 	cloud.google.com/go/datastore v1.6.0
 	github.com/go-playground/validator/v10 v10.11.0
 	github.com/labstack/echo/v4 v4.7.2
+	github.com/cosmtrek/air v1.27.3
 )
 
 require (
