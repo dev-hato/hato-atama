@@ -4,9 +4,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 ARG TARGETPLATFORM
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends ca-certificates curl \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    && apt-get install -y --no-install-recommends ca-certificates curl
 
 COPY elm/elm_arm64 /usr/local/bin/elm
 
@@ -22,7 +20,10 @@ RUN if [ "${TARGETPLATFORM}" != "linux/arm64" ]; then \
         chmod +x elm; \
         mv elm /usr/local/bin/; \
     fi
-RUN apt-get remove -y curl
+RUN apt-get remove -y curl \
+    && apt-get autoremove -y \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY frontend/.npmrc .
 COPY frontend/package*.json ./
