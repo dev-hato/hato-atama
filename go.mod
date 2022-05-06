@@ -1,6 +1,6 @@
 module github.com/dev-hato/hato-atama
 
-go 1.18
+go 1.16
 
 require (
 	cloud.google.com/go/datastore v1.6.0
