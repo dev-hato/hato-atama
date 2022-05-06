@@ -15,13 +15,16 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
+      - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
+        env:
+          HEAD_REF: ${{github.head_ref}}
+      - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
+      - run: docker-compose -f dev.docker-compose.yml pull
       - name: Get Go version
         id: get_go_version
         run: |
-          image_name=hato_atama_server_build
-          docker build -t "${image_name}" --target build -f server/Dockerfile .
           CMD="go version | awk '{print \$3}' | sed -e 's/^go//g'"
-          go_version=$(docker run ${image_name} sh -c "${CMD}")
+          go_version=$(docker-compose -f dev.docker-compose.yml run server sh -c "${CMD}")
           echo "Go version:" "${go_version}"
           echo "::set-output name=go_version::${go_version}"
       - name: Set up Go
