@@ -1,5 +1,6 @@
 module github.com/dev-hato/hato-atama
 
+// App Engineと連動させる
 go 1.16
 
 require (
