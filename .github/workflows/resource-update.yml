@@ -103,12 +103,12 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
       - run: echo "TAG_NAME=latest" >> "$GITHUB_ENV"
       - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
-      - run: docker-compose -f dev.docker-compose.yml pull
+      - run: docker compose -f dev.docker-compose.yml pull
       - name: Get Go version
         id: get_go_version
         run: |
           DOCKER_CMD="go version | awk '{print \$3}' | sed -e 's/^go//g'"
-          go_version=$(docker-compose -f dev.docker-compose.yml run server sh -c "${DOCKER_CMD}")
+          go_version=$(docker compose -f dev.docker-compose.yml run server sh -c "${DOCKER_CMD}")
           echo "Go version:" "${go_version}"
           echo "::set-output name=go_version::${go_version}"
       - name: Set up Go
