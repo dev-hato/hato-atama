@@ -168,7 +168,8 @@ jobs:
       - run: echo 'TAG_NAME=latest' >> "$GITHUB_ENV"
         if: ${{ github.event_name == 'push' }}
       - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
-      - run: sed -i -e 's!build:!build:\n\t\tplatform: linux/amd64!g' staging.docker-compose.yml
+      - run: |
+          sed -i -e 's!build:!platform: linux/amd64\n    build:!g' staging.docker-compose.yml
       - run: docker-compose -f staging.docker-compose.yml pull
       - run: docker-compose -f staging.docker-compose.yml up -d
       - uses: actions/setup-node@v3.1.1
@@ -211,7 +212,8 @@ jobs:
       - run: echo 'TAG_NAME=latest' >> "$GITHUB_ENV"
         if: ${{ github.event_name == 'push' }}
       - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
-      - run: sed -i -e 's!build:!build:\n\t\tplatform: linux/amd64!g' staging.docker-compose.yml
+      - run: |
+          sed -i -e 's!build:!platform: linux/amd64\n    build:!g' staging.docker-compose.yml
       - run: docker-compose -f staging.docker-compose.yml pull
       - run: docker-compose -f staging.docker-compose.yml up -d
       - uses: actions/setup-node@v3.1.1
