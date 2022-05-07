@@ -34,7 +34,8 @@ jobs:
           go install golang.org/x/tools/cmd/goimports@latest
       - name: Format files
         run: |
-          go mod tidy
+          go_version=$(grep runtime app.yaml | sed -e 's/runtime: go\([0-9]\)\([0-9]*\)/\1.\2/g')
+          go mod tidy -go="${go_version}"
           goimports -l -w .
       # 差分があったときは差分を出力する
       - name: Show diff
