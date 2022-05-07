@@ -1,12 +1,17 @@
 FROM golang:1.18.0-bullseye as build
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+ARG TARGETPLATFORM
+
 WORKDIR /go/app
 
 COPY go.mod go.sum ./
 COPY server server
 
 WORKDIR /go/app/server
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o app && go install github.com/cosmtrek/air@v1.27.3
+RUN mapfile -t PLATFORM < <(echo "${TARGETPLATFORM}" | tr '/' ' ') \
+    && CGO_ENABLED=0 GOOS=linux GOARCH=${PLATFORM[2]} go build -o app \
+    && go install github.com/cosmtrek/air@v1.27.3
 
 
 FROM scratch
