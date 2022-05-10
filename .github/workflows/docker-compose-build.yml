@@ -63,7 +63,7 @@ jobs:
         id: get_go_version
         run: |
           CMD="go version | awk '{print \$3}' | sed -e 's/^go//g'"
-          go_version=$(docker compose -f dev.docker-compose.yml run server sh -c "${CMD}")
+          go_version=$(docker compose -f dev.docker-compose.yml run server-dev sh -c "${CMD}")
           echo "Go version:" "${go_version}"
           echo "::set-output name=go_version::${go_version}"
       - name: Set up Go
@@ -446,7 +446,7 @@ jobs:
         id: get_node_version
         run: |
           DOCKER_CMD="node --version && npm --version"
-          mapfile -t result < <(docker compose -f dev.docker-compose.yml run frontend sh -c "${DOCKER_CMD}")
+          mapfile -t result < <(docker compose -f dev.docker-compose.yml run frontend-dev sh -c "${DOCKER_CMD}")
           node_version="${result[0]//v/}"
           npm_version=${result[1]}
           echo "Node.js version:" "${node_version}"
