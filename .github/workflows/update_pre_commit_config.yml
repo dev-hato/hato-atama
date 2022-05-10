@@ -4,6 +4,9 @@ name: update-pre-commit-config
 on:
   pull_request:
 
+permissions:
+  contents: write
+
 jobs:
   update-pre-commit-config:
     runs-on: ubuntu-latest

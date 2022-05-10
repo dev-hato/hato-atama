@@ -97,6 +97,8 @@ jobs:
   create-pr-environment:
     runs-on: ubuntu-latest
     needs: deploy-app-engine
+    permissions:
+      issues: write
     if: ${{ github.event_name == 'pull_request' }}
     steps:
       - uses: actions/github-script@v6
@@ -122,6 +124,8 @@ jobs:
   lighthouse:
     runs-on: ubuntu-latest
     needs: deploy-app-engine
+    permissions:
+      issues: write
     steps:
       - uses: actions/checkout@v3
       - run: |
