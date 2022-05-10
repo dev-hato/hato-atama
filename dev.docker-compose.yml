@@ -19,7 +19,7 @@ services:
       DATASTORE_PROJECT_ID: app
       DATASTORE_LISTEN_ADDRESS: 0.0.0.0:8081
 
-  server:
+  server-dev:
     build:
       context: .
       dockerfile: server/Dockerfile
@@ -42,7 +42,7 @@ services:
     ports:
       - "8082:8082"
 
-  frontend:
+  frontend-dev:
     build:
       context: .
       dockerfile: frontend/Dockerfile
