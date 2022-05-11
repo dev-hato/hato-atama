@@ -14,6 +14,7 @@ services:
           - linux/amd64
           - linux/arm64
     image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/gcloud_datastore:${TAG_NAME}
+    init: true
     tty: true
     environment:
       DATASTORE_PROJECT_ID: app
