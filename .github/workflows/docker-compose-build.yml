@@ -255,7 +255,7 @@ jobs:
           BRANCH_NAME="$(echo '${{ matrix.directory }}' | sed -e 's:/:-:g')"
           BRANCH_NAME="${BRANCH_NAME//\./root}"
           echo "::set-output name=branch_name::${BRANCH_NAME}"
-      - uses: actions/setup-node@v3.1.1
+      - uses: actions/setup-node@v3.2.0
         with:
           node-version-file: ${{ matrix.directory }}/.node-version
           cache: npm
