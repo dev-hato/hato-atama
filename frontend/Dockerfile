@@ -32,12 +32,7 @@ RUN npm ci
 COPY frontend/webpack.config.js ./
 COPY frontend/src ./src
 COPY frontend/public ./public
-RUN npm run build \
-    && for f in /usr/bin/chsh /bin/umount /sbin/unix_chkpwd /bin/mount /usr/bin/chfn /usr/bin/newgrp \
-                /bin/su /usr/bin/chage /usr/bin/wall /usr/bin/gpasswd /usr/bin/expiry /usr/bin/passwd; do \
-      chmod u-s "${f}"; \
-      chmod u-g "${f}"; \
-    done
+RUN npm run build
 
 USER node
 
