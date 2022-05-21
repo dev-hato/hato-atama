@@ -23,8 +23,7 @@ RUN if [ "${TARGETPLATFORM}" != "linux/arm64" ]; then \
     fi
 RUN apt-get remove -y curl \
     && apt-get autoremove -y \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    && apt-get clean
 
 COPY frontend/.npmrc .
 COPY frontend/package*.json ./
@@ -34,7 +33,6 @@ COPY frontend/webpack.config.js ./
 COPY frontend/src ./src
 COPY frontend/public ./public
 RUN npm run build \
-    && rm -rf /root/.npm \
     && for f in /usr/bin/chsh /bin/umount /sbin/unix_chkpwd /bin/mount /usr/bin/chfn /usr/bin/newgrp \
                 /bin/su /usr/bin/chage /usr/bin/wall /usr/bin/gpasswd /usr/bin/expiry /usr/bin/passwd; do \
       chmod u-s "${f}"; \
