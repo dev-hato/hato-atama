@@ -47,10 +47,6 @@ RUN elm_version="$(grep elm-version elm.json | sed -e 's/ *"elm-version": "\(.*\
 
 WORKDIR /compiler
 
-RUN useradd -l -m -s /bin/bash -N -u "1000" "nonroot" \
-    && chown -R nonroot /compiler
-USER nonroot
-
 RUN rm worker/elm.cabal \
     && cabal new-update \
     && cabal new-configure \
