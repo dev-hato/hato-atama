@@ -6,18 +6,20 @@ ARG CLOUD_SDK_VERSION=386.0.0
 ENV CLOUD_SDK_VERSION=$CLOUD_SDK_VERSION
 ENV PATH /google-cloud-sdk/bin:$PATH
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 RUN groupadd -r -g 1000 cloudsdk && \
     useradd -r -u 1000 -m -s /bin/bash -g cloudsdk cloudsdk
 
-RUN echo -n "cloud-datastore-emulator cloud-firestore-emulator pubsub-emulator bigtable" > /tmp/additional_components
-RUN if [ `uname -m` = 'x86_64' ]; then echo -n " cloud-spanner-emulator" >> /tmp/additional_components; fi;
+RUN printf "cloud-datastore-emulator cloud-firestore-emulator pubsub-emulator bigtable" > /tmp/additional_components
+RUN if [ `uname -m` = 'x86_64' ]; then printf " cloud-spanner-emulator" >> /tmp/additional_components; fi;
 RUN cat /tmp/additional_components
-RUN if [ `uname -m` = 'x86_64' ]; then echo -n "x86_64" > /tmp/arch; else echo -n "arm" > /tmp/arch; fi;
+RUN if [ `uname -m` = 'x86_64' ]; then printf "x86_64" > /tmp/arch; else echo -n "arm" > /tmp/arch; fi;
 
 RUN ARCH=`cat /tmp/arch` && \
     mkdir -p /usr/share/man/man1/ && \
     apt-get update && \
-    apt-get -y install \
+    apt-get -y --no-install-recommends install \
         curl \
         python3 \
         python3-crcmod \
@@ -33,7 +35,7 @@ RUN ARCH=`cat /tmp/arch` && \
     gcloud components install beta `cat /tmp/additional_components` && \
     rm /google-cloud-sdk/data/cli/gcloud.json && \
     rm -rf /google-cloud-sdk/.install/.backup/ && \
-    find /google-cloud-sdk/ -name "__pycache__" -type d  | xargs -n 1 rm -rf && \
+    find /google-cloud-sdk/ -name "__pycache__" -type d -print0 | xargs -0 -n 1 rm -rf && \
     rm -rf /var/lib/apt/lists
 
 VOLUME /opt/data
