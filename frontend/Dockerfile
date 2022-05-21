@@ -4,7 +4,8 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 ARG TARGETPLATFORM
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends ca-certificates curl
+    && apt-get install -y --no-install-recommends ca-certificates curl \
+    && rm -rf /var/lib/apt/lists
 
 COPY elm/elm_arm64 /usr/local/bin/elm
 
@@ -22,8 +23,7 @@ RUN if [ "${TARGETPLATFORM}" != "linux/arm64" ]; then \
     fi
 RUN apt-get remove -y curl \
     && apt-get autoremove -y \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    && apt-get clean
 
 COPY frontend/.npmrc .
 COPY frontend/package*.json ./
@@ -38,7 +38,12 @@ USER node
 
 FROM nginx:1.21.6
 
-RUN touch /var/run/nginx.pid \
+RUN for f in /usr/bin/newgrp /usr/bin/expiry /usr/bin/wall /bin/umount /usr/bin/chsh /usr/bin/gpasswd \
+             /sbin/unix_chkpwd /bin/mount /usr/bin/chfn /bin/su /usr/bin/passwd /usr/bin/chage; do \
+      chmod u-s "${f}"; \
+      chmod u-g "${f}"; \
+    done \
+    && touch /var/run/nginx.pid \
     && chown -R nginx:nginx /var/run/nginx.pid \
     && chown -R nginx:nginx /var/cache/nginx
 USER nginx
