@@ -21,9 +21,9 @@ RUN mapfile -t PLATFORM < <(echo "${TARGETPLATFORM}" | tr '/' ' ') \
               go/pkg/mod/github.com/cosmtrek/air@*/Dockerfile \
               go/pkg/mod/github.com/pelletier/go-toml@*/Dockerfile \
               go/pkg/mod/golang.org/x/sys@*/unix/linux/Dockerfile \
-    && for f in usr/bin/wall bin/umount usr/bin/chfn usr/bin/passwd bin/su \
-             bin/mount usr/bin/expiry usr/bin/chsh usr/bin/chage usr/bin/newgrp \
-             usr/bin/ssh-agent usr/lib/openssh/ssh-keysign sbin/unix_chkpwd usr/bin/gpasswd; do \
+    && for f in /usr/bin/wall /bin/umount /usr/bin/chfn /usr/bin/passwd /bin/su \
+                /bin/mount /usr/bin/expiry /usr/bin/chsh /usr/bin/chage /usr/bin/newgrp \
+                /usr/bin/ssh-agent /usr/lib/openssh/ssh-keysign /sbin/unix_chkpwd /usr/bin/gpasswd; do \
       chmod u-s "${f}"; \
       chmod u-g "${f}"; \
     done \
