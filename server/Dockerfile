@@ -1,5 +1,6 @@
 FROM golang:1.18.0-bullseye as build
 
+USER nonroot
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 ARG TARGETPLATFORM
 
@@ -15,6 +16,8 @@ RUN mapfile -t PLATFORM < <(echo "${TARGETPLATFORM}" | tr '/' ' ') \
 
 
 FROM scratch
+
+USER nonroot
 
 WORKDIR /app
 

@@ -2,6 +2,7 @@
 # GitHub Actionsでビルドするとうまく行かないため、手元でビルドする前提
 FROM debian:bullseye-slim
 
+USER nonroot
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN apt-get update \
