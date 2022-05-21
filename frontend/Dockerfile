@@ -37,8 +37,8 @@ RUN npm run build \
     && rm -rf root/.npm \
     && for f in usr/bin/chsh bin/umount sbin/unix_chkpwd bin/mount usr/bin/chfn usr/bin/newgrp \
                 bin/su usr/bin/chage usr/bin/wall usr/bin/gpasswd usr/bin/expiry usr/bin/passwd; do \
-      chmod u-s "${f}" \
-      && chmod u-g "${f}" \
+      chmod u-s "${f}"; \
+      chmod u-g "${f}"; \
     done
 
 USER node
@@ -56,6 +56,6 @@ COPY --from=build /usr/src/app/dist /usr/share/nginx/html
 
 RUN for f in usr/bin/newgrp usr/bin/expiry usr/bin/wall bin/umount usr/bin/chsh usr/bin/gpasswd \
              sbin/unix_chkpwd bin/mount usr/bin/chfn bin/su usr/bin/passwd usr/bin/chage; do \
-      chmod u-s "${f}" \
-      && chmod u-g "${f}" \
+      chmod u-s "${f}"; \
+      chmod u-g "${f}"; \
     done

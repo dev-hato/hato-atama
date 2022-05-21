@@ -44,8 +44,8 @@ RUN ARCH="$(cat /tmp/arch)" && \
            google-cloud-sdk/platform/ext-runtime/go/data/Dockerfile && \
     for f in usr/bin/passwd bin/mount bin/umount usr/bin/chage usr/bin/chfn usr/bin/newgrp \
              sbin/unix_chkpwd usr/bin/expiry usr/bin/chsh usr/bin/gpasswd bin/su usr/bin/wall; do \
-      chmod u-s "${f}" && \
-      chmod u-g "${f}" \
+      chmod u-s "${f}"; \
+      chmod u-g "${f}"; \
     done
 
 VOLUME /opt/data
