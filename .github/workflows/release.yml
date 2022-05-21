@@ -818,7 +818,7 @@ jobs:
 
             if [[ "${image_name}" =~ "gcloud_datastore" ]]; then
               cmd+="-af settings.py -i CIS-DI-0001 "
-            elif [[ "${image_name}" =~ "serer-dev" ]]; then
+            elif [[ "${image_name}" =~ "server-dev" ]]; then
               cmd+="-af credentials "
             fi
 
