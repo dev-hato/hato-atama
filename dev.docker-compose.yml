@@ -15,7 +15,7 @@ services:
           - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/gcloud_datastore:${TAG_NAME}
           - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/gcloud_datastore
         cache-to:
-          - type=local,src=/tmp/buildx-cache/gcloud_datastore
+          - type=local,dest=/tmp/buildx-cache/gcloud_datastore
         platforms:
           - linux/amd64
           - linux/arm64
@@ -40,7 +40,7 @@ services:
           - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server-dev:${TAG_NAME}
           - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server-dev
         cache-to:
-          - type=local,src=/tmp/buildx-cache/server-dev
+          - type=local,dest=/tmp/buildx-cache/server-dev
         platforms:
           - linux/amd64
           - linux/arm64
@@ -69,7 +69,7 @@ services:
           - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend-dev:${TAG_NAME}
           - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend-dev
         cache-to:
-          - type=local,src=/tmp/buildx-cache/frontend-dev
+          - type=local,dest=/tmp/buildx-cache/frontend-dev
         platforms:
           - linux/amd64
           - linux/arm64
