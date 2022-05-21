@@ -32,11 +32,11 @@ RUN ARCH="$(cat /tmp/arch)" && \
     gcloud config set component_manager/disable_update_check true && \
     gcloud config set metrics/environment github_docker_image_emulator && \
     gcloud components remove anthoscli && \
-    gcloud components install beta $(cat /tmp/additional_components) && # shellcheck disable=SC2046 \
+    gcloud components install beta $(cat /tmp/additional_components) && \
     rm /google-cloud-sdk/data/cli/gcloud.json && \
     rm -rf /google-cloud-sdk/.install/.backup/ && \
     find /google-cloud-sdk/ -name "__pycache__" -type d -print0 | xargs -0 -n 1 rm -rf && \
-    rm -rf /var/lib/apt/lists
+    rm -rf /var/lib/apt/lists # shellcheck disable=SC2046
 
 VOLUME /opt/data
 
