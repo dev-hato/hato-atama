@@ -27,7 +27,7 @@ RUN apt-get remove -y curl \
 
 COPY frontend/.npmrc .
 COPY frontend/package*.json ./
-RUN npm install
+RUN npm ci
 
 USER node
 
