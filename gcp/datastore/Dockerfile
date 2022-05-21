@@ -37,7 +37,7 @@ RUN ARCH="$(cat /tmp/arch)" && \
     rm -rf /google-cloud-sdk/.install/.backup/ && \
     find /google-cloud-sdk/ -name "__pycache__" -type d -print0 | xargs -0 -n 1 rm -rf && \
     rm -rf /var/lib/apt/lists && \
-    rm -rf tmp \
+    rm -rf tmp/* \
            google-cloud-sdk/platform/gsutil/third_party/pyparsing/.idea \
            google-cloud-sdk/platform/ext-runtime/nodejs/data/Dockerfile \
            google-cloud-sdk/platform/gsutil/third_party/google-auth-library-python/.kokoro/docker/docs/Dockerfile \
