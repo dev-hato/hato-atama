@@ -11,7 +11,7 @@ services:
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/gcloud_datastore:${TAG_NAME}
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/gcloud_datastore
       x-bake:
-        cache_from:
+        cache-from:
           - type=registry,ref=ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/gcloud_datastore:${TAG_NAME}
           - type=registry,ref=ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/gcloud_datastore
         platforms:
@@ -32,7 +32,7 @@ services:
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server:${TAG_NAME}
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server
       x-bake:
-        cache_from:
+        cache-from:
           - type=registry,ref=ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server:${TAG_NAME}
           - type=registry,ref=ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server
         platforms:
@@ -54,7 +54,7 @@ services:
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend:${TAG_NAME}
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend
       x-bake:
-        cache_from:
+        cache-from:
           - type=registry,ref=ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend:${TAG_NAME}
           - type=registry,ref=ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend
         platforms:
