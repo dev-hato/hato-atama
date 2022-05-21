@@ -2,7 +2,6 @@
 # GitHub Actionsでビルドするとうまく行かないため、手元でビルドする前提
 FROM debian:bullseye-slim
 
-USER nonroot
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN apt-get update \
@@ -47,6 +46,10 @@ RUN elm_version="$(grep elm-version elm.json | sed -e 's/ *"elm-version": "\(.*\
     && git clone -b "${elm_version}" https://github.com/elm/compiler.git
 
 WORKDIR /compiler
+
+RUN useradd -l -m -s /bin/bash -N -u "1000" "nonroot" \
+    && chown -R nonroot /compiler
+USER nonroot
 
 RUN rm worker/elm.cabal \
     && cabal new-update \
