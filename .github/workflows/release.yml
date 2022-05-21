@@ -149,6 +149,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DOCKER_BUILDKIT: 1
+      DOCKER_CONTENT_TRUST: 1
       COMPOSE_DOCKER_CLI_BUILD: 1
     permissions:
       contents: read
@@ -190,6 +191,8 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+    env:
+      DOCKER_CONTENT_TRUST: 1
     steps:
       - uses: actions/checkout@v3
         with:
@@ -568,6 +571,8 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+    env:
+      DOCKER_CONTENT_TRUST: 1
     steps:
       - uses: actions/checkout@v3
         with:
@@ -784,6 +789,8 @@ jobs:
     strategy:
       matrix:
         docker_compose_file_name: ["dev.docker-compose.yml", "staging.docker-compose.yml"]
+    env:
+      DOCKER_CONTENT_TRUST: 1
     steps:
       - uses: actions/checkout@v3
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
@@ -811,6 +818,8 @@ jobs:
     strategy:
       matrix:
         browser: ["chrome", "chromium", "firefox", "electron"]
+    env:
+      DOCKER_CONTENT_TRUST: 1
     steps:
       - uses: actions/checkout@v3
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
@@ -841,6 +850,8 @@ jobs:
     strategy:
       matrix:
         browser: ["chrome", "chromium", "firefox", "electron"]
+    env:
+      DOCKER_CONTENT_TRUST: 1
     steps:
       - uses: actions/checkout@v3
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
@@ -872,6 +883,8 @@ jobs:
     strategy:
       matrix:
         browser: ["chrome", "chromium", "firefox", "electron"]
+    env:
+      DOCKER_CONTENT_TRUST: 1
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3.2.0
