@@ -26,12 +26,15 @@ RUN mapfile -t PLATFORM < <(echo "${TARGETPLATFORM}" | tr '/' ' ') \
       chmod u-s "${f}"; \
       chmod u-g "${f}"; \
     done \
-    && useradd -l -m -s /bin/bash -N -u "1010" "nonroot"
+    && useradd -l -m -s /bin/bash -N -u "1000" "nonroot"
 USER nonroot
 
 FROM scratch
 
+COPY --from=build /etc/group /etc/group
 COPY --from=build /etc/passwd /etc/passwd
+COPY --from=build /etc/shadow /etc/shadow
+COPY --from=build /etc/master.passwd /etc/master.passwd
 USER nonroot
 
 WORKDIR /app
