@@ -38,10 +38,10 @@ RUN ARCH="$(cat /tmp/arch)" && \
     find /google-cloud-sdk/ -name "__pycache__" -type d -print0 | xargs -0 -n 1 rm -rf && \
     rm -rf /var/lib/apt/lists \
            tmp/* \
-           google-cloud-sdk/platform/gsutil/third_party/pyparsing/.idea \
+           google-cloud-sdk/platform/ext-runtime/go/data/Dockerfile \
            google-cloud-sdk/platform/ext-runtime/nodejs/data/Dockerfile \
-           google-cloud-sdk/platform/gsutil/third_party/google-auth-library-python/.kokoro/docker/docs/Dockerfile \
-           google-cloud-sdk/platform/ext-runtime/go/data/Dockerfile && \
+           google-cloud-sdk/platform/gsutil/third_party/pyparsing/.idea \
+           google-cloud-sdk/platform/gsutil/third_party/google-auth-library-python/.kokoro/docker/docs/Dockerfile && \
     for f in /usr/bin/passwd /bin/mount /bin/umount /usr/bin/chage /usr/bin/chfn /usr/bin/newgrp \
              /sbin/unix_chkpwd /usr/bin/expiry /usr/bin/chsh /usr/bin/gpasswd /bin/su /usr/bin/wall; do \
       chmod u-s "${f}"; \
