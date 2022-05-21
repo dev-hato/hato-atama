@@ -33,9 +33,8 @@ RUN npm ci
 COPY frontend/webpack.config.js ./
 COPY frontend/src ./src
 COPY frontend/public ./public
-RUN npm run build
-
-RUN rm -rf root/.npm
+RUN npm run build \
+    && rm -rf root/.npm
 
 USER node
 
