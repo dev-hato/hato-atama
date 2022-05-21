@@ -797,7 +797,7 @@ jobs:
             sed -E 's/.*"v([^"]+)".*/\1/' \
           )
           curl -L -o dockle.deb https://github.com/goodwithtech/dockle/releases/download/v${VERSION}/dockle_${VERSION}_Linux-64bit.deb
-          dpkg -i dockle.deb
+          sudo dpkg -i dockle.deb
       - run: docker compose -f ${{matrix.docker_compose_file_name}} pull
       - run: docker compose -f ${{matrix.docker_compose_file_name}} up -d
       - run: |
