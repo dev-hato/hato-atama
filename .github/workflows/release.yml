@@ -820,7 +820,7 @@ jobs:
               cmd+="-af settings.py "
             fi
 
-            cmd+=image_name
+            cmd+="${image_name}"
             echo "> ${cmd}"
             eval "${cmd}"
           done
