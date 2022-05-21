@@ -16,7 +16,6 @@ RUN if [ "$(uname -m)" = 'x86_64' ]; then printf " cloud-spanner-emulator" >> /t
 RUN cat /tmp/additional_components
 RUN if [ "$(uname -m)" = 'x86_64' ]; then printf "x86_64" > /tmp/arch; else echo -n "arm" > /tmp/arch; fi;
 
-# shellcheck disable=SC2046
 RUN ARCH="$(cat /tmp/arch)" && \
     mkdir -p /usr/share/man/man1/ && \
     apt-get update && \
@@ -33,7 +32,7 @@ RUN ARCH="$(cat /tmp/arch)" && \
     gcloud config set component_manager/disable_update_check true && \
     gcloud config set metrics/environment github_docker_image_emulator && \
     gcloud components remove anthoscli && \
-    gcloud components install beta $(cat /tmp/additional_components) && \
+    cat /tmp/additional_components | xargs gcloud components install beta && \
     rm /google-cloud-sdk/data/cli/gcloud.json && \
     rm -rf /google-cloud-sdk/.install/.backup/ && \
     find /google-cloud-sdk/ -name "__pycache__" -type d -print0 | xargs -0 -n 1 rm -rf && \
