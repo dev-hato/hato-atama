@@ -35,6 +35,8 @@ COPY frontend/src ./src
 COPY frontend/public ./public
 RUN npm run build
 
+RUN rm -rf root/.npm
+
 USER node
 
 FROM nginx:1.21.6
