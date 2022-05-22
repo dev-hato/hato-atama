@@ -13,12 +13,6 @@ services:
       args:
         BUILDKIT_INLINE_CACHE: 1
       x-bake:
-        cache-from:
-          - type=gha
-          - type=registry,ref=ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/gcloud_datastore:${TAG_NAME}
-          - type=registry,ref=ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/gcloud_datastore
-        cache-to:
-          - type=gha,mode=max
         platforms:
           - linux/amd64
           - linux/arm64
@@ -39,12 +33,6 @@ services:
       args:
         BUILDKIT_INLINE_CACHE: 1
       x-bake:
-        cache-from:
-          - type=gha
-          - type=registry,ref=ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server:${TAG_NAME}
-          - type=registry,ref=ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server
-        cache-to:
-          - type=gha,mode=max
         platforms:
           - linux/amd64
           - linux/arm64
@@ -66,12 +54,6 @@ services:
       args:
         BUILDKIT_INLINE_CACHE: 1
       x-bake:
-        cache-from:
-          - type=gha
-          - type=registry,ref=ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend:${TAG_NAME}
-          - type=registry,ref=ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend
-        cache-to:
-          - type=gha,mode=max
         platforms:
           - linux/amd64
           - linux/arm64
