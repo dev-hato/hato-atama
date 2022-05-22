@@ -17,6 +17,8 @@ services:
           - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/gcloud_datastore
         cache-to:
           - type=gha,mode=max
+        args:
+          - BUILDKIT_INLINE_CACHE=1
         platforms:
           - linux/amd64
           - linux/arm64
@@ -41,6 +43,8 @@ services:
           - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server
         cache-to:
           - type=gha,mode=max
+        args:
+          - BUILDKIT_INLINE_CACHE=1
         platforms:
           - linux/amd64
           - linux/arm64
@@ -66,6 +70,8 @@ services:
           - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend
         cache-to:
           - type=gha,mode=max
+        args:
+          - BUILDKIT_INLINE_CACHE=1
         platforms:
           - linux/amd64
           - linux/arm64
