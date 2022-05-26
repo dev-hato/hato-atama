@@ -36,7 +36,7 @@ RUN npm run build
 
 USER node
 
-FROM nginx:1.21.6
+FROM nginx:1.22.0
 
 RUN for f in /usr/bin/newgrp /usr/bin/expiry /usr/bin/wall /bin/umount /usr/bin/chsh /usr/bin/gpasswd \
              /sbin/unix_chkpwd /bin/mount /usr/bin/chfn /bin/su /usr/bin/passwd /usr/bin/chage; do \
