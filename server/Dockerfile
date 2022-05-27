@@ -17,9 +17,11 @@ USER nonroot
 
 HEALTHCHECK --interval=5s --retries=20 CMD ["curl", "-s", "-S", "-o", "/dev/null", "http://localhost:8082/ping"]
 
+FROM tarampampam/curl:7.78.0 as curl
+
 FROM scratch
 
-COPY --from=tarampampam/curl:7.78.0 /bin/curl /bin/curl
+COPY --from=curl /bin/curl /bin/curl
 COPY --from=build /etc/group /etc/group
 COPY --from=build /etc/passwd /etc/passwd
 COPY --from=build /etc/shadow /etc/shadow
