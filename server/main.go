@@ -90,6 +90,7 @@ func createServer() (e *echo.Echo) {
 	api.POST("/create", createShortURL)
 
 	e.GET("/l/:param", getLink)
+	e.GET("/ping", ping)
 
 	return
 }
@@ -241,6 +242,10 @@ func getLink(c echo.Context) (err error) {
 	c.Response().Header().Set("Cache-Control", "no-store")
 	// トランザクションがコミットされれば、URLにリダイレクトさせる
 	return c.Redirect(302, data.URLData)
+}
+
+func ping(c echo.Context) (err error) {
+	return c.JSON(http.StatusOK, RetJSONType{Status: true, Message: "ok"})
 }
 
 func initialize() (err error) {
