@@ -240,7 +240,7 @@ func getLink(c echo.Context) (err error) {
 
 	c.Response().Header().Set("Cache-Control", "no-store")
 	// トランザクションがコミットされれば、URLにリダイレクトさせる
-	return c.Redirect(302, data.URLData)
+	return c.Redirect(http.StatusFound, data.URLData)
 }
 
 func initialize() (err error) {
