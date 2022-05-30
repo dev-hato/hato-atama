@@ -830,7 +830,7 @@ jobs:
 
             cmd+="ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/${image_name}"
 
-            if [ '${{matrix.docker_compose_file_name}}' = 'dev.docker-compose.yml' ]; then
+            if [ "${image_name}" != 'gcloud_datastore' ] && [ '${{matrix.docker_compose_file_name}}' = 'dev.docker-compose.yml' ]; then
               cmd+="-dev"
             fi
 
