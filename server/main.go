@@ -245,7 +245,7 @@ func getLink(c echo.Context) (err error) {
 }
 
 func ping(c echo.Context) (err error) {
-	return c.NoContent(http.StatusNoContent)
+	return c.JSON(http.StatusOK, RetJSONType{Status: true, Message: "ok"})
 }
 
 func initialize() (err error) {
