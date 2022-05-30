@@ -607,7 +607,7 @@ jobs:
           DOCKER_CONTENT_TRUST: 1
         run: |
           DOCKER_CMD="node --version && npm --version"
-          mapfile -t result < <(docker compose -f dev.docker-compose.yml run frontend-dev sh -c "${DOCKER_CMD}")
+          mapfile -t result < <(docker run ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend:${TAG_NAME} sh -c "${DOCKER_CMD}")
           node_version="${result[0]//v/}"
           npm_version=${result[1]}
           echo "Node.js version:" "${node_version}"
@@ -818,9 +818,8 @@ jobs:
           curl -L -o dockle.deb "https://github.com/goodwithtech/dockle/releases/download/v${VERSION}/dockle_${VERSION}_Linux-64bit.deb"
           sudo dpkg -i dockle.deb
       - run: docker compose -f ${{matrix.docker_compose_file_name}} pull
-      - run: docker compose -f ${{matrix.docker_compose_file_name}} up -d
       - run: |
-          for image_name in $(docker compose -f ${{matrix.docker_compose_file_name}} images | awk 'OFS=":" {print $2,$3}' | tail -n +2); do
+          for image_name in gcloud_datastore server frontend; do
             cmd="dockle --exit-code 1 -i DKL-DI-0006 "
 
             if [[ "${image_name}" =~ "gcloud_datastore" ]]; then
@@ -829,7 +828,7 @@ jobs:
               cmd+="-af credentials "
             fi
 
-            cmd+="${image_name}"
+            cmd+="ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/${image_name}:${TAG_NAME}"
             echo "> ${cmd}"
             eval "${cmd}"
           done
