@@ -603,8 +603,6 @@ jobs:
           DOCKER_CONTENT_TRUST: 1
       - name: Get Node.js version
         id: get_node_version
-        env:
-          DOCKER_CONTENT_TRUST: 1
         run: |
           DOCKER_CMD="node --version && npm --version"
           mapfile -t result < <(docker run "ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend-dev:${TAG_NAME}" sh -c "${DOCKER_CMD}")
