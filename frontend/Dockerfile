@@ -21,9 +21,6 @@ RUN if [ "${TARGETPLATFORM}" != "linux/arm64" ]; then \
         chmod +x elm; \
         mv elm /usr/local/bin/; \
     fi
-RUN apt-get remove -y curl \
-    && apt-get autoremove -y \
-    && apt-get clean
 
 RUN chown -R node:node /usr/src/app
 
