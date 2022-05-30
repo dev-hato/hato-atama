@@ -824,7 +824,7 @@ jobs:
 
             if [[ "${image_name}" =~ "gcloud_datastore" ]]; then
               cmd+="-af settings.py -i CIS-DI-0001 "
-            elif [[ "${image_name}" =~ "server-dev" ]]; then
+            elif [ '${{matrix.docker_compose_file_name}}' = 'dev.docker-compose.yml' ] && [[ "${image_name}" =~ "server" ]]; then
               cmd+="-af credentials "
             fi
 
