@@ -70,6 +70,3 @@ services:
     command: npm run dev
     ports:
       - "8080:8080"
-    depends_on:
-      server-dev:
-        condition: service_healthy

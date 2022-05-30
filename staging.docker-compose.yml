@@ -67,6 +67,3 @@ services:
     image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend:${TAG_NAME}
     ports:
       - "8080:8080"
-    depends_on:
-      server:
-        condition: service_healthy
