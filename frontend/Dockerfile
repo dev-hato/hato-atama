@@ -25,6 +25,10 @@ RUN apt-get remove -y curl \
     && apt-get autoremove -y \
     && apt-get clean
 
+RUN chown -R node:node /usr/src/app
+
+USER node
+
 COPY frontend/.npmrc .
 COPY frontend/package*.json ./
 RUN npm ci
@@ -33,8 +37,6 @@ COPY frontend/webpack.config.js ./
 COPY frontend/src ./src
 COPY frontend/public ./public
 RUN npm run build
-
-USER node
 
 HEALTHCHECK --interval=5s --retries=20 CMD ["curl", "-s", "-S", "-o", "/dev/null", "http://localhost:8080"]
 
