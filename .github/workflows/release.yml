@@ -584,6 +584,7 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
+      - run: sudo chown -R 1000:1000 server/
       - name: Get Dependabot Node.js version
         id: get_dependabot_node_version
         run: |
