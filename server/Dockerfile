@@ -6,17 +6,22 @@ ARG TARGETPLATFORM
 WORKDIR /go/app
 
 COPY go.mod go.sum ./
+COPY ping ping
+
+WORKDIR /go/app/ping
+RUN mapfile -t PLATFORM < <(echo "${TARGETPLATFORM}" | tr '/' ' ') \
+    && CGO_ENABLED=0 GOOS=linux GOARCH=${PLATFORM[2]} go build -o ping
+
 COPY server server
 
 WORKDIR /go/app/server
 RUN mapfile -t PLATFORM < <(echo "${TARGETPLATFORM}" | tr '/' ' ') \
-    && CGO_ENABLED=0 GOOS=linux GOARCH=${PLATFORM[2]} go build -o app main.go \
-    && CGO_ENABLED=0 GOOS=linux GOARCH=${PLATFORM[2]} go build -o ping ping.go \
+    && CGO_ENABLED=0 GOOS=linux GOARCH=${PLATFORM[2]} go build -o app \
     && go install github.com/cosmtrek/air@v1.27.3 \
     && useradd -l -m -s /bin/bash -N -u "1000" "nonroot"
 USER nonroot
 
-HEALTHCHECK --interval=5s --retries=20 CMD ["/go/app/server/ping"]
+HEALTHCHECK --interval=5s --retries=20 CMD ["/go/app/ping/ping"]
 
 FROM scratch
 
@@ -28,7 +33,7 @@ USER nonroot
 WORKDIR /app
 
 COPY --from=build /go/app/server/app .
-COPY --from=build /go/app/server/ping .
+COPY --from=build /go/app/ping/ping .
 
 HEALTHCHECK --interval=5s --retries=20 CMD ["./ping"]
 ENTRYPOINT ["./app"]
