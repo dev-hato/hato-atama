@@ -21,9 +21,6 @@ RUN if [ "${TARGETPLATFORM}" != "linux/arm64" ]; then \
         chmod +x elm; \
         mv elm /usr/local/bin/; \
     fi
-RUN apt-get remove -y curl \
-    && apt-get autoremove -y \
-    && apt-get clean
 
 RUN chown -R node:node /usr/src/app
 
@@ -37,6 +34,8 @@ COPY frontend/webpack.config.js ./
 COPY frontend/src ./src
 COPY frontend/public ./public
 RUN npm run build
+
+HEALTHCHECK --interval=5s --retries=20 CMD ["curl", "-s", "-S", "-o", "/dev/null", "http://localhost:8080"]
 
 FROM nginx:1.22.0
 
@@ -53,3 +52,5 @@ USER nginx
 COPY frontend/nginx.conf /etc/nginx/nginx.conf
 
 COPY --from=build /usr/src/app/dist /usr/share/nginx/html
+
+HEALTHCHECK --interval=5s --retries=20 CMD ["curl", "-s", "-S", "-o", "/dev/null", "http://localhost:8080"]

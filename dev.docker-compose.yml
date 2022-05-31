@@ -46,6 +46,9 @@ services:
     command: air -c .air.toml
     ports:
       - "8082:8082"
+    depends_on:
+      gcloud_datastore:
+        condition: service_healthy
 
   frontend-dev:
     build:
@@ -67,3 +70,6 @@ services:
     command: npm run dev
     ports:
       - "8080:8080"
+    depends_on:
+      server-dev:
+        condition: service_healthy

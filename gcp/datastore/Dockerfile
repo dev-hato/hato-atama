@@ -52,4 +52,5 @@ VOLUME /opt/data
 
 COPY gcp/datastore/start.sh /
 
+HEALTHCHECK --interval=5s --retries=20 CMD ["curl", "-s", "-S", "-o", "/dev/null", "http://localhost:8081"]
 ENTRYPOINT ["./start.sh"]
