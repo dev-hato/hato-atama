@@ -203,6 +203,7 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
+      - run: sudo chown -R 1000:1000 server/
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
         env:
           HEAD_REF: ${{github.head_ref}}
@@ -583,6 +584,7 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
+      - run: sudo chown -R 1000:1000 server/
       - name: Get Dependabot Node.js version
         id: get_dependabot_node_version
         run: |
@@ -802,6 +804,7 @@ jobs:
       DOCKER_CONTENT_TRUST: 1
     steps:
       - uses: actions/checkout@v3
+      - run: sudo chown -R 1000:1000 server/
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
         env:
           HEAD_REF: ${{github.head_ref}}
