@@ -7,12 +7,11 @@ WORKDIR /go/app
 
 COPY go.mod go.sum ./
 COPY ping ping
+COPY server server
 
 WORKDIR /go/app/ping
 RUN mapfile -t PLATFORM < <(echo "${TARGETPLATFORM}" | tr '/' ' ') \
     && CGO_ENABLED=0 GOOS=linux GOARCH=${PLATFORM[2]} go build -o ping
-
-COPY server server
 
 WORKDIR /go/app/server
 RUN mapfile -t PLATFORM < <(echo "${TARGETPLATFORM}" | tr '/' ' ') \
