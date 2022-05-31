@@ -816,23 +816,18 @@ jobs:
           curl -L -o dockle.deb "https://github.com/goodwithtech/dockle/releases/download/v${VERSION}/dockle_${VERSION}_Linux-64bit.deb"
           sudo dpkg -i dockle.deb
       - run: docker compose -f ${{matrix.docker_compose_file_name}} pull
+      - run: docker compose -f ${{matrix.docker_compose_file_name}} up
       - run: |
-          for image_name in gcloud_datastore server frontend; do
+          for image_name in $(docker compose -f ${{matrix.docker_compose_file_name}} images | awk 'OFS=":" {print $2,$3}' | tail -n +2); do
             cmd="dockle --exit-code 1 -i DKL-DI-0006 "
 
             if [[ "${image_name}" =~ "gcloud_datastore" ]]; then
               cmd+="-af settings.py -i CIS-DI-0001 "
-            elif [ '${{matrix.docker_compose_file_name}}' = 'dev.docker-compose.yml' ] && [[ "${image_name}" =~ "server" ]]; then
+            elif [[ "${image_name}" =~ "server-dev" ]]; then
               cmd+="-af credentials "
             fi
 
-            cmd+="ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/${image_name}"
-
-            if [ "${image_name}" != 'gcloud_datastore' ] && [ '${{matrix.docker_compose_file_name}}' = 'dev.docker-compose.yml' ]; then
-              cmd+="-dev"
-            fi
-
-            cmd+=":${TAG_NAME}"
+            cmd+="${image_name}"
             echo "> ${cmd}"
             eval "${cmd}"
           done
