@@ -12,7 +12,9 @@ WORKDIR /go/app/server
 RUN mapfile -t PLATFORM < <(echo "${TARGETPLATFORM}" | tr '/' ' ') \
     && CGO_ENABLED=0 GOOS=linux GOARCH=${PLATFORM[2]} go build -o app \
     && go install github.com/cosmtrek/air@v1.27.3 \
-    && useradd -l -m -s /bin/bash -N -u "1000" "nonroot"
+    && groupadd -r -g "1000" "nonroot" \
+    && useradd -l -m -s /bin/bash -N -g "nonroot" -u "1000" "nonroot" \
+    && chown -R nonroot:nonroot /go/app/server
 USER nonroot
 
 HEALTHCHECK --interval=5s --retries=20 CMD ["curl", "-s", "-S", "-o", "/dev/null", "http://localhost:8082/ping"]
