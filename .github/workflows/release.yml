@@ -845,6 +845,7 @@ jobs:
         browser: ["chrome", "chromium", "firefox", "electron"]
     env:
       DOCKER_CONTENT_TRUST: 1
+      API_HOST: http://localhost:8080/
     steps:
       - uses: actions/checkout@v3
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
@@ -864,9 +865,7 @@ jobs:
       - run: npm ci --prefer-offline
         working-directory: ./test/e2e
       - run: |
-          npm run test -- --env API_HOST=http://localhost:8080/ \
-                          --spec cypress/e2e/mini/*.cy.js \
-                          --browser ${{ matrix.browser }}
+          npm run test:mini -- --browser ${{ matrix.browser }}
         working-directory: ./test/e2e
 
   e2e-test-all-docker-compose:
@@ -877,6 +876,7 @@ jobs:
         browser: ["chrome", "chromium", "firefox", "electron"]
     env:
       DOCKER_CONTENT_TRUST: 1
+      API_HOST: http://localhost:8080/
     steps:
       - uses: actions/checkout@v3
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
@@ -896,8 +896,7 @@ jobs:
       - run: npm ci --prefer-offline
         working-directory: ./test/e2e
       - run: |
-          ENV="API_HOST=http://localhost:8080/"
-          npm run test -- --env "${ENV}" --browser ${{ matrix.browser }}
+          npm run test -- --browser ${{ matrix.browser }}
         working-directory: ./test/e2e
 
   e2e-test-mini-prd:
@@ -920,11 +919,9 @@ jobs:
       - run: npm ci --prefer-offline
         working-directory: ./test/e2e
       - run: |
-          API_HOST="https://"
-          API_HOST+="v${GITHUB_RUN_NUMBER}-dot-hato-atama.an.r.appspot.com"
-          npm run test -- --env "API_HOST=${API_HOST}" \
-                          --spec cypress/e2e/mini/*.cy.js \
-                          --browser ${{ matrix.browser }}
+          ENV="API_HOST="
+          ENV+="https://v${GITHUB_RUN_NUMBER}-dot-hato-atama.an.r.appspot.com"
+          npm run test:mini -- --env "${ENV}" --browser ${{ matrix.browser }}
         working-directory: ./test/e2e
 
   e2e-test-all-prd:

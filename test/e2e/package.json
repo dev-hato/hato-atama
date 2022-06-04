@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_OPTIONS=--openssl-legacy-provider cypress run -q"
+    "test": "NODE_OPTIONS=--openssl-legacy-provider cypress run -q",
+    "test:mini": "npm run test -- --spec cypress/e2e/mini/*.cy.js"
   },
   "author": "",
   "license": "ISC",
