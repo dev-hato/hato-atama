@@ -1,4 +1,5 @@
-import { Cypress, cy, describe, it, expect } from 'cypress'
+/* global Cypress */
+import { cy, describe, it, expect } from 'cypress'
 
 describe('短縮URLを生成できる', () => {
   it('三回までは200だが、4回目以降は404が返る', () => {
