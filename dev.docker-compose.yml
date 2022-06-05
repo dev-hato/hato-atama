@@ -20,7 +20,8 @@ services:
     tty: true
     environment:
       DATASTORE_PROJECT_ID: app
-      DATASTORE_LISTEN_ADDRESS: 0.0.0.0:8081
+      DATASTORE_LISTEN_ADDRESS: 0.0.0.0:${GCLOUD_DATASOURCE_PORT}
+      GCLOUD_DATASOURCE_PORT: ${GCLOUD_DATASOURCE_PORT}
 
   server-dev:
     build:
@@ -41,11 +42,11 @@ services:
       - ./server:/go/app/server
     environment:
       PROJECT_ID: app
-      DATASTORE_EMULATOR_HOST: "gcloud_datastore:8081"
-      PORT: 8082
+      DATASTORE_EMULATOR_HOST: "gcloud_datastore:${GCLOUD_DATASOURCE_PORT}"
+      SERVER_PORT: ${SERVER_PORT}
     command: air -c .air.toml
     ports:
-      - "8082:8082"
+      - "${SERVER_PORT}:${SERVER_PORT}"
     depends_on:
       gcloud_datastore:
         condition: service_healthy
@@ -68,8 +69,11 @@ services:
     volumes:
       - ./frontend/src:/usr/src/app/src
     command: npm run dev
+    environment:
+      SERVER_PORT: ${SERVER_PORT}
+      FRONTEND_PORT: ${FRONTEND_PORT}
     ports:
-      - "8080:8080"
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
     depends_on:
       server-dev:
         condition: service_healthy

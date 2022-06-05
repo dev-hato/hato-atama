@@ -1,0 +1,20 @@
+server {
+    listen ${FRONTEND_PORT};
+
+    location ^~ /api/ {
+        proxy_pass http://server:${SERVER_PORT}/api/;
+    }
+
+    location ^~ /l/ {
+        proxy_pass http://server:${SERVER_PORT}/l/;
+    }
+
+    location ^~ /ping/ {
+        proxy_pass http://server:${SERVER_PORT}/ping/;
+    }
+
+    location ~ (.*/)*([^/]*)$ {
+        root /usr/share/nginx/html;
+        try_files /$2 /index.html;
+    }
+}

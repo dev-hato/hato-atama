@@ -36,12 +36,12 @@ module.exports = {
     new CleanWebpackPlugin()
   ],
   devServer: {
-    port: 8080,
+    port: process.env.FRONTEND_PORT,
     host: '0.0.0.0',
     hot: true,
     proxy: {
-      '/api/': 'http://server:8082',
-      '/l/': 'http://server:8082'
+      '/api/': 'http://server:' + process.env.SERVER_PORT,
+      '/l/': 'http://server:' + process.env.SERVER_PORT
     }
   }
 }
