@@ -54,6 +54,6 @@ COPY frontend/nginx/ /etc/nginx/
 
 COPY --from=build /usr/src/app/dist /usr/share/nginx/html
 
-COPY frontend/healthcheck.sh .
+COPY frontend/healthcheck.sh /
 
 HEALTHCHECK --interval=5s --retries=20 CMD ["./healthcheck.sh"]
