@@ -40,8 +40,8 @@ module.exports = {
     host: '0.0.0.0',
     hot: true,
     proxy: {
-      '/api/': 'http://server:' + process.env.SERVER_PORT,
-      '/l/': 'http://server:' + process.env.SERVER_PORT
+      '/api/': 'http://server-dev:' + process.env.SERVER_PORT,
+      '/l/': 'http://server-dev:' + process.env.SERVER_PORT
     }
   }
 }
