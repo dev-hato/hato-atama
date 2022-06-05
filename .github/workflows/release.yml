@@ -869,7 +869,7 @@ jobs:
       - run: npm ci --prefer-offline
         working-directory: ./test/e2e
       - run: |
-          npm run test -- --env API_HOST=http://localhost:8080/ \
+          npm run test -- --env "API_HOST=http://localhost:${FRONTEND_PORT}/" \
                           --spec cypress/e2e/mini/*.cy.js \
                           --browser ${{ matrix.browser }}
         working-directory: ./test/e2e
@@ -902,7 +902,7 @@ jobs:
       - run: npm ci --prefer-offline
         working-directory: ./test/e2e
       - run: |
-          ENV="API_HOST=http://localhost:8080/"
+          ENV="API_HOST=http://localhost:${FRONTEND_PORT}/"
           npm run test -- --env "${ENV}" --browser ${{ matrix.browser }}
         working-directory: ./test/e2e
 
