@@ -4,6 +4,20 @@
     "config:base",
     ":timezone(Asia/Tokyo)"
   ],
+  "includePaths": [
+    "elm/Dockerfile",
+    "frontend/Dockerfile",
+    "gcp/datastore/Dockerfile",
+    "server/Dockerfile",
+    ".github/workflows/*.yml",
+    "go.mod",
+    ".node-version",
+    "frontend/.node-version",
+    "test/e2e/.node-version",
+    "frontend/package.json",
+    "test/e2e/package.json",
+    "package.json"
+  ],
   "automerge": true,
   "platformAutomerge": true
 }
