@@ -35,7 +35,9 @@ COPY frontend/src ./src
 COPY frontend/public ./public
 RUN npm run build
 
-HEALTHCHECK --interval=5s --retries=20 CMD ["curl", "-s", "-S", "-o", "/dev/null", "http://localhost:8080"]
+COPY frontend/healthcheck.sh .
+
+HEALTHCHECK --interval=5s --retries=20 CMD ["./healthcheck.sh"]
 
 FROM nginx:1.22.0
 
@@ -45,12 +47,13 @@ RUN for f in /usr/bin/newgrp /usr/bin/expiry /usr/bin/wall /bin/umount /usr/bin/
       chmod u-g "${f}"; \
     done \
     && touch /var/run/nginx.pid \
-    && chown -R nginx:nginx /var/run/nginx.pid \
-    && chown -R nginx:nginx /var/cache/nginx
+    && chown -R nginx:nginx /var/run/nginx.pid /var/cache/nginx /etc/nginx/conf.d
 USER nginx
 
-COPY frontend/nginx.conf /etc/nginx/nginx.conf
+COPY frontend/nginx/ /etc/nginx/
 
 COPY --from=build /usr/src/app/dist /usr/share/nginx/html
 
-HEALTHCHECK --interval=5s --retries=20 CMD ["curl", "-s", "-S", "-o", "/dev/null", "http://localhost:8080"]
+COPY frontend/healthcheck.sh /
+
+HEALTHCHECK --interval=5s --retries=20 CMD ["./healthcheck.sh"]
