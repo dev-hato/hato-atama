@@ -38,7 +38,8 @@ RUN npm ci
 COPY frontend/webpack.config.js ./
 COPY frontend/src ./src
 COPY frontend/public ./public
-RUN npm run build
+RUN npm run build \
+    && rm -rf /home/node/.npm
 
 COPY frontend/healthcheck.sh .
 
