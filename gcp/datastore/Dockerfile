@@ -1,7 +1,5 @@
 FROM gcr.io/google.com/cloudsdktool/google-cloud-cli:389.0.0-emulators
 
-VOLUME /opt/data
-
 RUN chmod u-s /usr/bin/passwd \
     && chmod g-s /usr/bin/passwd \
     && chmod u-s /bin/mount \
@@ -27,15 +25,12 @@ RUN chmod u-s /usr/bin/passwd \
     && chmod u-s /usr/bin/wall \
     && chmod g-s /usr/bin/wall \
     && chmod u-s /usr/lib/dbus-1.0/dbus-daemon-launch-helper \
-    && chmod g-s /usr/lib/dbus-1.0/dbus-daemon-launch-helper \
-    && mkdir -p /app \
-    && chown -R cloudsdk:cloudsdk /app /opt/data
+    && chmod g-s /usr/lib/dbus-1.0/dbus-daemon-launch-helper
 
-USER cloudsdk
+VOLUME /opt/data
 
-WORKDIR /app
-COPY gcp/datastore/start.sh .
-COPY gcp/datastore/healthcheck.sh .
+COPY gcp/datastore/start.sh /
+COPY gcp/datastore/healthcheck.sh /
 
 HEALTHCHECK --interval=5s --retries=20 CMD ["./healthcheck.sh"]
 ENTRYPOINT ["./start.sh"]
