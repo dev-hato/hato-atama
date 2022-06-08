@@ -22,7 +22,12 @@ RUN if [ "${TARGETPLATFORM}" != "linux/arm64" ]; then \
         mv elm /usr/local/bin/; \
     fi
 
-RUN chown -R node:node /usr/src/app
+RUN for f in /usr/bin/wall /usr/bin/passwd /usr/bin/gpasswd /bin/su /usr/bin/chsh /usr/bin/chfn \
+             /usr/bin/expiry /usr/bin/newgrp /bin/umount /sbin/unix_chkpwd /usr/bin/chage /bin/mount; do \
+      chmod u-s "${f}"; \
+      chmod u-g "${f}"; \
+    done \
+    && chown -R node:node /usr/src/app
 
 USER node
 
