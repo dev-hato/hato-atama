@@ -17,7 +17,7 @@ WORKDIR /go/app/server
 RUN mapfile -t PLATFORM < <(echo "${TARGETPLATFORM}" | tr '/' ' ') \
     && CGO_ENABLED=0 GOOS=linux GOARCH=${PLATFORM[2]} go build -o app \
     && go install github.com/cosmtrek/air@v1.27.3 \
-    for f in /usr/bin/passwd /usr/bin/chfn /usr/lib/openssh/ssh-keysign /bin/umount /bin/mount \
+    && for f in /usr/bin/passwd /usr/bin/chfn /usr/lib/openssh/ssh-keysign /bin/umount /bin/mount \
              /usr/bin/gpasswd /usr/bin/ssh-agent /sbin/unix_chkpwd /bin/su /usr/bin/newgrp \
              /usr/bin/wall /usr/bin/chsh /usr/bin/chage /usr/bin/expiry; do \
       chmod u-s "${f}"; \
