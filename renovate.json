@@ -1,22 +1,24 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base",
+    ":dependencyDashboard",
+    ":semanticPrefixFixDepsChoreOthers",
+    ":autodetectPinVersions",
+    ":prHourlyLimit2",
+    ":prConcurrentLimit10",
+    "group:monorepos",
+    "group:recommended",
+    "workarounds:all",
     ":timezone(Asia/Tokyo)"
   ],
-  "includePaths": [
-    "elm/Dockerfile",
-    "frontend/Dockerfile",
-    "gcp/datastore/Dockerfile",
-    "server/Dockerfile",
-    ".github/workflows/*.yml",
-    "go.mod",
-    ".node-version",
-    "frontend/.node-version",
-    "test/e2e/.node-version",
-    "frontend/package.json",
-    "test/e2e/package.json",
-    "package.json"
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/bower_components/**",
+    "**/vendor/**",
+    "**/examples/**",
+    "**/__tests__/**",
+    "**/tests/**",
+    "**/__fixtures__/**"
   ],
   "automerge": true,
   "platformAutomerge": true
