@@ -22,8 +22,8 @@ RUN if [ "${TARGETPLATFORM}" != "linux/arm64" ]; then \
         mv elm /usr/local/bin/; \
     fi
 
-RUN find / -type f -perm u+s -ignore_readdir_race -exec chmod u-s {} \; \
-    && find / -type f -perm g+s -ignore_readdir_race -exec chmod g-s {} \; \
+RUN find / -type f -perm /u+s -ignore_readdir_race -exec chmod u-s {} \; \
+    && find / -type f -perm /g+s -ignore_readdir_race -exec chmod g-s {} \; \
     && chown -R node:node /usr/src/app
 
 USER node
@@ -44,8 +44,8 @@ HEALTHCHECK --interval=5s --retries=20 CMD ["./healthcheck.sh"]
 
 FROM nginx:1.22.0
 
-RUN find / -type f -perm u+s -ignore_readdir_race -exec chmod u-s {} \; \
-    && find / -type f -perm g+s -ignore_readdir_race -exec chmod g-s {} \; \
+RUN find / -type f -perm /u+s -ignore_readdir_race -exec chmod u-s {} \; \
+    && find / -type f -perm /g+s -ignore_readdir_race -exec chmod g-s {} \; \
     && touch /var/run/nginx.pid \
     && chown -R nginx:nginx /var/run/nginx.pid /var/cache/nginx /etc/nginx/conf.d
 USER nginx
