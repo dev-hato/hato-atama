@@ -17,8 +17,8 @@ WORKDIR /go/app/server
 RUN mapfile -t PLATFORM < <(echo "${TARGETPLATFORM}" | tr '/' ' ') \
     && CGO_ENABLED=0 GOOS=linux GOARCH=${PLATFORM[2]} go build -o app \
     && go install github.com/cosmtrek/air@v1.27.3 \
-    && find / -type f -perm /u+s -ignore_readdir_race -exec chmod u-s {} \; \
-    && find / -type f -perm /g+s -ignore_readdir_race -exec chmod g-s {} \; \
+    && find / -type f -perm u+s -ignore_readdir_race -exec chmod u-s {} \; \
+    && find / -type f -perm g+s -ignore_readdir_race -exec chmod g-s {} \; \
     && useradd -l -m -s /bin/bash -N -u "1000" "nonroot"
 USER nonroot
 
