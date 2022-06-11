@@ -1,3 +1,3 @@
 const { defineConfig } = require('cypress')
 
-module.exports = defineConfig({testingType: 'e2e'})
+module.exports = defineConfig({e2e: {}})
