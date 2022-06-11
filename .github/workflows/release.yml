@@ -863,7 +863,7 @@ jobs:
         if: ${{ github.event_name == 'push' }}
       - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
       - run: docker compose -f staging.docker-compose.yml pull
-      - run: docker compose -f staging.docker-compose.yml up -d
+      - run: docker compose -f staging.docker-compose.yml up -d --wait
       - uses: actions/setup-node@v3.3.0
         with:
           node-version-file: test/e2e/.node-version
@@ -896,7 +896,7 @@ jobs:
         if: ${{ github.event_name == 'push' }}
       - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
       - run: docker compose -f staging.docker-compose.yml pull
-      - run: docker compose -f staging.docker-compose.yml up -d
+      - run: docker compose -f staging.docker-compose.yml up -d --wait
       - uses: actions/setup-node@v3.3.0
         with:
           node-version-file: test/e2e/.node-version
