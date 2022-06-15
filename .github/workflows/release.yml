@@ -915,9 +915,6 @@ jobs:
     needs:
       - deploy-app-engine
       - e2e-test-mini-docker-compose
-    strategy:
-      matrix:
-        browser: ["chrome", "chromium", "firefox", "electron"]
     env:
       DOCKER_CONTENT_TRUST: 1
     concurrency: ${{ github.run_number }}
@@ -933,9 +930,11 @@ jobs:
       - run: |
           API_HOST="https://"
           API_HOST+="v${GITHUB_RUN_NUMBER}-dot-hato-atama.an.r.appspot.com"
-          npm run test -- --env "API_HOST=${API_HOST}" \
-                          --spec cypress/e2e/mini/*.cy.js \
-                          --browser ${{ matrix.browser }}
+          for browser in chrome chromium firefox electron; do
+            npm run test -- --env "API_HOST=${API_HOST}" \
+                            --spec cypress/e2e/mini/*.cy.js \
+                            --browser "${browser}"
+          done
         working-directory: ./test/e2e
 
   e2e-test-all-prd:
@@ -943,9 +942,6 @@ jobs:
     needs:
       - e2e-test-all-docker-compose
       - e2e-test-mini-prd
-    strategy:
-      matrix:
-        browser: ["chrome", "chromium", "firefox", "electron"]
     if: ${{ github.event_name == 'push' }}
     concurrency: ${{ github.run_number }}
     steps:
@@ -960,7 +956,9 @@ jobs:
       - run: |
           ENV="API_HOST="
           ENV+="https://v${GITHUB_RUN_NUMBER}-dot-hato-atama.an.r.appspot.com"
-          npm run test -- --env "${ENV}" --browser ${{ matrix.browser }}
+          for browser in chrome chromium firefox electron; do
+            npm run test -- --env "${ENV}" --browser "${browser}"
+          done
         working-directory: ./test/e2e
 
   migrating-traffic:
