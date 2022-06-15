@@ -126,6 +126,7 @@ jobs:
     needs: deploy-app-engine
     permissions:
       pull-requests: write
+    concurrency: ${{ github.run_number }}
     steps:
       - uses: actions/checkout@v3
       - run: |
@@ -919,7 +920,7 @@ jobs:
         browser: ["chrome", "chromium", "firefox", "electron"]
     env:
       DOCKER_CONTENT_TRUST: 1
-    concurrency: e2e-test-prd-${{ github.run_number }}
+    concurrency: ${{ github.run_number }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3.3.0
@@ -946,7 +947,7 @@ jobs:
       matrix:
         browser: ["chrome", "chromium", "firefox", "electron"]
     if: ${{ github.event_name == 'push' }}
-    concurrency: e2e-test-prd-${{ github.run_number }}
+    concurrency: ${{ github.run_number }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3.3.0
