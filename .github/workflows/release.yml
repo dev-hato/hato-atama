@@ -18,7 +18,7 @@ jobs:
       run:
         working-directory: frontend
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3.0.2
       - uses: actions/setup-node@v3.3.0
         with:
           node-version-file: frontend/.node-version
@@ -48,7 +48,7 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3.0.2
       - uses: actions/download-artifact@v3
         with:
           name: frontend
@@ -101,7 +101,7 @@ jobs:
       pull-requests: write
     if: ${{ github.event_name == 'pull_request' }}
     steps:
-      - uses: actions/github-script@v6
+      - uses: actions/github-script@v6.1.0
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
@@ -127,7 +127,7 @@ jobs:
     permissions:
       pull-requests: write
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3.0.2
       - run: |
           ARTIFACT_PATH="${{ github.workspace }}/tmp/artifacts"
           echo "ARTIFACT_PATH=${ARTIFACT_PATH}" >> "$GITHUB_ENV"
@@ -155,7 +155,7 @@ jobs:
       packages: write
     if: github.event_name == 'push' || github.repository == github.event.pull_request.head.repo.full_name
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3.0.2
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
@@ -200,7 +200,7 @@ jobs:
     env:
       DOCKER_CONTENT_TRUST: 1
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3.0.2
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
@@ -258,7 +258,7 @@ jobs:
           GITHUB_HEAD="HEAD:refs/heads/fix-format-${HEAD_REF}"
           git push -f "${REPO_URL}" "${GITHUB_HEAD}"
       - name: Set org name
-        uses: actions/github-script@v6
+        uses: actions/github-script@v6.1.0
         if: env.REPO_NAME == github.repository
         id: set_org_name
         with:
@@ -266,7 +266,7 @@ jobs:
           result-encoding: string
           script: return process.env.GITHUB_REPOSITORY.split('/')[0]
       - name: Get PullRequests
-        uses: actions/github-script@v6
+        uses: actions/github-script@v6.1.0
         env:
           HEAD_REF: ${{github.event.pull_request.head.ref}}
         if: ${{ env.REPO_NAME == github.repository
@@ -289,7 +289,7 @@ jobs:
             return pulls.length
       # pushしたブランチでPRを作る
       - name: Create PullRequest
-        uses: actions/github-script@v6
+        uses: actions/github-script@v6.1.0
         env:
           HEAD_REF: ${{github.event.pull_request.head.ref}}
         if: ${{ env.REPO_NAME == github.repository
@@ -317,7 +317,7 @@ jobs:
                                     )
             return create_pull_res.data.number
       - name: Assign a user
-        uses: actions/github-script@v6
+        uses: actions/github-script@v6.1.0
         if: ${{ env.REPO_NAME == github.repository
           && steps.diff.outputs.result != ''
           && steps.get_pull_requests.outputs.result == 0
@@ -337,7 +337,7 @@ jobs:
             await github.rest.issues.addAssignees(issues_add_assignees_params)
       # 既にformat修正のPRがある状態で、手動でformatを修正した場合、format修正のPRを閉じる
       - name: Close PullRequest
-        uses: actions/github-script@v6
+        uses: actions/github-script@v6.1.0
         env:
           HEAD_REF: ${{github.event.pull_request.head.ref}}
         if: ${{ env.REPO_NAME == github.repository
@@ -394,7 +394,7 @@ jobs:
       contents: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3.0.2
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
@@ -441,7 +441,7 @@ jobs:
           GITHUB_HEAD+="${HEAD_REF}"
           git push -f "${REPO_URL}" "${GITHUB_HEAD}"
       - name: Set org name
-        uses: actions/github-script@v6
+        uses: actions/github-script@v6.1.0
         if: env.REPO_NAME == github.repository
         id: set_org_name
         with:
@@ -449,7 +449,7 @@ jobs:
           result-encoding: string
           script: return process.env.GITHUB_REPOSITORY.split('/')[0]
       - name: Get PullRequests
-        uses: actions/github-script@v6
+        uses: actions/github-script@v6.1.0
         env:
           HEAD_REF: ${{github.event.pull_request.head.ref}}
         if: ${{ env.REPO_NAME == github.repository
@@ -475,7 +475,7 @@ jobs:
             return pulls.length
       # pushしたブランチでPRを作る
       - name: Create PullRequest
-        uses: actions/github-script@v6
+        uses: actions/github-script@v6.1.0
         env:
           HEAD_REF: ${{github.event.pull_request.head.ref}}
         if: ${{ env.REPO_NAME == github.repository
@@ -507,7 +507,7 @@ jobs:
                                     )
             return create_pull_res.data.number
       - name: Assign a user
-        uses: actions/github-script@v6
+        uses: actions/github-script@v6.1.0
         if: ${{ env.REPO_NAME == github.repository
           && steps.diff.outputs.result != ''
           && steps.get_pull_requests.outputs.result == 0
@@ -527,7 +527,7 @@ jobs:
             await github.rest.issues.addAssignees(issues_add_assignees_params)
       # 既にformat修正のPRがある状態で、手動でformatを修正した場合、format修正のPRを閉じる
       - name: Close PullRequest
-        uses: actions/github-script@v6
+        uses: actions/github-script@v6.1.0
         env:
           HEAD_REF: ${{github.event.pull_request.head.ref}}
         if: ${{ env.REPO_NAME == github.repository
@@ -582,7 +582,7 @@ jobs:
       contents: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3.0.2
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
@@ -675,7 +675,7 @@ jobs:
           GITHUB_HEAD="HEAD:refs/heads/fix-version-${HEAD_REF}"
           git push -f "${REPO_URL}" "${GITHUB_HEAD}"
       - name: Set org name
-        uses: actions/github-script@v6
+        uses: actions/github-script@v6.1.0
         if: env.REPO_NAME == github.repository
         id: set_org_name
         with:
@@ -683,7 +683,7 @@ jobs:
           result-encoding: string
           script: return process.env.GITHUB_REPOSITORY.split('/')[0]
       - name: Get PullRequests
-        uses: actions/github-script@v6
+        uses: actions/github-script@v6.1.0
         env:
           HEAD_REF: ${{github.event.pull_request.head.ref}}
         if: ${{ env.REPO_NAME == github.repository
@@ -706,7 +706,7 @@ jobs:
             return pulls.length
       # pushしたブランチでPRを作る
       - name: Create PullRequest
-        uses: actions/github-script@v6
+        uses: actions/github-script@v6.1.0
         env:
           HEAD_REF: ${{github.event.pull_request.head.ref}}
         if: ${{ env.REPO_NAME == github.repository
@@ -734,7 +734,7 @@ jobs:
                                     )
             return create_pull_res.data.number
       - name: Assign a user
-        uses: actions/github-script@v6
+        uses: actions/github-script@v6.1.0
         if: ${{ env.REPO_NAME == github.repository
           && steps.diff.outputs.result != ''
           && steps.get_pull_requests.outputs.result == 0
@@ -754,7 +754,7 @@ jobs:
             await github.rest.issues.addAssignees(issues_add_assignees_params)
       # 既にformat修正のPRがある状態で、手動でformatを修正した場合、format修正のPRを閉じる
       - name: Close PullRequest
-        uses: actions/github-script@v6
+        uses: actions/github-script@v6.1.0
         env:
           HEAD_REF: ${{github.event.pull_request.head.ref}}
         if: ${{ env.REPO_NAME == github.repository
@@ -806,7 +806,7 @@ jobs:
     env:
       DOCKER_CONTENT_TRUST: 1
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3.0.2
       - run: sudo chown -R 1000:1000 server/
       - run: cat .env >>"$GITHUB_ENV"
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
@@ -853,7 +853,7 @@ jobs:
     env:
       DOCKER_CONTENT_TRUST: 1
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3.0.2
       - run: cat .env >>"$GITHUB_ENV"
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
         env:
@@ -886,7 +886,7 @@ jobs:
     env:
       DOCKER_CONTENT_TRUST: 1
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3.0.2
       - run: cat .env >>"$GITHUB_ENV"
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
         env:
@@ -920,7 +920,7 @@ jobs:
     env:
       DOCKER_CONTENT_TRUST: 1
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3.0.2
       - uses: actions/setup-node@v3.3.0
         with:
           node-version-file: test/e2e/.node-version
@@ -946,7 +946,7 @@ jobs:
         browser: ["chrome", "chromium", "firefox", "electron"]
     if: ${{ github.event_name == 'push' }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3.0.2
       - uses: actions/setup-node@v3.3.0
         with:
           node-version-file: test/e2e/.node-version
@@ -969,7 +969,7 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3.0.2
       - id: 'auth'
         name: 'Authenticate to GCP'
         uses: google-github-actions/auth@v0.8.0
@@ -990,9 +990,9 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3.0.2
       - name: Get run numbers
-        uses: actions/github-script@v6
+        uses: actions/github-script@v6.1.0
         id: get_run_numbers
         env:
           HEAD_REF: master
