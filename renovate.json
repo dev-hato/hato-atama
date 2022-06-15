@@ -1,25 +1,5 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    ":dependencyDashboard",
-    ":semanticPrefixFixDepsChoreOthers",
-    ":autodetectPinVersions",
-    ":prHourlyLimit2",
-    ":prConcurrentLimit10",
-    "group:monorepos",
-    "group:recommended",
-    "workarounds:all",
-    ":timezone(Asia/Tokyo)"
-  ],
-  "ignorePaths": [
-    "**/node_modules/**",
-    "**/bower_components/**",
-    "**/vendor/**",
-    "**/examples/**",
-    "**/__tests__/**",
-    "**/tests/**",
-    "**/__fixtures__/**"
-  ],
-  "automerge": true,
-  "platformAutomerge": true
+    "github>dev-hato/renovate-config"
+  ]
 }
