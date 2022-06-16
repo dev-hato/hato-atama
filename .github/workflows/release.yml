@@ -1090,10 +1090,13 @@ jobs:
     needs:
       - e2e-test-all-docker-compose
       - pr-test-complete-check-deploy-app-engine
+      - update-package
+      - format-go
+      - dockle
     steps:
-      - if: ${{ needs.e2e-test-all-docker-compose.result == 'success' && (github.repository != github.event.pull_request.head.repo.full_name || github.repository != 'dev-hato/hato-atama' || needs.pr-test-complete-check-deploy-app-engine.result == 'success') }}
+      - if: ${{ needs.e2e-test-all-docker-compose.result == 'success' && needs.update-package.result == 'success' && needs.format-go.result == 'success' && needs.dockle.result == 'success' && (github.repository != github.event.pull_request.head.repo.full_name || github.repository != 'dev-hato/hato-atama' || needs.pr-test-complete-check-deploy-app-engine.result == 'success') }}
         run: exit 0
-      - if: ${{ needs.e2e-test-all-docker-compose.result != 'success' || (github.repository == github.event.pull_request.head.repo.full_name && github.repository == 'dev-hato/hato-atama' && needs.pr-test-complete-check-deploy-app-engine.result != 'success') }}
+      - if: ${{ needs.e2e-test-all-docker-compose.result != 'success' || needs.update-package.result != 'success' || needs.format-go.result != 'success' || needs.dockle.result != 'success' || (github.repository == github.event.pull_request.head.repo.full_name && github.repository == 'dev-hato/hato-atama' && needs.pr-test-complete-check-deploy-app-engine.result != 'success') }}
         run: exit 1
 
   release-complete-check:
@@ -1102,6 +1105,7 @@ jobs:
     needs:
       - remove-app-engine-past-versions
       - lighthouse
+      - dockle
     steps:
       - run: exit 0
 
