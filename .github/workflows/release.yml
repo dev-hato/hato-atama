@@ -176,14 +176,14 @@ jobs:
         if: ${{ github.event_name == 'push' }}
       - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
       - name: Build and push (dev)
-        uses: docker/bake-action@v2.0.0
+        uses: docker/bake-action@v2.1.0
         env:
           DOCKER_CONTENT_TRUST: 1
         with:
           push: true
           files: dev.docker-compose.yml
       - name: Build and push (staging)
-        uses: docker/bake-action@v2.0.0
+        uses: docker/bake-action@v2.1.0
         env:
           DOCKER_CONTENT_TRUST: 1
         with:
