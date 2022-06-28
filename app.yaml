@@ -1,5 +1,5 @@
 ---
-runtime: go116
+runtime: go114
 
 main: ./server
 
