@@ -21,7 +21,7 @@ jobs:
           node-version-file: .node-version
           cache: npm
       - name: Install packages
-        run: npm install --prefer-offline js-yaml
+        run: npm ci --prefer-offline
       - name: Update .gitleaks.toml
         run: |
           version="$(grep super-linter .github/workflows/super-linter.yml | grep uses | sed -e 's/.*@//g')"
