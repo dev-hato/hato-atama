@@ -1,0 +1,13 @@
+name: "Use composite action test"
+
+on:
+  pull_request:
+
+jobs:
+  composite_test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/test
+        with:
+          python-version: '3.9.1'
