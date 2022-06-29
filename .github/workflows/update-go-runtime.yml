@@ -3,7 +3,7 @@ name: update-go-runtime
 
 on:
   schedule:
-    - cron: '* 21 * * *' # 06:00 JST
+    - cron: '0 21 * * *' # 06:00 JST
 
 jobs:
   # App Engineランタイムのページをスクレイピングし、そこに記述されているGoランタイムのバージョンがアップデートされていたらapp.yamlをアップデートする
