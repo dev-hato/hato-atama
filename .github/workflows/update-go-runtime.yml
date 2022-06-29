@@ -2,10 +2,8 @@
 name: update-go-runtime
 
 on:
-  pull_request:
-  push:
-    branches:
-      - master
+  schedule:
+    - '* 21 * * *' # 06:00 JST
 
 jobs:
   # App Engineランタイムのページをスクレイピングし、そこに記述されているGoランタイムのバージョンがアップデートされていたらapp.yamlをアップデートする
@@ -18,7 +16,6 @@ jobs:
       - uses: actions/checkout@v3.0.2
         with:
           fetch-depth: 0
-          ref: ${{ github.event.pull_request.head.sha }}
       - uses: actions/setup-node@v3.3.0
         with:
           node-version-file: .node-version
@@ -62,17 +59,13 @@ jobs:
         run: |
           result=$(git diff)
           echo "::set-output name=result::$result"
-      - if: github.event_name == 'pull_request'
-        run: |
-          REPO_NAME="${{ github.event.pull_request.head.repo.full_name }}"
+      - run: |
+          REPO_NAME="dev-hato/hato-atama"
           echo "REPO_NAME=${REPO_NAME}" >> "${GITHUB_ENV}"
       # 差分があったときは、コミットを作りpushする
       - name: Push
-        env:
-          HEAD_REF: ${{github.event.pull_request.head.ref}}
         if: ${{ env.REPO_NAME == github.repository
-          && steps.diff.outputs.result != ''
-          && github.event_name == 'pull_request' }}
+          && steps.diff.outputs.result != '' }}
         run: |
           git config user.name "github-actions[bot]"
           EMAIL="41898282+github-actions[bot]@users.noreply.github.com"
@@ -82,12 +75,11 @@ jobs:
           REPO_URL="https://"
           REPO_URL+="${{github.actor}}:${{secrets.GITHUB_TOKEN}}@github.com/"
           REPO_URL+="${{github.repository}}.git"
-          GITHUB_HEAD="HEAD:refs/heads/update-go-runtime-${HEAD_REF}"
+          GITHUB_HEAD="HEAD:refs/heads/update-go-runtime"
           git push -f "${REPO_URL}" "${GITHUB_HEAD}"
       - name: Set org name
         uses: actions/github-script@v6.1.0
         if: env.REPO_NAME == github.repository
-          && github.event_name == 'pull_request'
         id: set_org_name
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
@@ -95,11 +87,8 @@ jobs:
           script: return process.env.GITHUB_REPOSITORY.split('/')[0]
       - name: Get PullRequests
         uses: actions/github-script@v6.1.0
-        env:
-          HEAD_REF: ${{github.event.pull_request.head.ref}}
         if: ${{ env.REPO_NAME == github.repository
-          && steps.diff.outputs.result != ''
-          && github.event_name == 'pull_request' }}
+          && steps.diff.outputs.result != '' }}
         id: get_pull_requests
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
@@ -108,7 +97,7 @@ jobs:
             const pulls_list_params = {
               owner: context.repo.owner,
               repo: context.repo.repo,
-              head: "${{steps.set_org_name.outputs.result}}:update-go-runtime-" + HEAD_REF,
+              head: "${{steps.set_org_name.outputs.result}}:update-go-runtime",
               base: HEAD_REF,
               state: "open"
             }
@@ -119,66 +108,38 @@ jobs:
       # pushしたブランチでPRを作る
       - name: Create PullRequest
         uses: actions/github-script@v6.1.0
-        env:
-          HEAD_REF: ${{github.event.pull_request.head.ref}}
         if: ${{ env.REPO_NAME == github.repository
           && steps.diff.outputs.result != ''
-          && steps.get_pull_requests.outputs.result == 0
-          && github.event_name == 'pull_request' }}
+          && steps.get_pull_requests.outputs.result == 0 }}
         id: create_pull_request
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             const HEAD_REF = process.env["HEAD_REF"]
-            const number = "#${{github.event.pull_request.number}}"
-            let title = "App EngineのGoランタイムのバージョンを直してあげたよ！PRをマージしてね！ "
-            title += number
+            let title = "App EngineのGoランタイムのバージョンを直してあげたよ！PRをマージしてね！"
             const pulls_create_params = {
               owner: context.repo.owner,
               repo: context.repo.repo,
-              head: "${{steps.set_org_name.outputs.result}}:update-go-runtime-" + HEAD_REF,
+              head: "${{steps.set_org_name.outputs.result}}:update-go-runtime",
               base: HEAD_REF,
               title,
-              body: "鳩の唐揚げおいしい！😋😋😋 " + number
+              body: "鳩の唐揚げおいしい！😋😋😋"
             }
             console.log("call pulls.create:", pulls_create_params)
             const create_pull_res = await github.rest.pulls.create(
                                       pulls_create_params
                                     )
             return create_pull_res.data.number
-      - name: Assign a user
-        uses: actions/github-script@v6.1.0
-        if: ${{ env.REPO_NAME == github.repository
-          && steps.diff.outputs.result != ''
-          && steps.get_pull_requests.outputs.result == 0
-          && github.event.pull_request.user.login != 'dependabot[bot]'
-          && github.event.pull_request.user.login != 'renovate[bot]'
-          && github.event_name == 'pull_request' }}
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            const issues_add_assignees_params = {
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: ${{steps.create_pull_request.outputs.result}},
-              assignees: ["${{github.event.pull_request.user.login}}"]
-            }
-            console.log("call issues.addAssignees:")
-            console.log(issues_add_assignees_params)
-            await github.rest.issues.addAssignees(issues_add_assignees_params)
       # 既にPRがある状態で、手動でを正した場合、PRを閉じる
       - name: Close PullRequest
         uses: actions/github-script@v6.1.0
-        env:
-          HEAD_REF: ${{github.event.pull_request.head.ref}}
         if: ${{ env.REPO_NAME == github.repository
-          && steps.diff.outputs.result == ''
-          && github.event_name == 'pull_request' }}
+          && steps.diff.outputs.result == '' }}
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             const HEAD_REF = process.env["HEAD_REF"]
-            const head_name = "update-go-runtime-" + HEAD_REF
+            const head_name = "update-go-runtime"
             const common_params = {
               owner: context.repo.owner,
               repo: context.repo.repo
