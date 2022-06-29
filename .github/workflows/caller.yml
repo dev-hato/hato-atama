@@ -8,6 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: ./.github/actions/test
+      - run: echo "test!" > test.txt
+      - uses: dev-hato/actions-diff-pr-management
         with:
-          python-version: '3.9.1'
+          github-token: ${{secrets.GITHUB_TOKEN}}
