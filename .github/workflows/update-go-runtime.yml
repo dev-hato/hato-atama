@@ -58,3 +58,4 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           branch-name-prefix: update-go-runtime
           pr-title-prefix: App EngineのGoランタイムのバージョンを直してあげたよ！
+          repo-name: dev-hato/hato-atama
