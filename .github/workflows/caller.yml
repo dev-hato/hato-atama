@@ -15,3 +15,5 @@ jobs:
       - uses: dev-hato/actions-diff-pr-management@composite_test
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
+          branch-name-prefix: fix-readme
+          pr-title-prefix: READMEを直してあげたよ！
