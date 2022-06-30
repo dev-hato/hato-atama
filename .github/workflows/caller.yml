@@ -7,7 +7,10 @@ jobs:
   composite_test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3.0.2
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
       - run: echo "test!" > README.md
       - uses: dev-hato/actions-diff-pr-management@composite_test
         with:
