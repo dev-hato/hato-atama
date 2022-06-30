@@ -9,6 +9,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: echo "test!" > test.txt
-      - uses: dev-hato/actions-diff-pr-management@0.0.2
+      - uses: dev-hato/actions-diff-pr-management@composite_test
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
