@@ -208,6 +208,9 @@ jobs:
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
         env:
           HEAD_REF: ${{github.head_ref}}
+        if: github.event_name == 'pull_request'
+      - run: echo 'TAG_NAME=latest' >> "$GITHUB_ENV"
+        if: github.event_name == 'push'
       - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
       - run: docker compose -f dev.docker-compose.yml pull
       - name: Get Go version
@@ -304,6 +307,9 @@ jobs:
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
         env:
           HEAD_REF: ${{github.head_ref}}
+        if: github.event_name == 'pull_request'
+      - run: echo 'TAG_NAME=latest' >> "$GITHUB_ENV"
+        if: github.event_name == 'push'
       - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
       - run: docker compose -f dev.docker-compose.yml pull
         env:
