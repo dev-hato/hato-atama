@@ -1,0 +1,61 @@
+---
+name: update-go-runtime
+
+on:
+  schedule:
+    - cron: '0 21 * * *' # 06:00 JST
+
+jobs:
+  # App Engineランタイムのページをスクレイピングし、そこに記述されているGoランタイムのバージョンがアップデートされていたらapp.yamlをアップデートする
+  update-go-runtime:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v3.0.2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v3.3.0
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - run: |
+          npm_version=$(grep \"npm\" package.json \
+                        | sed -e 's/ *"npm": "^\(.*\)"/\1/g')
+          npm install --prefer-offline --location=global "npm@${npm_version}"
+          npm ci --prefer-offline
+      - name: Get latest App Engine support version
+        id: get_latest_app_engine_support_version
+        uses: actions/github-script@v6.1.0
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          result-encoding: string
+          script: |
+            const axios = require('axios')
+            const cheerio = require('cheerio')
+            const {Text} = require('domhandler')
+
+            const response = await axios.get('https://cloud.google.com/appengine/docs/standard/go/runtime')
+            const $ = cheerio.load(response.data)
+            const versions = []
+
+            for (const element of $('code[dir="ltr"]').get()) {
+              const textElement = element.children[0]
+              if (textElement instanceof Text) {
+                const textElementData = textElement.data.trim()
+                if (textElementData.startsWith('runtime')) {
+                  versions.push(textElementData)
+                }
+              }
+            }
+
+            versions.sort()
+            return versions.pop()
+      - run: sed -i -e 's/runtime:.*/${{steps.get_latest_app_engine_support_version.outputs.result}}/g' app.yaml
+      - uses: dev-hato/actions-diff-pr-management@main
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          branch-name-prefix: update-go-runtime
+          pr-title-prefix: App EngineのGoランタイムのバージョンを直してあげたよ！
+          repo-name: dev-hato/hato-atama
