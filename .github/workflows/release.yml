@@ -11,6 +11,8 @@ env:
   GCP_WORKLOAD_IDENTITY_PROVIDER: 'projects/765091727073/locations/global/workloadIdentityPools/hato-atama-workload-identity/providers/github'
   GCP_SERVICE_ACCOUNT: 'actions-deploy@hato-atama.iam.gserviceaccount.com'
 
+concurrency: release
+
 jobs:
   build-frontend:
     runs-on: ubuntu-latest
