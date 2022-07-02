@@ -428,8 +428,8 @@ jobs:
       - run: echo 'TAG_NAME=latest' >> "$GITHUB_ENV"
         if: ${{ github.event_name == 'push' }}
       - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
-      - run: docker compose -f docker-compose.yml pull
-      - run: docker compose -f docker-compose.yml up -d --wait
+      - run: docker compose pull
+      - run: docker compose up -d --wait
       - uses: actions/setup-node@v3.3.0
         with:
           node-version-file: test/e2e/.node-version
@@ -461,8 +461,8 @@ jobs:
       - run: echo 'TAG_NAME=latest' >> "$GITHUB_ENV"
         if: ${{ github.event_name == 'push' }}
       - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
-      - run: docker compose -f docker-compose.yml pull
-      - run: docker compose -f docker-compose.yml up -d --wait
+      - run: docker compose pull
+      - run: docker compose up -d --wait
       - uses: actions/setup-node@v3.3.0
         with:
           node-version-file: test/e2e/.node-version
