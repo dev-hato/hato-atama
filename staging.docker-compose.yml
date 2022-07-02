@@ -9,7 +9,7 @@ services:
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server-dev:${TAG_NAME:-latest}
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server-dev
-    image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server:${TAG_NAME}
+    image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server:${TAG_NAME:-latest}
 
   frontend:
     build:
@@ -18,4 +18,4 @@ services:
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend-dev:${TAG_NAME:-latest}
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend-dev
-    image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend:${TAG_NAME}
+    image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend:${TAG_NAME:-latest}

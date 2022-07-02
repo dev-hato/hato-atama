@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: gcp/datastore/Dockerfile
       cache_from:
-        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/gcloud_datastore:${TAG_NAME}
+        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/gcloud_datastore:${TAG_NAME:-latest}
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/gcloud_datastore
       args:
         BUILDKIT_INLINE_CACHE: 1
@@ -15,7 +15,7 @@ services:
         platforms:
           - linux/amd64
           - linux/arm64
-    image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/gcloud_datastore:${TAG_NAME}
+    image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/gcloud_datastore:${TAG_NAME:-latest}
     init: true
     tty: true
     environment:
