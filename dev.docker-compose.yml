@@ -6,9 +6,9 @@ services:
     build:
       target: build
       cache_from:
-        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server-dev:${TAG_NAME}
+        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server-dev:${TAG_NAME:-latest}
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server-dev
-    image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server-dev:${TAG_NAME}
+    image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server-dev:${TAG_NAME:-latest}
     volumes:
       - ./server:/go/app/server
 
@@ -16,8 +16,8 @@ services:
     build:
       target: build
       cache_from:
-        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend-dev:${TAG_NAME}
+        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend-dev:${TAG_NAME:-latest}
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend-dev
-    image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend-dev:${TAG_NAME}
+    image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend-dev:${TAG_NAME:-latest}
     volumes:
       - ./frontend/src:/usr/src/app/src
