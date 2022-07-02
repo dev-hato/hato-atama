@@ -383,8 +383,8 @@ jobs:
               owner: 'goodwithtech',
               repo: 'dockle'
             });
-            return release.data.tag_name;
-      - run: sed -i -e 's/dockle_version=\([0-9.]*\)/dockle_version=${{ steps.get_latest_dockle_version.outputs.result }}/g' .github/workflows/release.yml
+            return release.data.tag_name.replace('v', '');
+      - run: sed -i -e 's/dockle_version=\([0-9.]*\)$/dockle_version=${{ steps.get_latest_dockle_version.outputs.result }}/g' .github/workflows/release.yml
       - uses: dev-hato/actions-diff-pr-management@main
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
