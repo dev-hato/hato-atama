@@ -368,7 +368,7 @@ jobs:
     needs: docker-compose-build
     strategy:
       matrix:
-        docker_compose_file_name: [ "dev.docker-compose.yml", "staging.docker-compose.yml"]
+        docker_compose_file_name: ["dev.docker-compose.yml", "staging.docker-compose.yml"]
     env:
       DOCKER_CONTENT_TRUST: 1
     steps:
