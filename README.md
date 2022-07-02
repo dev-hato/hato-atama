@@ -24,7 +24,7 @@ TAG_NAME=`git symbolic-ref --short HEAD | sed -e "s:/:-:g" | sed -e "s/^master$/
 
 #### 限りなく本番のapp engineに近い設定で動くバージョン
 ```sh
-TAG_NAME=`git symbolic-ref --short HEAD | sed -e "s:/:-:g" | sed -e "s/^master$/latest/g"` docker compose up --build
+TAG_NAME=`git symbolic-ref --short HEAD | sed -e "s:/:-:g" | sed -e "s/^master$/latest/g"` docker compose -f docker-compose.yml -f staging.docker-compose.yml up --build
 ```
 
 ## ARM64環境に対応したElmコンパイラに関して

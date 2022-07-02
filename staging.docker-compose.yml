@@ -1,0 +1,21 @@
+---
+version: "3.8"
+
+services:
+  server:
+    build:
+      cache_from:
+        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server:${TAG_NAME}
+        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server
+        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server-dev:${TAG_NAME}
+        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server-dev
+    image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server:${TAG_NAME}
+
+  frontend:
+    build:
+      cache_from:
+        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend:${TAG_NAME}
+        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend
+        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend-dev:${TAG_NAME}
+        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend-dev
+    image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend:${TAG_NAME}
