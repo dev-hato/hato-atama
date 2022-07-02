@@ -101,7 +101,6 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
-      - run: echo "TAG_NAME=latest" >> "$GITHUB_ENV"
       - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
       - run: docker compose -f dev.docker-compose.yml pull
       - name: Get Go version

@@ -8,7 +8,7 @@ services:
       context: .
       dockerfile: gcp/datastore/Dockerfile
       cache_from:
-        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/gcloud_datastore:${TAG_NAME}
+        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/gcloud_datastore:${TAG_NAME:-latest}
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/gcloud_datastore
       args:
         BUILDKIT_INLINE_CACHE: 1
@@ -16,7 +16,7 @@ services:
         platforms:
           - linux/amd64
           - linux/arm64
-    image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/gcloud_datastore:${TAG_NAME}
+    image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/gcloud_datastore:${TAG_NAME:-latest}
     init: true
     tty: true
     environment:
@@ -29,9 +29,9 @@ services:
       context: .
       dockerfile: server/Dockerfile
       cache_from:
-        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server:${TAG_NAME}
+        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server:${TAG_NAME:-latest}
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server
-        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server-dev:${TAG_NAME}
+        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server-dev:${TAG_NAME:-latest}
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server-dev
       args:
         BUILDKIT_INLINE_CACHE: 1
@@ -39,7 +39,7 @@ services:
         platforms:
           - linux/amd64
           - linux/arm64
-    image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server:${TAG_NAME}
+    image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server:${TAG_NAME:-latest}
     environment:
       PROJECT_ID: app
       DATASTORE_EMULATOR_HOST: "gcloud_datastore:${GCLOUD_DATASOURCE_PORT}"
@@ -55,9 +55,9 @@ services:
       context: .
       dockerfile: frontend/Dockerfile
       cache_from:
-        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend:${TAG_NAME}
+        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend:${TAG_NAME:-latest}
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend
-        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend-dev:${TAG_NAME}
+        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend-dev:${TAG_NAME:-latest}
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend-dev
       args:
         BUILDKIT_INLINE_CACHE: 1
@@ -65,7 +65,7 @@ services:
         platforms:
           - linux/amd64
           - linux/arm64
-    image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend:${TAG_NAME}
+    image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend:${TAG_NAME:-latest}
     environment:
       SERVER_PORT: ${SERVER_PORT}
       FRONTEND_PORT: ${FRONTEND_PORT}
