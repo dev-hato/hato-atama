@@ -23,6 +23,7 @@ RUN mapfile -t PLATFORM < <(echo "${TARGETPLATFORM}" | tr '/' ' ') \
 USER nonroot
 
 HEALTHCHECK --interval=5s --retries=20 CMD ["/go/app/ping/ping"]
+CMD ["air", "-c", ".air.toml"]
 
 FROM scratch
 

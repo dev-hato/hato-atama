@@ -181,14 +181,14 @@ jobs:
           DOCKER_CONTENT_TRUST: 1
         with:
           push: true
-          files: dev.docker-compose.yml
+          files: docker-compose.yml,dev.docker-compose.yml
       - name: Build and push (staging)
         uses: docker/bake-action@v2.1.0
         env:
           DOCKER_CONTENT_TRUST: 1
         with:
           push: true
-          files: staging.docker-compose.yml
+          files: docker-compose.yml,staging.docker-compose.yml
 
   format-go:
     runs-on: ubuntu-latest
@@ -212,12 +212,12 @@ jobs:
       - run: echo 'TAG_NAME=latest' >> "$GITHUB_ENV"
         if: github.event_name == 'push'
       - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
-      - run: docker compose -f dev.docker-compose.yml pull
+      - run: docker compose -f docker-compose.yml -f dev.docker-compose.yml pull
       - name: Get Go version
         id: get_go_version
         run: |
           CMD="go version | awk '{print \$3}' | sed -e 's/^go//g'"
-          go_version=$(docker compose -f dev.docker-compose.yml run server-dev sh -c "${CMD}")
+          go_version=$(docker compose -f docker-compose.yml -f dev.docker-compose.yml run server sh -c "${CMD}")
           echo "Go version:" "${go_version}"
           echo "::set-output name=go_version::${go_version}"
       - name: Set up Go
@@ -311,7 +311,7 @@ jobs:
       - run: echo 'TAG_NAME=latest' >> "$GITHUB_ENV"
         if: github.event_name == 'push'
       - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
-      - run: docker compose -f dev.docker-compose.yml pull
+      - run: docker compose -f docker-compose.yml -f dev.docker-compose.yml pull
         env:
           DOCKER_CONTENT_TRUST: 1
       - name: Get Node.js version
@@ -320,7 +320,7 @@ jobs:
           DOCKER_CONTENT_TRUST: 1
         run: |
           DOCKER_CMD="node --version && npm --version"
-          mapfile -t result < <(docker compose -f dev.docker-compose.yml run frontend-dev sh -c "${DOCKER_CMD}")
+          mapfile -t result < <(docker compose -f docker-compose.yml -f dev.docker-compose.yml run frontend sh -c "${DOCKER_CMD}")
           node_version="${result[0]//v/}"
           npm_version=${result[1]}
           echo "Node.js version:" "${node_version}"
@@ -417,10 +417,10 @@ jobs:
           dockle_version=0.4.5
           curl -L -o dockle.deb "https://github.com/goodwithtech/dockle/releases/download/v${dockle_version}/dockle_${dockle_version}_Linux-64bit.deb"
           sudo dpkg -i dockle.deb
-      - run: docker compose -f ${{matrix.docker_compose_file_name}} pull
-      - run: docker compose -f ${{matrix.docker_compose_file_name}} up -d
+      - run: docker compose -f docker-compose.yml -f ${{matrix.docker_compose_file_name}} pull
+      - run: docker compose -f docker-compose.yml -f ${{matrix.docker_compose_file_name}} up -d
       - run: |
-          for image_name in $(docker compose -f ${{matrix.docker_compose_file_name}} images | awk 'OFS=":" {print $2,$3}' | tail -n +2); do
+          for image_name in $(docker compose -f docker-compose.yml -f ${{matrix.docker_compose_file_name}} images | awk 'OFS=":" {print $2,$3}' | tail -n +2); do
             cmd="dockle --exit-code 1 "
 
             if [[ "${image_name}" =~ "gcloud_datastore" ]] || [[ "${image_name}" =~ "server-dev" ]]; then
@@ -455,8 +455,8 @@ jobs:
       - run: echo 'TAG_NAME=latest' >> "$GITHUB_ENV"
         if: ${{ github.event_name == 'push' }}
       - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
-      - run: docker compose -f staging.docker-compose.yml pull
-      - run: docker compose -f staging.docker-compose.yml up -d --wait
+      - run: docker compose -f docker-compose.yml -f staging.docker-compose.yml pull
+      - run: docker compose -f docker-compose.yml -f staging.docker-compose.yml up -d --wait
       - uses: actions/setup-node@v3.3.0
         with:
           node-version-file: test/e2e/.node-version
@@ -488,8 +488,8 @@ jobs:
       - run: echo 'TAG_NAME=latest' >> "$GITHUB_ENV"
         if: ${{ github.event_name == 'push' }}
       - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
-      - run: docker compose -f staging.docker-compose.yml pull
-      - run: docker compose -f staging.docker-compose.yml up -d --wait
+      - run: docker compose -f docker-compose.yml -f staging.docker-compose.yml pull
+      - run: docker compose -f docker-compose.yml -f staging.docker-compose.yml up -d --wait
       - uses: actions/setup-node@v3.3.0
         with:
           node-version-file: test/e2e/.node-version
