@@ -41,6 +41,7 @@ RUN npm run build \
 COPY frontend/healthcheck.sh .
 
 HEALTHCHECK --interval=5s --retries=20 CMD ["./healthcheck.sh"]
+CMD ["npm", "run", "dev"]
 
 FROM nginx:1.23.0
 
