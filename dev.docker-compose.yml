@@ -2,78 +2,22 @@
 version: "3.8"
 
 services:
-  gcloud_datastore:
+  server:
     build:
-      context: .
-      dockerfile: gcp/datastore/Dockerfile
-      cache_from:
-        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/gcloud_datastore:${TAG_NAME:-latest}
-        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/gcloud_datastore
-      args:
-        BUILDKIT_INLINE_CACHE: 1
-      x-bake:
-        platforms:
-          - linux/amd64
-          - linux/arm64
-    image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/gcloud_datastore:${TAG_NAME:-latest}
-    init: true
-    tty: true
-    environment:
-      DATASTORE_PROJECT_ID: app
-      DATASTORE_LISTEN_ADDRESS: 0.0.0.0:${GCLOUD_DATASOURCE_PORT}
-      GCLOUD_DATASOURCE_PORT: ${GCLOUD_DATASOURCE_PORT}
-
-  server-dev:
-    build:
-      context: .
-      dockerfile: server/Dockerfile
       target: build
       cache_from:
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server-dev:${TAG_NAME:-latest}
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server-dev
-      args:
-        BUILDKIT_INLINE_CACHE: 1
-      x-bake:
-        platforms:
-          - linux/amd64
-          - linux/arm64
     image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server-dev:${TAG_NAME:-latest}
     volumes:
       - ./server:/go/app/server
-    environment:
-      PROJECT_ID: app
-      DATASTORE_EMULATOR_HOST: "gcloud_datastore:${GCLOUD_DATASOURCE_PORT}"
-      SERVER_PORT: ${SERVER_PORT}
-    command: air -c .air.toml
-    ports:
-      - "${SERVER_PORT}:${SERVER_PORT}"
-    depends_on:
-      gcloud_datastore:
-        condition: service_healthy
 
-  frontend-dev:
+  frontend:
     build:
-      context: .
-      dockerfile: frontend/Dockerfile
       target: build
       cache_from:
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend-dev:${TAG_NAME:-latest}
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend-dev
-      args:
-        BUILDKIT_INLINE_CACHE: 1
-      x-bake:
-        platforms:
-          - linux/amd64
-          - linux/arm64
     image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend-dev:${TAG_NAME:-latest}
     volumes:
       - ./frontend/src:/usr/src/app/src
-    command: npm run dev
-    environment:
-      SERVER_PORT: ${SERVER_PORT}
-      FRONTEND_PORT: ${FRONTEND_PORT}
-    ports:
-      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
-    depends_on:
-      server-dev:
-        condition: service_healthy
