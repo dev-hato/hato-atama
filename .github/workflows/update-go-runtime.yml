@@ -30,29 +30,22 @@ jobs:
         uses: actions/github-script@v6.1.0
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
-          result-encoding: string
           script: |
             const axios = require('axios')
             const cheerio = require('cheerio')
-            const {Text} = require('domhandler')
 
             const response = await axios.get('https://cloud.google.com/appengine/docs/standard/go/runtime')
             const $ = cheerio.load(response.data)
-            const versions = []
-
-            for (const element of $('code[dir="ltr"]').get()) {
-              const textElement = element.children[0]
-              if (textElement instanceof Text) {
-                const textElementData = textElement.data.trim()
-                if (textElementData.startsWith('runtime')) {
-                  versions.push(textElementData)
-                }
-              }
-            }
-
-            versions.sort()
-            return versions.pop()
-      - run: sed -i -e 's/runtime:.*/${{steps.get_latest_app_engine_support_version.outputs.result}}/g' app.yaml
+            const versions = Object.fromEntries($('.ds-selector-tabs section').get().map(element => {
+              const version = Number($('h3', element).text().replace(/^Go /, ''))
+              const versionYAML = $('code', element).text().trim()
+              return [version, versionYAML]
+            }))
+            const latestVersion = Object.keys(versions).sort().pop()
+            return {version: latestVersion, versionYAML: versions[latestVersion]}
+      - run: sed -i -e 's/runtime:.*/${{fromJson(steps.get_latest_app_engine_support_version.outputs.result).versionYAML}}/g' app.yaml
+      - run: sed -i -e 's/go .*/go ${{fromJson(steps.get_latest_app_engine_support_version.outputs.result).version}}/g' go.mod
+      - run: sed -e 's/go [0-9.]*/go 1.15/g' go.mod
       - uses: dev-hato/actions-diff-pr-management@v0.0.8
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
