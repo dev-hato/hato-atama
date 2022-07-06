@@ -45,7 +45,6 @@ jobs:
             return {version: latestVersion, versionYAML: versions[latestVersion]}
       - run: sed -i -e 's/runtime:.*/${{fromJson(steps.get_latest_app_engine_support_version.outputs.result).versionYAML}}/g' app.yaml
       - run: sed -i -e 's/go .*/go ${{fromJson(steps.get_latest_app_engine_support_version.outputs.result).version}}/g' go.mod
-      - run: sed -e 's/go [0-9.]*/go 1.15/g' go.mod
       - uses: dev-hato/actions-diff-pr-management@v0.0.8
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
