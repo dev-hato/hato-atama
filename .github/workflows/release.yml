@@ -495,7 +495,7 @@ jobs:
   e2e-test-mini-prd:
     runs-on: ubuntu-latest
     concurrency: production_access
-    timeout-minutes: 2
+    timeout-minutes: 3
     needs:
       - deploy-app-engine
       - e2e-test-mini-docker-compose
