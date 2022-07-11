@@ -19,7 +19,7 @@ jobs:
         working-directory: frontend
     steps:
       - uses: actions/checkout@v3.0.2
-      - uses: actions/setup-node@v3.3.0
+      - uses: actions/setup-node@v3.4.0
         with:
           node-version-file: frontend/.node-version
           cache: npm
@@ -262,7 +262,7 @@ jobs:
           BRANCH_NAME="$(echo '${{ matrix.directory }}' | sed -e 's:/:-:g')"
           BRANCH_NAME="${BRANCH_NAME//\./root}"
           echo "::set-output name=branch_name::${BRANCH_NAME}"
-      - uses: actions/setup-node@v3.3.0
+      - uses: actions/setup-node@v3.4.0
         with:
           node-version-file: ${{ matrix.directory }}/.node-version
           cache: npm
@@ -449,7 +449,7 @@ jobs:
       - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
       - run: docker compose -f docker-compose.yml -f staging.docker-compose.yml pull
       - run: docker compose -f docker-compose.yml -f staging.docker-compose.yml up -d --wait
-      - uses: actions/setup-node@v3.3.0
+      - uses: actions/setup-node@v3.4.0
         with:
           node-version-file: test/e2e/.node-version
           cache: npm
@@ -480,7 +480,7 @@ jobs:
       - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
       - run: docker compose -f docker-compose.yml -f staging.docker-compose.yml pull
       - run: docker compose -f docker-compose.yml -f staging.docker-compose.yml up -d --wait
-      - uses: actions/setup-node@v3.3.0
+      - uses: actions/setup-node@v3.4.0
         with:
           node-version-file: test/e2e/.node-version
           cache: npm
@@ -504,7 +504,7 @@ jobs:
       DOCKER_CONTENT_TRUST: 1
     steps:
       - uses: actions/checkout@v3.0.2
-      - uses: actions/setup-node@v3.3.0
+      - uses: actions/setup-node@v3.4.0
         with:
           node-version-file: test/e2e/.node-version
           cache: npm
@@ -531,7 +531,7 @@ jobs:
     if: ${{ github.event_name == 'push' }}
     steps:
       - uses: actions/checkout@v3.0.2
-      - uses: actions/setup-node@v3.3.0
+      - uses: actions/setup-node@v3.4.0
         with:
           node-version-file: test/e2e/.node-version
           cache: npm
