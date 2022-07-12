@@ -709,7 +709,7 @@ jobs:
 
   release-complete-check:
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' && (needs.check-deploy-diff.outputs.deploy-files == 'false' || needs.lighthouse.result == 'success') }}
+    if: ${{ github.event_name == 'push' && (needs.check-deploy-diff.outputs.deploy-files == 'false' || (needs.lighthouse.result == 'success' && needs.remove-app-engine-past-versions.result == 'success')) }}
     needs:
       - remove-app-engine-past-versions
       - lighthouse
