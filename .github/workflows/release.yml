@@ -696,9 +696,9 @@ jobs:
       - format-go
       - dockle
     steps:
-      - if: ${{ needs.e2e-test-all-docker-compose.result == 'success' && needs.update-package.result == 'success' && needs.format-go.result == 'success' && needs.dockle.result == 'success' && (github.repository != github.event.pull_request.head.repo.full_name || github.repository != 'dev-hato/hato-atama' || (needs.create-pr-environment.result == 'success' && (needs.check-deploy-diff.changes.src == false || (needs.lighthouse.result == 'success' && needs.e2e-test-mini-prd.result == 'success'))) }}
+      - if: ${{ needs.e2e-test-all-docker-compose.result == 'success' && needs.update-package.result == 'success' && needs.format-go.result == 'success' && needs.dockle.result == 'success' && (github.repository != github.event.pull_request.head.repo.full_name || github.repository != 'dev-hato/hato-atama' || (needs.create-pr-environment.result == 'success' && (needs.check-deploy-diff.changes.src == false || (needs.lighthouse.result == 'success' && needs.e2e-test-mini-prd.result == 'success')))) }}
         run: exit 0
-      - if: ${{ needs.e2e-test-all-docker-compose.result != 'success' || needs.update-package.result != 'success' || needs.format-go.result != 'success' || needs.dockle.result != 'success' || (github.repository == github.event.pull_request.head.repo.full_name && github.repository == 'dev-hato/hato-atama' && (needs.create-pr-environment.result != 'success' || (needs.check-deploy-diff.changes.src == true && (needs.lighthouse.result != 'success' || needs.e2e-test-mini-prd.result != 'success'))) }}
+      - if: ${{ needs.e2e-test-all-docker-compose.result != 'success' || needs.update-package.result != 'success' || needs.format-go.result != 'success' || needs.dockle.result != 'success' || (github.repository == github.event.pull_request.head.repo.full_name && github.repository == 'dev-hato/hato-atama' && (needs.create-pr-environment.result != 'success' || (needs.check-deploy-diff.changes.src == true && (needs.lighthouse.result != 'success' || needs.e2e-test-mini-prd.result != 'success')))) }}
         run: exit 1
 
   release-complete-check:
