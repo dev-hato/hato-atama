@@ -15,7 +15,6 @@ jobs:
   # App Engineにデプロイされるファイルの差分の有無を判定する
   check-deploy-diff:
     runs-on: ubuntu-latest
-    timeout-minutes: 1
     outputs:
       deploy-files: ${{ steps.changes.outputs.deploy-files }}
     steps:
