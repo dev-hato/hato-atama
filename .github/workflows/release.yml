@@ -25,6 +25,7 @@ jobs:
               - '.github/workflows/release.yml'
               - 'frontend/**'
               - 'server/**'
+              - 'test/**'
               - 'app.yaml'
               - 'go.mod'
               - 'go.sum'
