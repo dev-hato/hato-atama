@@ -137,7 +137,7 @@ jobs:
           URLS+="v${{ github.run_number }}-dot-hato-atama.an.r.appspot.com"
           echo "URLS=${URLS}" >> "${GITHUB_ENV}"
       - run: mkdir -p "${ARTIFACT_PATH}"
-      - uses: foo-software/lighthouse-check-action@v8.0.2
+      - uses: foo-software/lighthouse-check-action@v9.0.0
         with:
           gitHubAccessToken: ${{ secrets.GITHUB_TOKEN }}
           urls: ${{ env.URLS }}
