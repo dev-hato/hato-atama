@@ -716,25 +716,22 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'push' }}
     needs:
-      - remove-app-engine-past-versions
-      - lighthouse
-      - check-deploy-diff
       - update-package
       - format-go
       - dockle
     steps:
-      - if: needs.check-deploy-diff.outputs.deploy-files == 'false' || (needs.lighthouse.result == 'success' && needs.remove-app-engine-past-versions.result == 'success')
-        run: exit 0
-      - if: needs.check-deploy-diff.outputs.deploy-files == 'true' && (needs.lighthouse.result != 'success' || needs.remove-app-engine-past-versions.result != 'success')
-        run: exit 1
+      - run: exit 0
 
   release-complete:
     runs-on: ubuntu-latest
     if: ${{ always() && github.event_name == 'push' }}
     needs:
       - release-complete-check
+      - remove-app-engine-past-versions
+      - lighthouse
+      - check-deploy-diff
     steps:
-      - if: ${{ needs.release-complete-check.result == 'success' }}
+      - if: ${{ needs.release-complete-check.result == 'success' && (needs.check-deploy-diff.outputs.deploy-files == 'false' || (needs.lighthouse.result == 'success' && needs.remove-app-engine-past-versions.result == 'success')) }}
         run: exit 0
-      - if: ${{ needs.release-complete-check.result != 'success' }}
+      - if: ${{ needs.release-complete-check.result != 'success' || (needs.check-deploy-diff.outputs.deploy-files == 'true' && (needs.lighthouse.result != 'success' || needs.remove-app-engine-past-versions.result != 'success')) }}
         run: exit 1
