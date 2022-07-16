@@ -684,7 +684,7 @@ jobs:
           gcloud app versions delete --service=default \
                                      ${{steps.get_run_numbers.outputs.result}}
 
-  # deploy-app-engineに依存しているjobが完了したか
+  # (App Engineにデプロイした場合のみ) deploy-app-engine に依存しているjobが完了したか
   deploy-app-engine-complete-check:
     runs-on: ubuntu-latest
     if: always()
@@ -710,6 +710,7 @@ jobs:
     steps:
       - run: exit 0
 
+  # PRをトリガーとした場合に完了しているべきjobが完了したか
   # forkしたリポジトリからdev-hato/hato-atamaへPRを出した場合やforkしたリポジトリ上でPRを立てた場合はdeploy-app-engineがskipされていても完了したものと見なす
   pr-test-complete:
     runs-on: ubuntu-latest
@@ -724,6 +725,7 @@ jobs:
       - if: needs.release-complete-check.result != 'success' || (github.repository == github.event.pull_request.head.repo.full_name && github.repository == 'dev-hato/hato-atama' && needs.check-deploy-diff.outputs.deploy-files == 'true' && needs.create-pr-environment.result != 'success')
         run: exit 1
 
+  # pushをトリガーとした場合に完了しているべきjobが完了したか
   release-complete:
     runs-on: ubuntu-latest
     if: ${{ always() && github.event_name == 'push' }}
