@@ -684,31 +684,31 @@ jobs:
           gcloud app versions delete --service=default \
                                      ${{steps.get_run_numbers.outputs.result}}
 
-  # docker-compose-buildに依存しているjobが完了したか
-  docker-compose-build-complete-check:
+  # deploy-app-engineに依存しているjobが完了したか
+  deploy-app-engine-complete-check:
+    runs-on: ubuntu-latest
+    if: always()
+    needs:
+      - lighthouse
+      - e2e-test-mini-prd
+      - check-deploy-diff
+    steps:
+      - if: github.repository != 'dev-hato/hato-atama' || needs.check-deploy-diff.outputs.deploy-files == 'false' || (needs.lighthouse.result == 'success' && needs.e2e-test-mini-prd.result == 'success')
+        run: exit 0
+      - if: github.repository == 'dev-hato/hato-atama' && needs.check-deploy-diff.outputs.deploy-files == 'true' && (needs.lighthouse.result != 'success' || needs.e2e-test-mini-prd.result != 'success')
+        run: exit 1
+
+  # PRとpushで共通して完了しているべきjobが完了したか
+  release-complete-check:
     runs-on: ubuntu-latest
     needs:
+      - deploy-app-engine-complete-check
       - update-package
       - format-go
       - dockle
       - e2e-test-all-docker-compose
     steps:
       - run: exit 0
-
-  # PRとpushで共通して完了しているべきjobが完了したか
-  release-complete-check:
-    runs-on: ubuntu-latest
-    if: always()
-    needs:
-      - docker-compose-build-complete-check
-      - lighthouse
-      - e2e-test-mini-prd
-      - check-deploy-diff
-    steps:
-      - if: needs.docker-compose-build-complete-check.result == 'success' && (github.repository != 'dev-hato/hato-atama' || needs.check-deploy-diff.outputs.deploy-files == 'false' || (needs.lighthouse.result == 'success' && needs.e2e-test-mini-prd.result == 'success'))
-        run: exit 0
-      - if: needs.docker-compose-build-complete-check.result != 'success' || (github.repository == 'dev-hato/hato-atama' && needs.check-deploy-diff.outputs.deploy-files == 'true' && (needs.lighthouse.result != 'success' || needs.e2e-test-mini-prd.result != 'success'))
-        run: exit 1
 
   # forkしたリポジトリからdev-hato/hato-atamaへPRを出した場合やforkしたリポジトリ上でPRを立てた場合はdeploy-app-engineがskipされていても完了したものと見なす
   pr-test-complete:
