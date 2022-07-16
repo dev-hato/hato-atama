@@ -705,34 +705,34 @@ jobs:
       - e2e-test-mini-prd
       - check-deploy-diff
     steps:
-      - if: ${{ needs.docker-compose-build-complete-check.result == 'success' && (github.repository != 'dev-hato/hato-atama' || needs.check-deploy-diff.outputs.deploy-files == 'false' || (needs.lighthouse.result == 'success' && needs.e2e-test-mini-prd.result == 'success')) }}
+      - if: needs.docker-compose-build-complete-check.result == 'success' && (github.repository != 'dev-hato/hato-atama' || needs.check-deploy-diff.outputs.deploy-files == 'false' || (needs.lighthouse.result == 'success' && needs.e2e-test-mini-prd.result == 'success'))
         run: exit 0
-      - if: ${{ needs.docker-compose-build-complete-check.result != 'success' || (github.repository == 'dev-hato/hato-atama' && needs.check-deploy-diff.outputs.deploy-files == 'true' && (needs.lighthouse.result != 'success' || needs.e2e-test-mini-prd.result != 'success')) }}
+      - if: needs.docker-compose-build-complete-check.result != 'success' || (github.repository == 'dev-hato/hato-atama' && needs.check-deploy-diff.outputs.deploy-files == 'true' && (needs.lighthouse.result != 'success' || needs.e2e-test-mini-prd.result != 'success'))
         run: exit 1
 
   # forkしたリポジトリからdev-hato/hato-atamaへPRを出した場合やforkしたリポジトリ上でPRを立てた場合はdeploy-app-engineがskipされていても完了したものと見なす
   pr-test-complete:
     runs-on: ubuntu-latest
-    if: ${{ always() && github.event_name == 'pull_request' }}
+    if: always() && github.event_name == 'pull_request'
     needs:
       - release-complete-check
       - create-pr-environment
       - check-deploy-diff
     steps:
-      - if: ${{ needs.release-complete-check.result == 'success' && (github.repository != github.event.pull_request.head.repo.full_name || github.repository != 'dev-hato/hato-atama' || needs.check-deploy-diff.outputs.deploy-files == 'false' || needs.create-pr-environment.result == 'success') }}
+      - if: needs.release-complete-check.result == 'success' && (github.repository != github.event.pull_request.head.repo.full_name || github.repository != 'dev-hato/hato-atama' || needs.check-deploy-diff.outputs.deploy-files == 'false' || needs.create-pr-environment.result == 'success')
         run: exit 0
-      - if: ${{ needs.release-complete-check.result != 'success' || (github.repository == github.event.pull_request.head.repo.full_name && github.repository == 'dev-hato/hato-atama' && needs.check-deploy-diff.outputs.deploy-files == 'true' && needs.create-pr-environment.result != 'success') }}
+      - if: needs.release-complete-check.result != 'success' || (github.repository == github.event.pull_request.head.repo.full_name && github.repository == 'dev-hato/hato-atama' && needs.check-deploy-diff.outputs.deploy-files == 'true' && needs.create-pr-environment.result != 'success')
         run: exit 1
 
   release-complete:
     runs-on: ubuntu-latest
-    if: ${{ always() && github.event_name == 'push' }}
+    if: always() && github.event_name == 'push'
     needs:
       - release-complete-check
       - remove-app-engine-past-versions
       - check-deploy-diff
     steps:
-      - if: ${{ needs.release-complete-check.result == 'success' && (github.repository != 'dev-hato/hato-atama' || needs.check-deploy-diff.outputs.deploy-files == 'false' || needs.remove-app-engine-past-versions.result == 'success') }}
+      - if: needs.release-complete-check.result == 'success' && (github.repository != 'dev-hato/hato-atama' || needs.check-deploy-diff.outputs.deploy-files == 'false' || needs.remove-app-engine-past-versions.result == 'success')
         run: exit 0
-      - if: ${{ needs.release-complete-check.result != 'success' || (github.repository == 'dev-hato/hato-atama' && needs.check-deploy-diff.outputs.deploy-files == 'true' && needs.remove-app-engine-past-versions.result != 'success') }}
+      - if: needs.release-complete-check.result != 'success' || (github.repository == 'dev-hato/hato-atama' && needs.check-deploy-diff.outputs.deploy-files == 'true' && needs.remove-app-engine-past-versions.result != 'success')
         run: exit 1
