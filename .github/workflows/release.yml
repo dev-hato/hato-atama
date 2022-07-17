@@ -645,13 +645,12 @@ jobs:
       - e2e-test-mini-prd
       - check-deploy-diff
       - update-package
-      - format-go
       - dockle
       - e2e-test-all-docker-compose
     steps:
-      - if: (github.repository != 'dev-hato/hato-atama' || needs.check-deploy-diff.outputs.deploy-files == 'false' || (needs.lighthouse.result == 'success' && needs.e2e-test-mini-prd.result == 'success')) && needs.update-package.result == 'success' && needs.format-go.result == 'success' && needs.dockle.result == 'success' && needs.e2e-test-all-docker-compose.result == 'success'
+      - if: (github.repository != 'dev-hato/hato-atama' || needs.check-deploy-diff.outputs.deploy-files == 'false' || (needs.lighthouse.result == 'success' && needs.e2e-test-mini-prd.result == 'success')) && needs.update-package.result == 'success' && needs.dockle.result == 'success' && needs.e2e-test-all-docker-compose.result == 'success'
         run: exit 0
-      - if: (github.repository == 'dev-hato/hato-atama' && needs.check-deploy-diff.outputs.deploy-files == 'true' && (needs.lighthouse.result != 'success' || needs.e2e-test-mini-prd.result != 'success')) || needs.update-package.result != 'success' || needs.format-go.result != 'success' || needs.dockle.result != 'success' || needs.e2e-test-all-docker-compose.result != 'success'
+      - if: (github.repository == 'dev-hato/hato-atama' && needs.check-deploy-diff.outputs.deploy-files == 'true' && (needs.lighthouse.result != 'success' || needs.e2e-test-mini-prd.result != 'success')) || needs.update-package.result != 'success' || needs.dockle.result != 'success' || needs.e2e-test-all-docker-compose.result != 'success'
         run: exit 1
 
   # PRをトリガーとした場合に完了しているべきjobが完了したか
