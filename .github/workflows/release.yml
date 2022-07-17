@@ -253,7 +253,7 @@ jobs:
           go_version=$(grep runtime app.yaml | sed -e 's/runtime: go\([0-9]\)\([0-9]*\)/\1.\2/g')
           go mod tidy -go="${go_version}"
           goimports -l -w .
-      - uses: dev-hato/actions-diff-pr-management@v0.0.9
+      - uses: dev-hato/actions-diff-pr-management@v0.0.10
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           branch-name-prefix: fix-format
@@ -292,7 +292,7 @@ jobs:
       - run: npm install
       - if: matrix.directory == 'frontend'
         run: npx browserslist@latest --update-db
-      - uses: dev-hato/actions-diff-pr-management@v0.0.9
+      - uses: dev-hato/actions-diff-pr-management@v0.0.10
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           branch-name-prefix: ${{steps.get_branch_name.outputs.branch_name}}
@@ -374,7 +374,7 @@ jobs:
             NPM_PATTERN+="\"/g"
             sed -i -e "${NPM_PATTERN}" ${path}/package.json
           done
-      - uses: dev-hato/actions-diff-pr-management@v0.0.9
+      - uses: dev-hato/actions-diff-pr-management@v0.0.10
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           branch-name-prefix: fix-version
@@ -403,7 +403,7 @@ jobs:
             });
             return release.data.tag_name.replace('v', '');
       - run: sed -i -e 's/dockle_version=\([0-9.]*\)$/dockle_version=${{ steps.get_latest_dockle_version.outputs.result }}/g' .github/workflows/release.yml
-      - uses: dev-hato/actions-diff-pr-management@v0.0.9
+      - uses: dev-hato/actions-diff-pr-management@v0.0.10
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           branch-name-prefix: update-dockle
