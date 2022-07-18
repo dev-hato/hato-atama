@@ -7,6 +7,10 @@ on:
     branches:
       - master
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   format-json-yml:
     runs-on: ubuntu-latest
@@ -15,8 +19,8 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
-      - run: find . -name '*.json' -exec yq -i -o json {} \;
-      - run: find . -name '*.yaml' -o -name '*.yml' -exec yq -i {} \;
+      - run: find . -not -path './.github/workflows/*' -name '*.json' -exec yq -i -o json {} \;
+      - run: find . -not -path './.github/workflows/*' \( -name '*.yaml' -o -name '*.yml' \) -exec yq -i {} \;
       - uses: dev-hato/actions-diff-pr-management@v0.0.10
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
