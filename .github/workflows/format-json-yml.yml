@@ -27,11 +27,11 @@ jobs:
       - run: |
           for file_name in $(find . -name '*.${{ matrix.extension }}' -not -path './.github/workflows/*'); do
             cmd='yq -i '
-          
+
             if [ '${{ matrix.extension }}' = 'json' ]; then
               cmd+='-o json '
             fi
-          
+
             cmd+="${file_name}"
             echo "> ${cmd}"
             eval "${cmd}"
