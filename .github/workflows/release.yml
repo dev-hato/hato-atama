@@ -430,7 +430,7 @@ jobs:
         if: ${{ github.event_name == 'pull_request' }}
       - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
       - run: |
-          dockle_version=0.4.5
+          dockle_version=0.4.0
           curl -L -o dockle.deb "https://github.com/goodwithtech/dockle/releases/download/v${dockle_version}/dockle_${dockle_version}_Linux-64bit.deb"
           sudo dpkg -i dockle.deb
       - run: docker compose -f docker-compose.yml -f ${{matrix.docker_compose_file_name}} pull
