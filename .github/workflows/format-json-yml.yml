@@ -14,26 +14,13 @@ permissions:
 jobs:
   format-json-yml:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        extension:
-          - json
-          - yml
     steps:
       - uses: actions/checkout@v3.0.2
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
-      - run: |
-          cmd="find . -name '*.${{ matrix.extension }}' -not -path './.github/workflows/*' -exec yq -i "
-
-          if [ '${{ matrix.extension }}' = 'json' ]; then
-            cmd+='-o json '
-          fi
-
-          cmd+='{} \;'
-          echo "> ${cmd}"
-          eval "${cmd}"
+      - run: find . -not -path './.github/workflows/*' -name '*.json' -exec yq -i -o json {} \;
+      - run: find . -not -path './.github/workflows/*' \( -name '*.yaml' -o -name '*.yml' \) -exec yq -i {} \;
       - uses: dev-hato/actions-diff-pr-management@v0.0.10
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
