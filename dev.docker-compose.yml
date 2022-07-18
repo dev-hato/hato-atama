@@ -1,6 +1,5 @@
 ---
 version: "3.8"
-
 services:
   server:
     build:
@@ -11,7 +10,6 @@ services:
     image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server-dev:${TAG_NAME:-latest}
     volumes:
       - ./server:/go/app/server
-
   frontend:
     build:
       target: build

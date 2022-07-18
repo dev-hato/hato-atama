@@ -1,6 +1,5 @@
 ---
 version: "3.8"
-
 services:
   gcloud_datastore:
     build:
@@ -22,7 +21,6 @@ services:
       DATASTORE_PROJECT_ID: app
       DATASTORE_LISTEN_ADDRESS: 0.0.0.0:${GCLOUD_DATASOURCE_PORT}
       GCLOUD_DATASOURCE_PORT: ${GCLOUD_DATASOURCE_PORT}
-
   server:
     build:
       context: .
@@ -42,7 +40,6 @@ services:
     depends_on:
       gcloud_datastore:
         condition: service_healthy
-
   frontend:
     build:
       context: .
