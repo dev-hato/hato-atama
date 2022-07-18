@@ -29,28 +29,12 @@ jobs:
         run: npx npm-check-updates -u
       - name: npm update
         run: npm install
-      - run: |
-          COMMITTER="github-actions[bot]"
-          COMMITTER+=" <41898282+github-actions[bot]@users.noreply.github.com>"
-          echo "COMMITTER=${COMMITTER}" >> "${GITHUB_ENV}"
-          AUTHOR="${{ github.actor }}"
-          AUTHOR+=" <${{ github.actor }}@users.noreply.github.com>"
-          echo "AUTHOR=${AUTHOR}" >> "${GITHUB_ENV}"
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v4
+      - uses: dev-hato/actions-diff-pr-management@v0.0.10
         with:
-          token: ${{secrets.GITHUB_TOKEN}}
-          commit-message: Update frontend
-          committer: ${{ env.COMMITTER }}
-          author: ${{ env.AUTHOR }}
-          signoff: false
-          branch: ${{ github.event.inputs.base-branch-name }}-update-frontend
-          base: ${{ github.event.inputs.base-branch-name }}
-          delete-branch: true
-          title: "Update frontend"
-          body: |
-
-          draft: false
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          branch-name-prefix: ${{ github.event.inputs.base-branch-name }}-update-frontend
+          pr-title-prefix: Update frontend
+          repo-name: dev-hato/hato-atama
 
   update-test-e2e:
     runs-on: ubuntu-latest
@@ -71,28 +55,12 @@ jobs:
         run: npx npm-check-updates -u
       - name: npm update
         run: npm install
-      - run: |
-          COMMITTER="github-actions[bot]"
-          COMMITTER+=" <41898282+github-actions[bot]@users.noreply.github.com>"
-          echo "COMMITTER=${COMMITTER}" >> "${GITHUB_ENV}"
-          AUTHOR="${{ github.actor }}"
-          AUTHOR+=" <${{ github.actor }}@users.noreply.github.com>"
-          echo "AUTHOR=${AUTHOR}" >> "${GITHUB_ENV}"
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v4
+      - uses: dev-hato/actions-diff-pr-management@v0.0.10
         with:
-          token: ${{secrets.GITHUB_TOKEN}}
-          commit-message: Update test/e2e
-          committer: ${{ env.COMMITTER }}
-          author: ${{ env.AUTHOR }}
-          signoff: false
-          branch: ${{ github.event.inputs.base-branch-name }}-update-test-e2e
-          base: ${{ github.event.inputs.base-branch-name }}
-          delete-branch: true
-          title: "Update test/e2e"
-          body: |
-
-          draft: false
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          branch-name-prefix: ${{ github.event.inputs.base-branch-name }}-update-test-e2e
+          pr-title-prefix: Update test/e2e
+          repo-name: dev-hato/hato-atama
 
   update-go:
     runs-on: ubuntu-latest
@@ -118,25 +86,9 @@ jobs:
         run: go get -u ./...
       - name: go mod tidy
         run: go mod tidy
-      - run: |
-          COMMITTER="github-actions[bot]"
-          COMMITTER+=" <41898282+github-actions[bot]@users.noreply.github.com>"
-          echo "COMMITTER=${COMMITTER}" >> "${GITHUB_ENV}"
-          AUTHOR="${{ github.actor }}"
-          AUTHOR+=" <${{ github.actor }}@users.noreply.github.com>"
-          echo "AUTHOR=${AUTHOR}" >> "${GITHUB_ENV}"
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v4
+      - uses: dev-hato/actions-diff-pr-management@v0.0.10
         with:
-          token: ${{secrets.GITHUB_TOKEN}}
-          commit-message: Update go
-          committer: ${{ env.COMMITTER }}
-          author: ${{ env.AUTHOR }}
-          signoff: false
-          branch: ${{ github.event.inputs.base-branch-name }}-update-go
-          base: ${{ github.event.inputs.base-branch-name }}
-          delete-branch: true
-          title: "Update go"
-          body: |
-
-          draft: false
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          branch-name-prefix: ${{ github.event.inputs.base-branch-name }}-update-go
+          pr-title-prefix: Update go
+          repo-name: dev-hato/hato-atama
