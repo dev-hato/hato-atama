@@ -25,17 +25,15 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
       - run: |
-          for file_name in $(find . -name '*.${{ matrix.extension }}' -not -path './.github/workflows/*'); do
-            cmd='yq -i '
+          cmd="find . -name '*.${{ matrix.extension }}' -not -path './.github/workflows/*' -exec yq -i "
 
-            if [ '${{ matrix.extension }}' = 'json' ]; then
-              cmd+='-o json '
-            fi
+          if [ '${{ matrix.extension }}' = 'json' ]; then
+            cmd+='-o json '
+          fi
 
-            cmd+="${file_name}"
-            echo "> ${cmd}"
-            eval "${cmd}"
-          done
+          cmd+='{} \;'
+          echo "> ${cmd}"
+          eval "${cmd}"
       - uses: dev-hato/actions-diff-pr-management@v0.0.10
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
