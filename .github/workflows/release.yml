@@ -383,8 +383,6 @@ jobs:
 
   update-dockle:
     runs-on: ubuntu-latest
-    env:
-      DOCKER_CONTENT_TRUST: 1
     steps:
       - uses: actions/checkout@v3.0.2
         with:
@@ -526,8 +524,6 @@ jobs:
       max-parallel: 1
       matrix:
         browser: ["chrome", "chromium", "firefox", "electron"]
-    env:
-      DOCKER_CONTENT_TRUST: 1
     steps:
       - uses: actions/checkout@v3.0.2
       - uses: actions/setup-node@v3.4.1
