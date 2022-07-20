@@ -684,6 +684,18 @@ jobs:
           gcloud app versions delete --service=default \
                                      ${{steps.get_run_numbers.outputs.result}}
 
+  # docker-compose関連でPRとpushで共通して必ず完了しているべきjobが完了したか
+  release-complete-check-docker-compose:
+    runs-on: ubuntu-latest
+    needs:
+      - update-package
+      - format-go
+      - dockle
+      - e2e-test-mini-docker-compose
+      - e2e-test-all-docker-compose
+    steps:
+      - run: exit 0
+
   # PRとpushで共通して完了しているべきjobが完了したか
   release-complete-check:
     runs-on: ubuntu-latest
@@ -692,14 +704,11 @@ jobs:
       - lighthouse
       - e2e-test-mini-prd
       - check-deploy-diff
-      - update-package
-      - format-go
-      - dockle
-      - e2e-test-all-docker-compose
+      - release-complete-check-docker-compose
     steps:
-      - if: (github.repository != 'dev-hato/hato-atama' || needs.check-deploy-diff.outputs.deploy-files == 'false' || (needs.lighthouse.result == 'success' && needs.e2e-test-mini-prd.result == 'success')) && needs.update-package.result == 'success' && needs.format-go.result == 'success' && needs.dockle.result == 'success' && needs.e2e-test-all-docker-compose.result == 'success'
+      - if: (github.repository != 'dev-hato/hato-atama' || needs.check-deploy-diff.outputs.deploy-files == 'false' || (needs.lighthouse.result == 'success' && needs.e2e-test-mini-prd.result == 'success')) && needs.release-complete-check-docker-compose.result == 'success'
         run: exit 0
-      - if: (github.repository == 'dev-hato/hato-atama' && needs.check-deploy-diff.outputs.deploy-files == 'true' && (needs.lighthouse.result != 'success' || needs.e2e-test-mini-prd.result != 'success')) || needs.update-package.result != 'success' || needs.format-go.result != 'success' || needs.dockle.result != 'success' || needs.e2e-test-all-docker-compose.result != 'success'
+      - if: (github.repository == 'dev-hato/hato-atama' && needs.check-deploy-diff.outputs.deploy-files == 'true' && (needs.lighthouse.result != 'success' || needs.e2e-test-mini-prd.result != 'success')) || needs.release-complete-check-docker-compose.result != 'success'
         run: exit 1
 
   # PRをトリガーとした場合に完了しているべきjobが完了したか
