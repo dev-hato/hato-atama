@@ -1,0 +1,29 @@
+---
+name: format-json-yml
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  format-json-yml:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3.0.2
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+      - run: find . -not -path './.github/workflows/*' -name '*.json' -exec yq -i -o json {} \;
+      - run: find . -not -path './.github/workflows/*' \( -name '*.yaml' -o -name '*.yml' \) -exec yq -i {} \;
+      - uses: dev-hato/actions-diff-pr-management@v0.0.10
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          branch-name-prefix: fix-format-json-yml
+          pr-title-prefix: formatが間違ってたので直してあげたよ！
+          repo-name: dev-hato/hato-atama

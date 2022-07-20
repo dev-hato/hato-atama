@@ -1,8 +1,6 @@
 ---
 runtime: go116
-
 main: ./server
-
 handlers:
   - url: /api/.*
     script: auto
