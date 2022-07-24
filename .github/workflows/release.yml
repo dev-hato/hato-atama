@@ -445,7 +445,7 @@ jobs:
                 cmd+="-af credentials "
               fi
             elif [[ "${image_name}" =~ "frontend" ]]; then
-              cmd+="-ak key "
+              cmd+="-ak NGINX_GPGKEY "
             fi
 
             cmd+="${image_name}"
