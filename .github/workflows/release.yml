@@ -444,6 +444,8 @@ jobs:
               else
                 cmd+="-af credentials "
               fi
+            elsif [[ "${image_name}" =~ "frontend" ]]; then
+              cmd+="-ak key "
             fi
 
             cmd+="${image_name}"
