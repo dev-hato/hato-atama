@@ -400,7 +400,7 @@ jobs:
               repo: 'dockle'
             });
             return release.data.tag_name.replace('v', '');
-      - run: sed -i -e 's/dockle_version=\([0-9.]*\)$/dockle_version=${{ steps.get_latest_dockle_version.outputs.result }}/g' .github/workflows/release.yml
+      - run: echo '${{ steps.get_latest_dockle_version.outputs.result }}' > .dockle-version
       - uses: dev-hato/actions-diff-pr-management@v0.0.10
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
@@ -428,7 +428,7 @@ jobs:
         if: ${{ github.event_name == 'pull_request' }}
       - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
       - run: |
-          dockle_version=0.4.5
+          dockle_version="$(cat .dockle-version)"
           curl -L -o dockle.deb "https://github.com/goodwithtech/dockle/releases/download/v${dockle_version}/dockle_${dockle_version}_Linux-64bit.deb"
           sudo dpkg -i dockle.deb
       - run: docker compose -f docker-compose.yml -f ${{matrix.docker_compose_file_name}} pull
@@ -444,6 +444,8 @@ jobs:
               else
                 cmd+="-af credentials "
               fi
+            elif [[ "${image_name}" =~ "frontend:" ]]; then
+              cmd+="-ak NGINX_GPGKEY "
             fi
 
             cmd+="${image_name}"
