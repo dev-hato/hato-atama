@@ -21,7 +21,7 @@ jobs:
           cache: npm
       - run: npm ci --prefer-offline
       - name: Super-Linter
-        uses: github/super-linter/slim@v4.9.5
+        uses: github/super-linter/slim@v4.9.6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LINTER_RULES_PATH: .
