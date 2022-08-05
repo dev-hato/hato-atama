@@ -700,7 +700,7 @@ jobs:
   # PRとpushで共通して完了しているべきjobが完了したか
   release-complete-check:
     runs-on: ubuntu-latest
-    if: always()
+    if: always() && (github.event_name != 'pull_request' || github.event.action != 'closed')
     needs:
       - lighthouse
       - e2e-test-mini-prd
@@ -716,7 +716,7 @@ jobs:
   # forkしたリポジトリからdev-hato/hato-atamaへPRを出した場合やforkしたリポジトリ上でPRを立てた場合はdeploy-app-engineがskipされていても完了したものと見なす
   pr-test-complete:
     runs-on: ubuntu-latest
-    if: always() && github.event_name == 'pull_request'
+    if: always() && github.event_name == 'pull_request' && github.event.action != 'closed'
     needs:
       - release-complete-check
       - create-pr-environment
