@@ -4,5 +4,6 @@
   ],
   "ignoreDeps": [
     "go"
-  ]
+  ],
+  "prConcurrentLimit": 1
 }
