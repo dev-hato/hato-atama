@@ -2,6 +2,15 @@
   "extends": [
     "github>dev-hato/renovate-config"
   ],
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/bower_components/**",
+    "**/vendor/**",
+    "**/examples/**",
+    "**/__tests__/**",
+    "**/tests/**",
+    "**/__fixtures__/**"
+  ],
   "ignoreDeps": [
     "go"
   ]
