@@ -129,7 +129,7 @@ jobs:
       pull-requests: write
     if: ${{ github.event_name == 'pull_request' }}
     steps:
-      - uses: actions/github-script@v6.1.0
+      - uses: actions/github-script@v6.1.1
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
@@ -406,7 +406,7 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
-      - uses: dev-hato/actions-update-dockle@v0.0.6
+      - uses: dev-hato/actions-update-dockle@v0.0.9
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           repo-name: ${{ github.event.pull_request.head.repo.full_name }}
@@ -605,7 +605,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3.0.2
       - name: Get run numbers
-        uses: actions/github-script@v6.1.0
+        uses: actions/github-script@v6.1.1
         id: get_run_numbers
         env:
           HEAD_REF: master
