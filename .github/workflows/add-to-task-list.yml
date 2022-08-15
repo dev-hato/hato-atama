@@ -5,7 +5,7 @@ on:
     types:
       - opened
       - reopened
-  issue:
+  issues:
     types:
       - opened
 
