@@ -1,4 +1,4 @@
-# hato-atama
+# hato-atamatest
 
 ## サービス概要
 - 使い捨てURL短縮サービス
