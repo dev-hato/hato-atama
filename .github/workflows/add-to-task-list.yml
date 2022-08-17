@@ -13,7 +13,13 @@ jobs:
   add-to-task-list:
     runs-on: ubuntu-latest
     steps:
+      - name: Generate token
+        id: generate_token
+        uses: tibdex/github-app-token@v1.6.0
+        with:
+          app_id: ${{ secrets.PROJECT_AUTOMATION_APP_ID }}
+          private_key: ${{ secrets.PROJECT_AUTOMATION_PRIVATE_KEY }}
       - uses: actions/add-to-project@v0.3.0
         with:
           project-url: https://github.com/orgs/dev-hato/projects/1
-          github-token: ${{secrets.PROJECT_AUTOMATION_GITHUB_TOKEN}}
+          github-token: ${{steps.generate_token.outputs.token}}
