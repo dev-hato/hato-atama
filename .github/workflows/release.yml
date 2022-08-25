@@ -496,7 +496,6 @@ jobs:
   lighthouse:
     runs-on: ubuntu-latest
     needs: deploy-app-engine
-    concurrency: production_access
     timeout-minutes: 1
     permissions:
       pull-requests: write
@@ -521,7 +520,6 @@ jobs:
 
   e2e-test-mini-prd:
     runs-on: ubuntu-latest
-    concurrency: production_access
     timeout-minutes: 2
     needs:
       - deploy-app-engine
@@ -548,7 +546,6 @@ jobs:
 
   e2e-test-all-prd:
     runs-on: ubuntu-latest
-    concurrency: production_access
     timeout-minutes: 3
     needs:
       - e2e-test-all-docker-compose
