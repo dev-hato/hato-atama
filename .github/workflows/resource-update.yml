@@ -86,7 +86,7 @@ jobs:
         run: go get -u ./...
       - name: go mod tidy
         run: go mod tidy
-      - uses: dev-hato/actions-diff-pr-management@v1.0.3
+      - uses: dev-hato/actions-diff-pr-management@massongit-patch-1
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           branch-name-prefix: ${{ github.event.inputs.base-branch-name }}-update-go
