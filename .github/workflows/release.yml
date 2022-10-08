@@ -390,7 +390,7 @@ jobs:
     needs: docker-compose-build
     strategy:
       matrix:
-        browser: ["chrome", "chromium", "firefox", "electron"]
+        browser: ["chrome", "chromium", "firefox", "electron", "edge"]
     env:
       DOCKER_CONTENT_TRUST: 1
     steps:
@@ -535,7 +535,7 @@ jobs:
       - e2e-test-mini-docker-compose
     strategy:
       matrix:
-        browser: ["chrome", "chromium", "firefox", "electron"]
+        browser: ["chrome", "chromium", "firefox", "electron", "edge"]
     steps:
       - uses: actions/checkout@v3.0.2
       - uses: actions/setup-node@v3.5.0
@@ -565,7 +565,7 @@ jobs:
       - e2e-test-mini-prd
     strategy:
       matrix:
-        browser: ["chrome", "chromium", "firefox", "electron"]
+        browser: ["chrome", "chromium", "firefox", "electron", "edge"]
     if: ${{ github.event_name == 'push' }}
     steps:
       - uses: actions/checkout@v3.0.2
