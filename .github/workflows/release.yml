@@ -354,7 +354,7 @@ jobs:
     needs: docker-compose-build
     strategy:
       matrix:
-        browser: ["chrome", "chromium", "electron"]
+        browser: ["chrome", "chromium", "electron", "edge"]
     env:
       DOCKER_CONTENT_TRUST: 1
     steps:
