@@ -375,8 +375,8 @@ jobs:
       - run: npm ci --prefer-offline
         working-directory: ./test/e2e
       - run: |
-          wget https://ftp.mozilla.org/pub/firefox/releases/99.0/linux-x86_64/en-US/firefox-99.0.tar.bz2
-          tar -jxvf firefox-99.0.tar.bz2
+          wget https://ftp.mozilla.org/pub/firefox/releases/100.0.2/linux-x86_64/en-US/firefox-100.0.2.tar.bz2
+          tar -jxvf firefox-100.0.2.tar.bz2
           echo "PATH=$(pwd)/firefox/:${PATH}" >> $GITHUB_ENV
           firefox --version
       - run: |
