@@ -374,7 +374,11 @@ jobs:
           cache-dependency-path: test/e2e/package-lock.json
       - run: npm ci --prefer-offline
         working-directory: ./test/e2e
-      - run: firefox --version
+      - run: |
+          wget https://ftp.mozilla.org/pub/firefox/releases/99.0/linux-x86_64/en-US/firefox-99.0.tar.bz2
+          tar -jxvf firefox-99.0.tar.bz2
+          echo "PATH=$(pwd)/firefox/:${PATH}" >> $GITHUB_ENV
+          firefox --version
       - run: |
           npm run test -- --env "API_HOST=http://localhost:${FRONTEND_PORT}/" \
                           --spec cypress/e2e/mini/*.cy.js \
