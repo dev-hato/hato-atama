@@ -25,7 +25,7 @@ jobs:
       deploy-files: ${{ steps.changes.outputs.deploy-files }}
     if: github.event_name != 'pull_request' || github.event.action != 'closed'
     steps:
-      - uses: actions/checkout@v3.0.2
+      - uses: actions/checkout@v3.1.0
       - uses: dorny/paths-filter@v2.10.2
         id: changes
         with:
@@ -47,7 +47,7 @@ jobs:
       run:
         working-directory: frontend
     steps:
-      - uses: actions/checkout@v3.0.2
+      - uses: actions/checkout@v3.1.0
       - uses: actions/setup-node@v3.5.0
         with:
           node-version-file: frontend/.node-version
@@ -79,7 +79,7 @@ jobs:
       packages: write
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed' && github.repository == github.event.pull_request.head.repo.full_name)
     steps:
-      - uses: actions/checkout@v3.0.2
+      - uses: actions/checkout@v3.1.0
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
@@ -122,7 +122,7 @@ jobs:
     env:
       DOCKER_CONTENT_TRUST: 1
     steps:
-      - uses: actions/checkout@v3.0.2
+      - uses: actions/checkout@v3.1.0
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
@@ -180,7 +180,7 @@ jobs:
       contents: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@v3.0.2
+      - uses: actions/checkout@v3.1.0
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
@@ -214,7 +214,7 @@ jobs:
       contents: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@v3.0.2
+      - uses: actions/checkout@v3.1.0
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
@@ -296,7 +296,7 @@ jobs:
   update-dockle:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3.0.2
+      - uses: actions/checkout@v3.1.0
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
@@ -316,7 +316,7 @@ jobs:
     env:
       DOCKER_CONTENT_TRUST: 1
     steps:
-      - uses: actions/checkout@v3.0.2
+      - uses: actions/checkout@v3.1.0
       - run: sudo chown -R 1000:1000 server/
       - run: cat .env >>"$GITHUB_ENV"
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
@@ -359,7 +359,7 @@ jobs:
     env:
       DOCKER_CONTENT_TRUST: 1
     steps:
-      - uses: actions/checkout@v3.0.2
+      - uses: actions/checkout@v3.1.0
       - run: cat .env >>"$GITHUB_ENV"
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
         env:
@@ -394,7 +394,7 @@ jobs:
     env:
       DOCKER_CONTENT_TRUST: 1
     steps:
-      - uses: actions/checkout@v3.0.2
+      - uses: actions/checkout@v3.1.0
       - run: cat .env >>"$GITHUB_ENV"
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
         env:
@@ -429,7 +429,7 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v3.0.2
+      - uses: actions/checkout@v3.1.0
       - uses: actions/download-artifact@v3
         with:
           name: frontend
@@ -509,7 +509,7 @@ jobs:
     permissions:
       pull-requests: write
     steps:
-      - uses: actions/checkout@v3.0.2
+      - uses: actions/checkout@v3.1.0
       - run: |
           ARTIFACT_PATH="${{ github.workspace }}/tmp/artifacts"
           echo "ARTIFACT_PATH=${ARTIFACT_PATH}" >> "$GITHUB_ENV"
@@ -537,7 +537,7 @@ jobs:
       matrix:
         browser: ["chrome", "chromium", "firefox", "electron", "edge"]
     steps:
-      - uses: actions/checkout@v3.0.2
+      - uses: actions/checkout@v3.1.0
       - uses: actions/setup-node@v3.5.0
         with:
           node-version-file: test/e2e/.node-version
@@ -568,7 +568,7 @@ jobs:
         browser: ["chrome", "chromium", "firefox", "electron", "edge"]
     if: ${{ github.event_name == 'push' }}
     steps:
-      - uses: actions/checkout@v3.0.2
+      - uses: actions/checkout@v3.1.0
       - uses: actions/setup-node@v3.5.0
         with:
           node-version-file: test/e2e/.node-version
@@ -595,7 +595,7 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v3.0.2
+      - uses: actions/checkout@v3.1.0
       - id: 'auth'
         name: 'Authenticate to GCP'
         uses: google-github-actions/auth@v0.8.1
@@ -616,7 +616,7 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v3.0.2
+      - uses: actions/checkout@v3.1.0
       - name: Get run numbers
         uses: actions/github-script@v6.3.1
         id: get_run_numbers
