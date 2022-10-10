@@ -20,7 +20,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "browserslist": "^4.21.4",
+    "browserslist": "4.21.4",
     "clean-webpack-plugin": "4.0.0",
     "copy-webpack-plugin": "11.0.0",
     "elm-webpack-loader": "8.0.0",
