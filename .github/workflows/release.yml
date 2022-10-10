@@ -389,7 +389,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: make-browserslist
     strategy:
-      matrix: ${needs.make-browserslist.outputs.browsers}
+      matrix: ${{needs.make-browserslist.outputs.browsers}}
     env:
       DOCKER_CONTENT_TRUST: 1
     steps:
@@ -431,7 +431,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: make-browserslist
     strategy:
-      matrix: ${needs.make-browserslist.outputs.browsers}
+      matrix: ${{needs.make-browserslist.outputs.browsers}}
     env:
       DOCKER_CONTENT_TRUST: 1
     steps:
@@ -584,7 +584,7 @@ jobs:
       - e2e-test-mini-docker-compose
       - make-browserslist
     strategy:
-      matrix: ${needs.make-browserslist.outputs.browsers}
+      matrix: ${{needs.make-browserslist.outputs.browsers}}
     steps:
       - uses: actions/checkout@v3.1.0
       - uses: actions/setup-node@v3.5.0
@@ -622,7 +622,7 @@ jobs:
       - e2e-test-mini-prd
       - make-browserslist
     strategy:
-      matrix: ${needs.make-browserslist.outputs.browsers}
+      matrix: ${{needs.make-browserslist.outputs.browsers}}
     if: ${{ github.event_name == 'push' }}
     steps:
       - uses: actions/checkout@v3.1.0
