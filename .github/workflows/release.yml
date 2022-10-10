@@ -364,30 +364,7 @@ jobs:
       - name: Set Browserslist
         id: set_browserslist
         run: |
-          browsers="$(npx browserslist)"
-          chrome_versions="$(echo "${browsers}" | grep chrome | sed -e 's/chrome //' | tr '\n' ',' | sed -e 's/,$//g')"
-          firefox_version="$(for v in $(echo "${browsers}" | grep firefox | sed -e 's/firefox //')
-          do
-            # TODO: https://github.com/cypress-io/cypress/issues/23897 が解消したら全ての場合についてvを入れる
-            if [ 105 -le "${v}" ]
-            then
-              echo 104
-            else
-              echo "${v}"
-            fi
-          done | sort -r | uniq | tr '\n' ',' | sed -e 's/,$//g')"
-          cat <<-EOF | tr -d '\n'
-          ::set-output name=browserslist::[
-            { browser_name: "chrome", browser_version: [${chrome_versions}] },
-            { browser_name: "chromium", browser_version: [${chrome_versions}] },
-            { browser_name: "firefox", browser_version: [${firefox_version}] },
-            { browser_name: "electron" },
-            {
-              browser_name: "edge",
-              browser_version: [$(echo "${browsers}" | grep edge | sed -e 's/edge //' | tr '\n' ',' | sed -e 's/,$//g')]
-            }
-          ]
-          EOF
+          echo "::set-output name=browserslist::[$(npx browserslist | grep -e chrome -e chromium -e firefox -e electron -e edge | sed -e 's/^\(.*\) \(.*\)/{browser_name: "\1", browser_version: \2}/' | tr '\n' ',' | sed -e 's/,$//g')]"
 
   e2e-test-mini-docker-compose:
     runs-on: ubuntu-latest
