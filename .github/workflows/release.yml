@@ -372,7 +372,7 @@ jobs:
               echo "${v}"
             fi
           done | sort -r | uniq | tr '\n' ',' | sed -e 's/,$//g')"
-          cat <<-EOF
+          cat <<-EOF | tr -d '\n'
           ::set-output name=browsers::[
             { browser_name: "chrome", browser_version: [${chrome_versions}] },
             { browser_name: "chromium", browser_version: [${chrome_versions}] },
