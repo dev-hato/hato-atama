@@ -15,7 +15,6 @@ on:
 env:
   GCP_WORKLOAD_IDENTITY_PROVIDER: 'projects/765091727073/locations/global/workloadIdentityPools/hato-atama-workload-identity/providers/github'
   GCP_SERVICE_ACCOUNT: 'actions-deploy@hato-atama.iam.gserviceaccount.com'
-  FIREFOX_VERSION: 104.0.2
 
 jobs:
   # App Engineにデプロイされるファイルの差分の有無を判定する
@@ -350,12 +349,47 @@ jobs:
             eval "${cmd}"
           done
 
-  e2e-test-mini-docker-compose:
+  make-browserslist:
     runs-on: ubuntu-latest
     needs: docker-compose-build
+    steps:
+      - uses: actions/checkout@v3.0.2
+      - uses: actions/setup-node@v3.5.0
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - run: npm ci --prefer-offline
+      - run: |
+          browsers="$(npx browserslist)"
+          chrome_versions="$(echo "${browsers}" | grep chrome | sed -e 's/chrome //' | tr '\n' ',' | sed -e 's/,$//g')"
+          firefox_version="$(for v in $(echo "${browsers}" | grep firefox | sed -e 's/firefox //')
+          do
+            # TODO: https://github.com/cypress-io/cypress/issues/23897 が解消したら全ての場合についてvを入れる
+            if [ 105 -le "${v}" ]
+            then
+              echo 104
+            else
+              echo "${v}"
+            fi
+          done | sort -r | uniq | tr '\n' ',' | sed -e 's/,$//g')"
+          cat <<-EOF
+          ::set-output name=browsers::[
+            { browser_name: "chrome", browser_version: [${chrome_versions}] },
+            { browser_name: "chromium", browser_version: [${chrome_versions}] },
+            { browser_name: "firefox", browser_version: [${firefox_version}] },
+            { browser_name: "electron" },
+            {
+              browser_name: "edge",
+              browser_version: [$(echo "${browsers}" | grep edge | sed -e 's/edge //' | tr '\n' ',' | sed -e 's/,$//g')]
+            }
+          ]
+          EOF
+
+  e2e-test-mini-docker-compose:
+    runs-on: ubuntu-latest
+    needs: make-browserslist
     strategy:
-      matrix:
-        browser: ["chrome", "chromium", "firefox", "electron", "edge"]
+      matrix: ${needs.make-browserslist.outputs.browsers}
     env:
       DOCKER_CONTENT_TRUST: 1
     steps:
@@ -375,22 +409,29 @@ jobs:
           cache-dependency-path: test/e2e/package-lock.json
       - run: npm ci --prefer-offline
         working-directory: ./test/e2e
+      - uses: browser-actions/setup-chrome@v0.0.0
+        if: matrix.browser == 'chrome' || matrix.browser == 'chromium'
+        with:
+          chrome-version: ${{ matrix.browser_version }}
       - uses: browser-actions/setup-firefox@v0.0.0
         if: matrix.browser == 'firefox'
         with:
-          firefox-version: ${{ env.FIREFOX_VERSION }}
+          firefox-version: ${{ matrix.browser_version }}
+      - uses: browser-actions/setup-edge@v0.0.0
+        if: matrix.browser == 'edge'
+        with:
+          edge-version: ${{ matrix.browser_version }}
       - run: |
           npm run test -- --env "API_HOST=http://localhost:${FRONTEND_PORT}/" \
                           --spec cypress/e2e/mini/*.cy.js \
-                          --browser ${{ matrix.browser }}
+                          --browser ${{ matrix.browser_name }}
         working-directory: ./test/e2e
 
   e2e-test-all-docker-compose:
     runs-on: ubuntu-latest
-    needs: docker-compose-build
+    needs: make-browserslist
     strategy:
-      matrix:
-        browser: ["chrome", "chromium", "firefox", "electron", "edge"]
+      matrix: ${needs.make-browserslist.outputs.browsers}
     env:
       DOCKER_CONTENT_TRUST: 1
     steps:
@@ -410,13 +451,21 @@ jobs:
           cache-dependency-path: test/e2e/package-lock.json
       - run: npm ci --prefer-offline
         working-directory: ./test/e2e
+      - uses: browser-actions/setup-chrome@v0.0.0
+        if: matrix.browser == 'chrome' || matrix.browser == 'chromium'
+        with:
+          chrome-version: ${{ matrix.browser_version }}
       - uses: browser-actions/setup-firefox@v0.0.0
         if: matrix.browser == 'firefox'
         with:
-          firefox-version: ${{ env.FIREFOX_VERSION }}
+          firefox-version: ${{ matrix.browser_version }}
+      - uses: browser-actions/setup-edge@v0.0.0
+        if: matrix.browser == 'edge'
+        with:
+          edge-version: ${{ matrix.browser_version }}
       - run: |
           ENV="API_HOST=http://localhost:${FRONTEND_PORT}/"
-          npm run test -- --env "${ENV}" --browser ${{ matrix.browser }}
+          npm run test -- --env "${ENV}" --browser ${{ matrix.browser_name }}
         working-directory: ./test/e2e
 
   deploy-app-engine:
@@ -533,9 +582,9 @@ jobs:
     needs:
       - deploy-app-engine
       - e2e-test-mini-docker-compose
+      - make-browserslist
     strategy:
-      matrix:
-        browser: ["chrome", "chromium", "firefox", "electron", "edge"]
+      matrix: ${needs.make-browserslist.outputs.browsers}
     steps:
       - uses: actions/checkout@v3.1.0
       - uses: actions/setup-node@v3.5.0
@@ -545,16 +594,24 @@ jobs:
           cache-dependency-path: test/e2e/package-lock.json
       - run: npm ci --prefer-offline
         working-directory: ./test/e2e
+      - uses: browser-actions/setup-chrome@v0.0.0
+        if: matrix.browser == 'chrome' || matrix.browser == 'chromium'
+        with:
+          chrome-version: ${{ matrix.browser_version }}
       - uses: browser-actions/setup-firefox@v0.0.0
         if: matrix.browser == 'firefox'
         with:
-          firefox-version: ${{ env.FIREFOX_VERSION }}
+          firefox-version: ${{ matrix.browser_version }}
+      - uses: browser-actions/setup-edge@v0.0.0
+        if: matrix.browser == 'edge'
+        with:
+          edge-version: ${{ matrix.browser_version }}
       - run: |
           API_HOST="https://"
           API_HOST+="v${GITHUB_RUN_NUMBER}-dot-hato-atama.an.r.appspot.com"
           npm run test -- --env "API_HOST=${API_HOST}" \
                           --spec cypress/e2e/mini/*.cy.js \
-                          --browser ${{ matrix.browser }}
+                          --browser ${{ matrix.browser_name }}
         working-directory: ./test/e2e
 
   e2e-test-all-prd:
@@ -563,9 +620,9 @@ jobs:
     needs:
       - e2e-test-all-docker-compose
       - e2e-test-mini-prd
+      - make-browserslist
     strategy:
-      matrix:
-        browser: ["chrome", "chromium", "firefox", "electron", "edge"]
+      matrix: ${needs.make-browserslist.outputs.browsers}
     if: ${{ github.event_name == 'push' }}
     steps:
       - uses: actions/checkout@v3.1.0
@@ -576,14 +633,22 @@ jobs:
           cache-dependency-path: test/e2e/package-lock.json
       - run: npm ci --prefer-offline
         working-directory: ./test/e2e
+      - uses: browser-actions/setup-chrome@v0.0.0
+        if: matrix.browser == 'chrome' || matrix.browser == 'chromium'
+        with:
+          chrome-version: ${{ matrix.browser_version }}
       - uses: browser-actions/setup-firefox@v0.0.0
         if: matrix.browser == 'firefox'
         with:
-          firefox-version: ${{ env.FIREFOX_VERSION }}
+          firefox-version: ${{ matrix.browser_version }}
+      - uses: browser-actions/setup-edge@v0.0.0
+        if: matrix.browser == 'edge'
+        with:
+          edge-version: ${{ matrix.browser_version }}
       - run: |
           ENV="API_HOST="
           ENV+="https://v${GITHUB_RUN_NUMBER}-dot-hato-atama.an.r.appspot.com"
-          npm run test -- --env "${ENV}" --browser ${{ matrix.browser }}
+          npm run test -- --env "${ENV}" --browser ${{ matrix.browser_name }}
         working-directory: ./test/e2e
 
   migrating-traffic:
