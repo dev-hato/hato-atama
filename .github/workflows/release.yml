@@ -364,7 +364,9 @@ jobs:
       - name: Set Browserslist
         id: set_browserslist
         run: |
-          echo "::set-output name=browserslist::[$(npx browserslist | grep -e chrome -e firefox | sed -e 's/\(firefox.*\)/\1.0/' | sed -e 's/^\(.*\) \(.*\)/{browser_name: "\1", browser_version: \2}/' | tr '\n' ','){browser_name: \"edge\"},{browser_name: \"electron\"}]"
+          browserslist="[$(npx browserslist | grep -e chrome -e firefox | sed -e 's/\(firefox.*\)/\1.0/' | sed -e 's/^\(.*\) \(.*\)/{browser_name: "\1", browser_version: "\2"}/' | tr '\n' ','){browser_name: \"edge\"},{browser_name: \"electron\"}]"
+          echo "${browserslist}"
+          echo "::set-output name=browserslist::${browserslist}"
 
   e2e-test-mini-docker-compose:
     runs-on: ubuntu-latest
