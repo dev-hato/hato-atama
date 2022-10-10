@@ -368,7 +368,12 @@ jobs:
       - name: Set Browserslist
         id: set_browserslist
         run: |
-          browserslist="[$(npx browserslist | grep -e chrome -e firefox | sed -e 's/\(firefox.*\)/\1.0/' | sed -e 's/^\(.*\) \(.*\)/{browser_name: "\1", browser_version: "\2"}/' | tr '\n' ','){browser_name: \"edge\"},{browser_name: \"electron\"}]"
+          base_data="$(npx browserslist)"
+          browserslist="$(echo "${base_data}" | grep -e chrome -e firefox | sed -e 's/\(firefox.*\)/\1.0/' | sed -e 's/^\([^ ]*\) \(.*\)/{browser_name: "\1", browser_version: "\2"}/')"
+          non_version_browsers="$(echo "${base_data}" | grep edge)"
+          non_version_browsers+="\nelectron"
+          browserslist+="\n$(echo "${non_version_browsers}" | sed -e 's/^\([^ ]*\).*/{browser_name: "\1"}/')"
+          browserslist="[$(echo "${browserslist}" | sort | uniq | tr '\n' ',' | sed -e 's/,$//')]"
           echo "${browserslist}"
           echo "::set-output name=browserslist::${browserslist}"
 
