@@ -364,7 +364,7 @@ jobs:
       - name: Set Browserslist
         id: set_browserslist
         run: |
-          echo "::set-output name=browserslist::[$(npx browserslist | grep -e chrome -e chromium -e firefox -e electron -e edge | sed -e 's/^\(.*\) \(.*\)/{browser_name: "\1", browser_version: \2}/' | tr '\n' ',' | sed -e 's/,$//g')]"
+          echo "::set-output name=browserslist::[$(npx browserslist | grep -e chrome -e firefox -e edge | sed -e 's/^\(.*\) \(.*\)/{browser_name: "\1", browser_version: \2}/' | tr '\n' ','){browser_name: \"electron\"}]"
 
   e2e-test-mini-docker-compose:
     runs-on: ubuntu-latest
@@ -392,13 +392,13 @@ jobs:
       - run: npm ci --prefer-offline
         working-directory: ./test/e2e
       - uses: browser-actions/setup-chrome@v0.0.0
-        if: matrix.browser_name == 'chrome' || matrix.browser_name == 'chromium'
+        if: matrix.browser_name == 'chrome'
         with:
           chrome-version: ${{ matrix.browser_version }}
       - uses: browser-actions/setup-firefox@v0.0.0
         if: matrix.browser_name == 'firefox'
         with:
-          firefox-version: ${{ matrix.browser_version }}
+          firefox-version: ${{ matrix.browser_version }}.0
       - uses: browser-actions/setup-edge@v0.0.0
         if: matrix.browser_name == 'edge'
         with:
@@ -435,7 +435,7 @@ jobs:
       - run: npm ci --prefer-offline
         working-directory: ./test/e2e
       - uses: browser-actions/setup-chrome@v0.0.0
-        if: matrix.browser_name == 'chrome' || matrix.browser_name == 'chromium'
+        if: matrix.browser_name == 'chrome'
         with:
           chrome-version: ${{ matrix.browser_version }}
       - uses: browser-actions/setup-firefox@v0.0.0
@@ -579,7 +579,7 @@ jobs:
       - run: npm ci --prefer-offline
         working-directory: ./test/e2e
       - uses: browser-actions/setup-chrome@v0.0.0
-        if: matrix.browser_name == 'chrome' || matrix.browser_name == 'chromium'
+        if: matrix.browser_name == 'chrome'
         with:
           chrome-version: ${{ matrix.browser_version }}
       - uses: browser-actions/setup-firefox@v0.0.0
@@ -619,7 +619,7 @@ jobs:
       - run: npm ci --prefer-offline
         working-directory: ./test/e2e
       - uses: browser-actions/setup-chrome@v0.0.0
-        if: matrix.browser_name == 'chrome' || matrix.browser_name == 'chromium'
+        if: matrix.browser_name == 'chrome'
         with:
           chrome-version: ${{ matrix.browser_version }}
       - uses: browser-actions/setup-firefox@v0.0.0
