@@ -415,15 +415,15 @@ jobs:
       - run: npm ci --prefer-offline
         working-directory: ./test/e2e
       - uses: browser-actions/setup-chrome@v0.0.0
-        if: matrix.browser == 'chrome' || matrix.browser == 'chromium'
+        if: matrix.browser_name == 'chrome' || matrix.browser_name == 'chromium'
         with:
           chrome-version: ${{ matrix.browser_version }}
       - uses: browser-actions/setup-firefox@v0.0.0
-        if: matrix.browser == 'firefox'
+        if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
       - uses: browser-actions/setup-edge@v0.0.0
-        if: matrix.browser == 'edge'
+        if: matrix.browser_name == 'edge'
         with:
           edge-version: ${{ matrix.browser_version }}
       - run: |
@@ -458,15 +458,15 @@ jobs:
       - run: npm ci --prefer-offline
         working-directory: ./test/e2e
       - uses: browser-actions/setup-chrome@v0.0.0
-        if: matrix.browser == 'chrome' || matrix.browser == 'chromium'
+        if: matrix.browser_name == 'chrome' || matrix.browser_name == 'chromium'
         with:
           chrome-version: ${{ matrix.browser_version }}
       - uses: browser-actions/setup-firefox@v0.0.0
-        if: matrix.browser == 'firefox'
+        if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
       - uses: browser-actions/setup-edge@v0.0.0
-        if: matrix.browser == 'edge'
+        if: matrix.browser_name == 'edge'
         with:
           edge-version: ${{ matrix.browser_version }}
       - run: |
@@ -602,15 +602,15 @@ jobs:
       - run: npm ci --prefer-offline
         working-directory: ./test/e2e
       - uses: browser-actions/setup-chrome@v0.0.0
-        if: matrix.browser == 'chrome' || matrix.browser == 'chromium'
+        if: matrix.browser_name == 'chrome' || matrix.browser_name == 'chromium'
         with:
           chrome-version: ${{ matrix.browser_version }}
       - uses: browser-actions/setup-firefox@v0.0.0
-        if: matrix.browser == 'firefox'
+        if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
       - uses: browser-actions/setup-edge@v0.0.0
-        if: matrix.browser == 'edge'
+        if: matrix.browser_name == 'edge'
         with:
           edge-version: ${{ matrix.browser_version }}
       - run: |
@@ -642,15 +642,15 @@ jobs:
       - run: npm ci --prefer-offline
         working-directory: ./test/e2e
       - uses: browser-actions/setup-chrome@v0.0.0
-        if: matrix.browser == 'chrome' || matrix.browser == 'chromium'
+        if: matrix.browser_name == 'chrome' || matrix.browser_name == 'chromium'
         with:
           chrome-version: ${{ matrix.browser_version }}
       - uses: browser-actions/setup-firefox@v0.0.0
-        if: matrix.browser == 'firefox'
+        if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
       - uses: browser-actions/setup-edge@v0.0.0
-        if: matrix.browser == 'edge'
+        if: matrix.browser_name == 'edge'
         with:
           edge-version: ${{ matrix.browser_version }}
       - run: |
