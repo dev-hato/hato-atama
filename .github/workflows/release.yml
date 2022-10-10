@@ -364,7 +364,7 @@ jobs:
       - name: Set Browserslist
         id: set_browserslist
         run: |
-          echo "::set-output name=browserslist::[$(npx browserslist | grep -e chrome -e firefox | sed -e 's/^\(.*\) \(.*\)/{browser_name: "\1", browser_version: \2}/' | tr '\n' ','){browser_name: \"edge\"},{browser_name: \"electron\"}]"
+          echo "::set-output name=browserslist::[$(npx browserslist | grep -e chrome -e firefox | sed -e 's/\(firefox.*\)/\1.0/' | sed -e 's/^\(.*\) \(.*\)/{browser_name: "\1", browser_version: \2}/' | tr '\n' ','){browser_name: \"edge\"},{browser_name: \"electron\"}]"
 
   e2e-test-mini-docker-compose:
     runs-on: ubuntu-latest
@@ -398,7 +398,7 @@ jobs:
       - uses: browser-actions/setup-firefox@v0.0.0
         if: matrix.browser_name == 'firefox'
         with:
-          firefox-version: ${{ matrix.browser_version }}.0
+          firefox-version: ${{ matrix.browser_version }}
       - run: |
           npm run test -- --env "API_HOST=http://localhost:${FRONTEND_PORT}/" \
                           --spec cypress/e2e/mini/*.cy.js \
@@ -437,7 +437,7 @@ jobs:
       - uses: browser-actions/setup-firefox@v0.0.0
         if: matrix.browser_name == 'firefox'
         with:
-          firefox-version: ${{ matrix.browser_version }}.0
+          firefox-version: ${{ matrix.browser_version }}
       - run: |
           ENV="API_HOST=http://localhost:${FRONTEND_PORT}/"
           npm run test -- --env "${ENV}" --browser ${{ matrix.browser_name }}
@@ -577,7 +577,7 @@ jobs:
       - uses: browser-actions/setup-firefox@v0.0.0
         if: matrix.browser_name == 'firefox'
         with:
-          firefox-version: ${{ matrix.browser_version }}.0
+          firefox-version: ${{ matrix.browser_version }}
       - run: |
           API_HOST="https://"
           API_HOST+="v${GITHUB_RUN_NUMBER}-dot-hato-atama.an.r.appspot.com"
@@ -613,7 +613,7 @@ jobs:
       - uses: browser-actions/setup-firefox@v0.0.0
         if: matrix.browser_name == 'firefox'
         with:
-          firefox-version: ${{ matrix.browser_version }}.0
+          firefox-version: ${{ matrix.browser_version }}
       - run: |
           ENV="API_HOST="
           ENV+="https://v${GITHUB_RUN_NUMBER}-dot-hato-atama.an.r.appspot.com"
