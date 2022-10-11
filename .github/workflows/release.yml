@@ -197,7 +197,7 @@ jobs:
           cache-dependency-path: ${{ matrix.directory }}/package-lock.json
       - run: npm install
       - if: matrix.directory == 'frontend'
-        run: npx browserslist@latest --update-db
+        run: npx update-browserslist-db
       - uses: dev-hato/actions-diff-pr-management@v1.0.5
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
