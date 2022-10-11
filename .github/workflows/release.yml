@@ -405,7 +405,7 @@ jobs:
       - uses: browser-actions/setup-chrome@v0.0.0
         if: matrix.browser_name == 'chrome'
         with:
-          chrome-version: ${{ matrix.browser_version }}
+          chromium-version: ${{ matrix.browser_version }}
       - uses: browser-actions/setup-firefox@v0.0.0
         if: matrix.browser_name == 'firefox'
         with:
@@ -444,7 +444,7 @@ jobs:
       - uses: browser-actions/setup-chrome@v0.0.0
         if: matrix.browser_name == 'chrome'
         with:
-          chrome-version: ${{ matrix.browser_version }}
+          chromium-version: ${{ matrix.browser_version }}
       - uses: browser-actions/setup-firefox@v0.0.0
         if: matrix.browser_name == 'firefox'
         with:
@@ -584,7 +584,7 @@ jobs:
       - uses: browser-actions/setup-chrome@v0.0.0
         if: matrix.browser_name == 'chrome'
         with:
-          chrome-version: ${{ matrix.browser_version }}
+          chromium-version: ${{ matrix.browser_version }}
       - uses: browser-actions/setup-firefox@v0.0.0
         if: matrix.browser_name == 'firefox'
         with:
@@ -620,7 +620,7 @@ jobs:
       - uses: browser-actions/setup-chrome@v0.0.0
         if: matrix.browser_name == 'chrome'
         with:
-          chrome-version: ${{ matrix.browser_version }}
+          chromium-version: ${{ matrix.browser_version }}
       - uses: browser-actions/setup-firefox@v0.0.0
         if: matrix.browser_name == 'firefox'
         with:
