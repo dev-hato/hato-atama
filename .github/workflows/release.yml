@@ -370,6 +370,7 @@ jobs:
         run: |
           base_data="$(npx browserslist)"
           versioned_browsers="$(echo "${base_data}" | grep firefox | sed -e 's/\(firefox.*\)/\1.0/')"
+          # shellcheck disable=SC2001
           browserslist="$(echo "${versioned_browsers}" | sed -e 's/^\([^ ]*\) \(.*\)/{browser_name: "\1", browser_version: "\2"}/')"
           non_versioned_browsers="$(echo "${base_data}" | grep -e chrome -e edge)\nelectron"
           browserslist+="\n$(echo -e "${non_versioned_browsers}" | sed -e 's/^\([^ ]*\).*/{browser_name: "\1"}/')"
