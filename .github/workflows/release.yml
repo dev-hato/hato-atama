@@ -196,7 +196,7 @@ jobs:
           cache-dependency-path: ${{ matrix.directory }}/package-lock.json
       - run: npm install
       - if: matrix.directory == 'frontend'
-        run: npx browserslist@latest --update-db
+        run: npx update-browserslist-db
       - uses: dev-hato/actions-diff-pr-management@v1.0.5
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
@@ -783,3 +783,7 @@ jobs:
         run: exit 0
       - if: needs.release-complete-check.result != 'success' || (github.repository == 'dev-hato/hato-atama' && needs.check-deploy-diff.outputs.deploy-files == 'true' && needs.remove-app-engine-past-versions.result != 'success')
         run: exit 1
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
