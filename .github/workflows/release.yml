@@ -402,7 +402,7 @@ jobs:
           cache-dependency-path: test/e2e/package-lock.json
       - run: npm ci --prefer-offline
         working-directory: ./test/e2e
-      - uses: browser-actions/setup-chrome@master
+      - uses: massongit/setup-chrome@massongit-patch-1
         if: matrix.browser_name == 'chrome'
         with:
           chrome-version: ${{ matrix.browser_version }}
@@ -441,7 +441,7 @@ jobs:
           cache-dependency-path: test/e2e/package-lock.json
       - run: npm ci --prefer-offline
         working-directory: ./test/e2e
-      - uses: browser-actions/setup-chrome@master
+      - uses: massongit/setup-chrome@massongit-patch-1
         if: matrix.browser_name == 'chrome'
         with:
           chrome-version: ${{ matrix.browser_version }}
@@ -581,7 +581,7 @@ jobs:
           cache-dependency-path: test/e2e/package-lock.json
       - run: npm ci --prefer-offline
         working-directory: ./test/e2e
-      - uses: browser-actions/setup-chrome@master
+      - uses: massongit/setup-chrome@massongit-patch-1
         if: matrix.browser_name == 'chrome'
         with:
           chrome-version: ${{ matrix.browser_version }}
@@ -617,7 +617,7 @@ jobs:
           cache-dependency-path: test/e2e/package-lock.json
       - run: npm ci --prefer-offline
         working-directory: ./test/e2e
-      - uses: browser-actions/setup-chrome@master
+      - uses: massongit/setup-chrome@massongit-patch-1
         if: matrix.browser_name == 'chrome'
         with:
           chrome-version: ${{ matrix.browser_version }}
