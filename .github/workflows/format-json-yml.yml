@@ -28,3 +28,7 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           repo-name: dev-hato/hato-atama
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true

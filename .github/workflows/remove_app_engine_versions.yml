@@ -92,3 +92,7 @@ jobs:
         run: |
           gcloud app versions delete --service=default \
                                      ${{steps.get_run_numbers.outputs.result}}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
