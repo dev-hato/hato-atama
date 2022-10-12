@@ -2,15 +2,15 @@ server {
     listen ${FRONTEND_PORT};
 
     location ^~ /api/ {
-        proxy_pass http://server:${SERVER_PORT}/api/;
+        proxy_pass http://server:${PORT}/api/;
     }
 
     location ^~ /l/ {
-        proxy_pass http://server:${SERVER_PORT}/l/;
+        proxy_pass http://server:${PORT}/l/;
     }
 
     location ^~ /ping/ {
-        proxy_pass http://server:${SERVER_PORT}/ping/;
+        proxy_pass http://server:${PORT}/ping/;
     }
 
     location ~ (.*/)*([^/]*)$ {
