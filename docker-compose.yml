@@ -34,9 +34,9 @@ services:
     environment:
       PROJECT_ID: app
       DATASTORE_EMULATOR_HOST: "gcloud_datastore:${GCLOUD_DATASOURCE_PORT}"
-      SERVER_PORT: ${SERVER_PORT}
+      PORT: ${PORT}
     ports:
-      - "${SERVER_PORT}:${SERVER_PORT}"
+      - "${PORT}:${PORT}"
     depends_on:
       gcloud_datastore:
         condition: service_healthy
@@ -51,7 +51,7 @@ services:
           - linux/amd64
           - linux/arm64
     environment:
-      SERVER_PORT: ${SERVER_PORT}
+      PORT: ${PORT}
       FRONTEND_PORT: ${FRONTEND_PORT}
     ports:
       - "${FRONTEND_PORT}:${FRONTEND_PORT}"

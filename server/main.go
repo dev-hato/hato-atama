@@ -269,7 +269,7 @@ func main() {
 		os.Exit(1)
 	}
 	e := createServer()
-	port := os.Getenv("SERVER_PORT")
+	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
