@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3.1.0
       - name: Get run numbers
-        uses: actions/github-script@v6.3.2
+        uses: actions/github-script@v6.3.3
         id: get_run_numbers
         env:
           HEAD_REF: ${{github.event.pull_request.head.ref}}
@@ -86,7 +86,7 @@ jobs:
         with:
           workload_identity_provider: 'projects/765091727073/locations/global/workloadIdentityPools/hato-atama-workload-identity/providers/github'
           service_account: 'actions-deploy@hato-atama.iam.gserviceaccount.com'
-      - uses: google-github-actions/setup-gcloud@v0.6.0
+      - uses: google-github-actions/setup-gcloud@v0.6.1
         if: ${{ steps.get_run_numbers.outputs.result != '' }}
       - if: ${{ steps.get_run_numbers.outputs.result != '' }}
         run: |
