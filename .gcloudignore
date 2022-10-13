@@ -12,6 +12,7 @@
 !/server/
 /server/*
 !/server/main.go
+!/server/settings/*
 
 # frontend
 !/frontend/dist/*
