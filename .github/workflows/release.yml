@@ -509,7 +509,7 @@ jobs:
       pull-requests: write
     if: ${{ github.event_name == 'pull_request' }}
     steps:
-      - uses: actions/github-script@v6.3.2
+      - uses: actions/github-script@v6.3.3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
@@ -649,7 +649,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3.1.0
       - name: Get run numbers
-        uses: actions/github-script@v6.3.2
+        uses: actions/github-script@v6.3.3
         id: get_run_numbers
         env:
           HEAD_REF: master
