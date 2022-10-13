@@ -15,4 +15,4 @@
 !/server/settings/**
 
 # frontend
-!/frontend/dist/*
+!/frontend/dist/**
