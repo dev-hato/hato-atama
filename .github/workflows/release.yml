@@ -37,6 +37,7 @@ jobs:
               - 'app.yaml'
               - 'go.mod'
               - 'go.sum'
+              - '.gcloudignore'
 
   build-frontend:
     runs-on: ubuntu-latest
