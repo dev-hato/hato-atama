@@ -9,7 +9,9 @@
 !app.yaml
 
 # server
+!/server/
+/server/*
 !/server/main.go
 
 # frontend
-!/frontend/dist/**
+!/frontend/dist/*
