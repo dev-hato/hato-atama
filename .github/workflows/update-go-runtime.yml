@@ -27,7 +27,7 @@ jobs:
           npm ci --prefer-offline
       - name: Get latest App Engine support version
         id: get_latest_app_engine_support_version
-        uses: actions/github-script@v6.3.2
+        uses: actions/github-script@v6.3.3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           result-encoding: string
