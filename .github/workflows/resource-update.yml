@@ -77,7 +77,7 @@ jobs:
           DOCKER_CMD="go version | awk '{print \$3}' | sed -e 's/^go//g'"
           go_version=$(docker compose -f docker-compose.yml -f dev.docker-compose.yml run server sh -c "${DOCKER_CMD}")
           echo "Go version:" "${go_version}"
-          echo "go_version=${go_version}" >> $GITHUB_OUTPUT
+          echo "go_version=${go_version}" >> "${GITHUB_OUTPUT}"
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
