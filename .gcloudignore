@@ -6,6 +6,7 @@
 # current
 !go.mod
 !go.sum
+!app.yaml
 
 # server
 !/server/main.go
