@@ -1,4 +1,4 @@
-FROM node:18.10.0-bullseye-slim as build
+FROM node:18.11.0-bullseye-slim as build
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 ARG TARGETPLATFORM
