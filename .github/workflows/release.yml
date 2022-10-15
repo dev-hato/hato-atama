@@ -142,7 +142,7 @@ jobs:
           CMD="go version | awk '{print \$3}' | sed -e 's/^go//g'"
           go_version=$(docker compose -f docker-compose.yml -f dev.docker-compose.yml run server sh -c "${CMD}")
           echo "Go version:" "${go_version}"
-          echo "::set-output name=go_version::${go_version}"
+          echo "go_version=${go_version}" >> "${GITHUB_OUTPUT}"
       - name: Set up Go
         uses: actions/setup-go@v3
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
@@ -189,7 +189,7 @@ jobs:
         run: |
           BRANCH_NAME="$(echo '${{ matrix.directory }}' | sed -e 's:/:-:g')"
           BRANCH_NAME="${BRANCH_NAME//\./root}"
-          echo "::set-output name=branch_name::${BRANCH_NAME}"
+          echo "branch_name=${BRANCH_NAME}" >> "${GITHUB_OUTPUT}"
       - uses: actions/setup-node@v3.5.1
         with:
           node-version-file: ${{ matrix.directory }}/.node-version
@@ -229,8 +229,8 @@ jobs:
           npm_version=${result[1]}
           echo "Node.js version:" "${node_version}"
           echo "npm version:" "${npm_version}"
-          echo "::set-output name=node_version::${node_version}"
-          echo "::set-output name=npm_version::${npm_version}"
+          echo "node_version=${node_version}" >> "${GITHUB_OUTPUT}"
+          echo "npm_version=${npm_version}" >> "${GITHUB_OUTPUT}"
       - run: cat .env >>"$GITHUB_ENV"
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
         env:
@@ -254,8 +254,8 @@ jobs:
           npm_version=${result[1]}
           echo "Node.js version:" "${node_version}"
           echo "npm version:" "${npm_version}"
-          echo "::set-output name=node_version::${node_version}"
-          echo "::set-output name=npm_version::${npm_version}"
+          echo "node_version=${node_version}" >> "${GITHUB_OUTPUT}"
+          echo "npm_version=${npm_version}" >> "${GITHUB_OUTPUT}"
       - name: Update versions
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         run: |
@@ -373,7 +373,7 @@ jobs:
           # shellcheck disable=SC2001
           browserslist="[$(echo "${browsers}" | sed -e 's/^\([^ ]*\) \(.*\)/{browser_name: "\1", browser_version: "\2"}/' | tr '\n' ',' | sed -e 's/,$//')]"
           echo "${browserslist}"
-          echo "::set-output name=browserslist::${browserslist}"
+          echo "browserslist=${browserslist}" >> "${GITHUB_OUTPUT}"
 
   e2e-test-mini-docker-compose:
     runs-on: ubuntu-latest
