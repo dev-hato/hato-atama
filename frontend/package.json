@@ -30,7 +30,7 @@
     "webpack-dev-server": "4.11.1"
   },
   "engines": {
-    "node": "^16.18.0 || ^18.11.0",
-    "npm": "^8.19.2"
+    "node": "^16.18.0 || ^#1 [hato-atama-serer internal] load build definition from Dockerfile",
+    "npm": "^8.19.2 || ^#1 transferring dockerfile: 1.24kB 0.0s done"
   }
 }
