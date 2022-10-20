@@ -16,4 +16,6 @@ services:
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend-dev:${TAG_NAME:-latest}
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend-dev
+        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend-base:${TAG_NAME:-latest}
+        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend-base
     image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend:${TAG_NAME:-latest}

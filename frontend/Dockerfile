@@ -1,4 +1,4 @@
-FROM node:18.11.0-bullseye-slim as build
+FROM node:18.11.0-bullseye-slim as base
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 ARG TARGETPLATFORM
@@ -25,6 +25,8 @@ RUN if [ "${TARGETPLATFORM}" != "linux/arm64" ]; then \
 RUN find / -type f -perm /u+s -ignore_readdir_race -exec chmod u-s {} \; \
     && find / -type f -perm /g+s -ignore_readdir_race -exec chmod g-s {} \; \
     && chown -R node:node /usr/src/app
+
+FROM base as build
 
 USER node
 
