@@ -6,7 +6,7 @@ ARG TARGETPLATFORM
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends ca-certificates curl　apt-utils \
+    && apt-get install -y --no-install-recommends ca-certificates curl \
     && rm -rf /var/lib/apt/lists
 
 COPY elm/elm_arm64 /usr/local/bin/elm
