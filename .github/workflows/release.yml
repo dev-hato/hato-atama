@@ -383,7 +383,7 @@ jobs:
             elif [[ "${image_name}" =~ "frontend:" ]]; then
               cmd+="-ak NGINX_GPGKEY "
             elif [[ "${image_name}" =~ "frontend-base" ]]; then
-              cmd:="-i CIS-DI-0006 "
+              cmd+="-i CIS-DI-0006 "
             fi
 
             cmd+="${image_name}"
