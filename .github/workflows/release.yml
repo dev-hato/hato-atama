@@ -378,7 +378,7 @@ jobs:
               if [[ "${image_name}" =~ "gcloud_datastore" ]]; then
                 cmd+="-af settings.py -i CIS-DI-0001 "
               else
-                cmd+="-af credentials "
+                cmd+="-af credentials --timeout 600s "
               fi
             elif [[ "${image_name}" =~ "frontend:" ]]; then
               cmd+="-ak NGINX_GPGKEY "
