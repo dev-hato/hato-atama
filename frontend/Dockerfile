@@ -26,9 +26,9 @@ RUN find / -type f -perm /u+s -ignore_readdir_race -exec chmod u-s {} \; \
     && find / -type f -perm /g+s -ignore_readdir_race -exec chmod g-s {} \; \
     && chown -R node:node /usr/src/app
 
-FROM base as build
-
 USER node
+
+FROM base as build
 
 COPY frontend/.npmrc .
 COPY frontend/package*.json ./
