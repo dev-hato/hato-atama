@@ -276,7 +276,7 @@ jobs:
       - if: github.event_name != 'pull_request' || github.event.action != 'closed'
         run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
       - if: github.event_name != 'pull_request' || github.event.action != 'closed'
-        run: docker compose -f docker-compose.yml -f base.docker-compose.yml pull
+        run: docker compose -f docker-compose.yml -f base.docker-compose.yml pull frontend
         env:
           DOCKER_CONTENT_TRUST: 1
       - name: Get Node.js version
