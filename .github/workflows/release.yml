@@ -349,7 +349,11 @@ jobs:
       - update-dockle
     strategy:
       matrix:
-        docker_compose_command: ["base.docker-compose.yml", "dev.docker-compose.yml", "staging.docker-compose.yml"]
+        include:
+          - docker_compose_file_name: "base.docker-compose.yml"
+            service_name: "frontend"
+          - docker_compose_file_name: "dev.docker-compose.yml"
+          - docker_compose_file_name: "staging.docker-compose.yml"
     env:
       DOCKER_CONTENT_TRUST: 1
     steps:
@@ -365,10 +369,10 @@ jobs:
           dockle_version="$(cat .dockle-version)"
           curl -L -o dockle.deb "https://github.com/goodwithtech/dockle/releases/download/v${dockle_version}/dockle_${dockle_version}_Linux-64bit.deb"
           sudo dpkg -i dockle.deb
-      - run: docker compose -f docker-compose.yml -f ${{matrix.docker_compose_command}} pull
-      - run: docker compose -f docker-compose.yml -f ${{matrix.docker_compose_command}} up -d
+      - run: docker compose -f docker-compose.yml -f ${{matrix.docker_compose_file_name}} pull ${{matrix.service_name}}
+      - run: docker compose -f docker-compose.yml -f ${{matrix.docker_compose_file_name}} up -d ${{matrix.service_name}}
       - run: |
-          for image_name in $(docker compose -f docker-compose.yml -f ${{matrix.docker_compose_command}} images | awk 'OFS=":" {print $2,$3}' | tail -n +2); do
+          for image_name in $(docker compose -f docker-compose.yml -f ${{matrix.docker_compose_file_name}} images ${{matrix.service_name}} | awk 'OFS=":" {print $2,$3}' | tail -n +2); do
             cmd="dockle --exit-code 1 "
 
             if [[ "${image_name}" =~ "gcloud_datastore" ]] || [[ "${image_name}" =~ "server-dev" ]]; then
