@@ -103,7 +103,8 @@ jobs:
           DOCKER_CONTENT_TRUST: 1
         with:
           push: true
-          files: docker-compose.yml,dev.docker-compose.yml,base.docker-compose.yml
+          targets: frontend
+          files: docker-compose.yml,base.docker-compose.yml
 
   docker-compose-build:
     runs-on: ubuntu-latest
@@ -275,7 +276,7 @@ jobs:
       - if: github.event_name != 'pull_request' || github.event.action != 'closed'
         run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
       - if: github.event_name != 'pull_request' || github.event.action != 'closed'
-        run: docker compose -f docker-compose.yml -f dev.docker-compose.yml -f base.docker-compose.yml pull
+        run: docker compose -f docker-compose.yml -f base.docker-compose.yml pull
         env:
           DOCKER_CONTENT_TRUST: 1
       - name: Get Node.js version
@@ -285,7 +286,7 @@ jobs:
           DOCKER_CONTENT_TRUST: 1
         run: |
           DOCKER_CMD="node --version && npm --version"
-          mapfile -t result < <(docker compose -f docker-compose.yml -f dev.docker-compose.yml -f base.docker-compose.yml run frontend sh -c "${DOCKER_CMD}")
+          mapfile -t result < <(docker compose -f docker-compose.yml -f base.docker-compose.yml run frontend sh -c "${DOCKER_CMD}")
           node_version="${result[0]//v/}"
           npm_version=${result[1]}
           echo "Node.js version:" "${node_version}"
@@ -348,7 +349,7 @@ jobs:
       - update-dockle
     strategy:
       matrix:
-        docker_compose_command: ["-f dev.docker-compose.yml -f base.docker-compose.yml", "-f dev.docker-compose.yml", "-f staging.docker-compose.yml"]
+        docker_compose_command: ["base.docker-compose.yml", "dev.docker-compose.yml", "staging.docker-compose.yml"]
     env:
       DOCKER_CONTENT_TRUST: 1
     steps:
@@ -364,10 +365,10 @@ jobs:
           dockle_version="$(cat .dockle-version)"
           curl -L -o dockle.deb "https://github.com/goodwithtech/dockle/releases/download/v${dockle_version}/dockle_${dockle_version}_Linux-64bit.deb"
           sudo dpkg -i dockle.deb
-      - run: docker compose -f docker-compose.yml ${{matrix.docker_compose_command}} pull
-      - run: docker compose -f docker-compose.yml ${{matrix.docker_compose_command}} up -d
+      - run: docker compose -f docker-compose.yml -f ${{matrix.docker_compose_command}} pull
+      - run: docker compose -f docker-compose.yml -f ${{matrix.docker_compose_command}} up -d
       - run: |
-          for image_name in $(docker compose -f docker-compose.yml ${{matrix.docker_compose_command}} images | awk 'OFS=":" {print $2,$3}' | tail -n +2); do
+          for image_name in $(docker compose -f docker-compose.yml -f ${{matrix.docker_compose_command}} images | awk 'OFS=":" {print $2,$3}' | tail -n +2); do
             cmd="dockle --exit-code 1 "
 
             if [[ "${image_name}" =~ "gcloud_datastore" ]] || [[ "${image_name}" =~ "server-dev" ]]; then
