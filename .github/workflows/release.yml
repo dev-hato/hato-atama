@@ -349,11 +349,10 @@ jobs:
       - update-dockle
     strategy:
       matrix:
+        docker_compose_file_name: ["dev.docker-compose.yml", "staging.docker-compose.yml"]
         include:
           - docker_compose_file_name: "base.docker-compose.yml"
             service_name: "frontend"
-          - docker_compose_file_name: "dev.docker-compose.yml"
-          - docker_compose_file_name: "staging.docker-compose.yml"
     env:
       DOCKER_CONTENT_TRUST: 1
     steps:
