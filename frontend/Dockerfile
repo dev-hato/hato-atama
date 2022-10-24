@@ -1,4 +1,4 @@
-FROM node:18.11.0-bullseye-slim as build
+FROM node:18.11.0-bullseye-slim as base
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 ARG TARGETPLATFORM
@@ -29,6 +29,8 @@ RUN find / -type f -perm /u+s -ignore_readdir_race -exec chmod u-s {} \; \
     && chown -R node:node /usr/src/app
 
 USER node
+
+FROM base as build
 
 COPY frontend/.npmrc .
 COPY frontend/package*.json ./

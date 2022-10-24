@@ -16,6 +16,11 @@ services:
       cache_from:
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend-dev:${TAG_NAME:-latest}
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend-dev
+        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend-base:${TAG_NAME:-latest}
+        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend-base
     image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend-dev:${TAG_NAME:-latest}
     volumes:
       - ./frontend/src:/usr/src/app/src
+    depends_on:
+      server:
+        condition: service_healthy
