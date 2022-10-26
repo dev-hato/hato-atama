@@ -98,7 +98,7 @@ jobs:
         if: ${{ github.event_name == 'pull_request' }}
       - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
       - name: Build and push
-        uses: docker/bake-action@v2.2.0
+        uses: docker/bake-action@v2.3.0
         env:
           DOCKER_CONTENT_TRUST: 1
         with:
