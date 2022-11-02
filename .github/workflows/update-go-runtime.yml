@@ -28,7 +28,7 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           result-encoding: string
           script: |
-            const script = require('./scripts/update_go_runtime/update_go_runtime/get_latest_app_engine_support_version.js')
+            const script = require(`${process.env.GITHUB_WORKSPACE}/scripts/update_go_runtime/update_go_runtime/get_latest_app_engine_support_version.js`)
             return await script()
       - run: sed -i -e 's/runtime:.*/${{steps.get_latest_app_engine_support_version.outputs.result}}/g' app.yaml
       - uses: dev-hato/actions-diff-pr-management@v1.0.8

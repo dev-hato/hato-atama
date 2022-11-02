@@ -24,7 +24,7 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           result-encoding: string
           script: |
-            const script = require('./scripts/remove_app_engine_versions/remove_app_engine_versions/get_run_numbers.js')
+            const script = require(`${process.env.GITHUB_WORKSPACE}/scripts/remove_app_engine_versions/remove_app_engine_versions/get_run_numbers.js`)
             return await script({github, context})
       - id: 'auth'
         if: ${{ steps.get_run_numbers.outputs.result != '' }}
