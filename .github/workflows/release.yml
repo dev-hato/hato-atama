@@ -55,7 +55,7 @@ jobs:
           cache: npm
           cache-dependency-path: frontend/package-lock.json
       - name: Install Elm
-        run: ${GITHUB_WORKSPACE}/scripts/release/build_frontend/install_elm.sh
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/build_frontend/install_elm.sh"
       - run: npm ci --prefer-offline
       - name: build
         run: npm run build
@@ -170,7 +170,7 @@ jobs:
       - name: Get Go version
         id: get_go_version
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
-        run: ${GITHUB_WORKSPACE}/scripts/release/format_go/get_go_version.sh
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/format_go/get_go_version.sh"
       - name: Set up Go
         uses: actions/setup-go@v3.3.1
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
@@ -178,10 +178,10 @@ jobs:
           go-version: ${{steps.get_go_version.outputs.go_version}}
       - name: Install goimports
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
-        run: ${GITHUB_WORKSPACE}/scripts/release/format_go/install_goimports.sh
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/format_go/install_goimports.sh"
       - name: Format files
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
-        run: ${GITHUB_WORKSPACE}/scripts/release/format_go/format_files.sh
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/format_go/format_files.sh"
       - uses: dev-hato/actions-diff-pr-management@v1.0.8
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
@@ -211,7 +211,7 @@ jobs:
         id: get_branch_name
         env:
           DIRECTORY: ${{ matrix.directory }}
-        run: ${GITHUB_WORKSPACE}/scripts/release/update_package/get_branch_name.sh
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/update_package/get_branch_name.sh"
       - uses: actions/setup-node@v3.5.1
         with:
           node-version-file: ${{ matrix.directory }}/.node-version
@@ -244,7 +244,7 @@ jobs:
       - name: Get Dependabot Node.js version
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         id: get_dependabot_node_version
-        run: ${GITHUB_WORKSPACE}/scripts/release/update_version/get_dependabot_node_version.sh
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/update_version/get_dependabot_node_version.sh"
       - run: cat .env >>"$GITHUB_ENV"
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
         env:
@@ -261,7 +261,7 @@ jobs:
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         env:
           DOCKER_CONTENT_TRUST: 1
-        run: ${GITHUB_WORKSPACE}/scripts/release/update_version/get_node_version.sh
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/update_version/get_node_version.sh"
       - name: Update versions
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         env:
@@ -269,7 +269,7 @@ jobs:
           DEPENDABOT_NPM_VERSION: ${{steps.get_dependabot_node_version.outputs.npm_version}}
           NODE_VERSION: ${{steps.get_node_version.outputs.node_version}}
           NPM_VERSION: ${{steps.get_node_version.outputs.npm_version}}
-        run: ${GITHUB_WORKSPACE}/scripts/release/update_version/update_versions.sh
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/update_version/update_versions.sh"
       - uses: dev-hato/actions-diff-pr-management@v1.0.8
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
@@ -311,13 +311,13 @@ jobs:
           HEAD_REF: ${{github.head_ref}}
         if: ${{ github.event_name == 'pull_request' }}
       - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
-      - run: ${GITHUB_WORKSPACE}/scripts/release/dockle/install_dockle.sh
+      - run: bash "${GITHUB_WORKSPACE}/scripts/release/dockle/install_dockle.sh"
       - run: docker compose -f docker-compose.yml -f ${{matrix.docker_compose_file_name}} pull ${{matrix.service_name}}
       - run: docker compose -f docker-compose.yml -f ${{matrix.docker_compose_file_name}} up -d ${{matrix.service_name}}
       - env:
           DOCKER_COMPOSE_FILE_NAME: ${{matrix.docker_compose_file_name}}
           SERVICE_NAME: ${{matrix.service_name}}
-        run: ${GITHUB_WORKSPACE}/scripts/release/dockle/run_dockle.sh
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/dockle/run_dockle.sh"
 
   make-browserslist:
     runs-on: ubuntu-latest
@@ -337,7 +337,7 @@ jobs:
       - run: npm ci --prefer-offline
       - name: Set Browserslist
         id: set_browserslist
-        run: ${GITHUB_WORKSPACE}/scripts/release/make_browserslist/set_browserslist.sh
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/make_browserslist/set_browserslist.sh"
 
   e2e-test-mini-docker-compose:
     runs-on: ubuntu-latest
@@ -373,7 +373,7 @@ jobs:
           firefox-version: ${{ matrix.browser_version }}
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
-        run: ${GITHUB_WORKSPACE}/scripts/release/e2e_test_mini_docker_compose/run_test.sh
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/e2e_test_mini_docker_compose/run_test.sh"
         working-directory: ./test/e2e
 
   e2e-test-all-docker-compose:
@@ -410,7 +410,7 @@ jobs:
           firefox-version: ${{ matrix.browser_version }}
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
-        run: ${GITHUB_WORKSPACE}/scripts/release/e2e_test_all_docker_compose/run_test.sh
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/e2e_test_all_docker_compose/run_test.sh"
         working-directory: ./test/e2e
 
   deploy-app-engine:
@@ -428,7 +428,7 @@ jobs:
         with:
           name: frontend
           path: frontend/dist
-      - run: ${GITHUB_WORKSPACE}/scripts/release/deploy_app_engine/set_config.sh
+      - run: bash "${GITHUB_WORKSPACE}/scripts/release/deploy_app_engine/set_config.sh"
         if: ${{ github.event_name == 'pull_request' }}
       - run: 'echo -e "env_variables:\n  ENV_NAME: \"prd\"" >> app.yaml'
         if: ${{ github.event_name == 'push' }}
@@ -449,7 +449,7 @@ jobs:
       - name: Wait for the deployment to complete
         env:
           RUN_NUMBER: ${{github.run_number}}
-        run: ${GITHUB_WORKSPACE}/scripts/release/deploy_app_engine/wait_for_deployment.sh
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/deploy_app_engine/wait_for_deployment.sh"
 
 
   create-pr-environment:
@@ -460,6 +460,8 @@ jobs:
     if: ${{ github.event_name == 'pull_request' }}
     steps:
       - uses: actions/github-script@v6.3.3
+        env:
+          SHA: ${{github.event.pull_request.head.sha}}
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
@@ -477,7 +479,7 @@ jobs:
       - env:
           WORKSPACE: ${{ github.workspace }}
           RUN_NUMBER: ${{ github.run_number }}
-        run: ${GITHUB_WORKSPACE}/scripts/release/lighthouse/set_env.sh
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/lighthouse/set_env.sh"
       - run: mkdir -p "${ARTIFACT_PATH}"
       - uses: foo-software/lighthouse-check-action@v9.0.0
         with:
@@ -515,7 +517,7 @@ jobs:
           firefox-version: ${{ matrix.browser_version }}
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
-        run: ${GITHUB_WORKSPACE}/scripts/release/e2e_test_mini_prd/run_test.sh
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/e2e_test_mini_prd/run_test.sh"
         working-directory: ./test/e2e
 
   e2e-test-all-prd:
@@ -545,7 +547,7 @@ jobs:
           firefox-version: ${{ matrix.browser_version }}
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
-        run: ${GITHUB_WORKSPACE}/scripts/release/e2e_test_all_prd/run_test.sh
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/e2e_test_all_prd/run_test.sh"
         working-directory: ./test/e2e
 
   migrating-traffic:
@@ -565,7 +567,7 @@ jobs:
           workload_identity_provider: ${{env.GCP_WORKLOAD_IDENTITY_PROVIDER}}
           service_account: ${{env.GCP_SERVICE_ACCOUNT}}
       - uses: google-github-actions/setup-gcloud@v0.6.2
-      - run: ${GITHUB_WORKSPACE}/scripts/release/migrating_traffic/set_traffic.sh
+      - run: bash "${GITHUB_WORKSPACE}/scripts/release/migrating_traffic/set_traffic.sh"
 
   remove-app-engine-past-versions:
     runs-on: ubuntu-latest
@@ -588,7 +590,7 @@ jobs:
           result-encoding: string
           script: |
             const script = require(`${process.env.GITHUB_WORKSPACE}/scripts/release/remove_app_engine_past_versions/get_run_numbers.js`)
-            return await script({github, context})
+            return await script({github, context, core})
       - id: 'auth'
         if: ${{ steps.get_run_numbers.outputs.result != '' }}
         name: 'Authenticate to GCP'

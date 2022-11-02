@@ -73,7 +73,7 @@ jobs:
       - run: docker compose -f docker-compose.yml -f dev.docker-compose.yml pull
       - name: Get Go version
         id: get_go_version
-        run: ${GITHUB_WORKSPACE}/scripts/resource_update/update_go/get_go_version.sh
+        run: bash "${GITHUB_WORKSPACE}/scripts/resource_update/update_go/get_go_version.sh"
       - name: Set up Go
         uses: actions/setup-go@v3.3.1
         with:
