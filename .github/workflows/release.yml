@@ -33,6 +33,7 @@ jobs:
               - '.github/workflows/release.yml'
               - 'frontend/**'
               - 'server/**'
+              - 'scripts/release/**'
               - 'test/**'
               - 'app.yaml'
               - 'go.mod'
