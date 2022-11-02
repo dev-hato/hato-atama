@@ -1,5 +1,5 @@
 module.exports = async ({ github, context }) => {
-  let body = `${process.env.SHA} のPR用環境:`
+  let body = process.env.SHA + ' のPR用環境:'
   body += ' <a href="https://v' + process.env.GITHUB_RUN_NUMBER
   body += '-dot-hato-atama.an.r.appspot.com">サイト</a>,'
   body += ' <a href="https://console.cloud.google.com/logs/query;'
