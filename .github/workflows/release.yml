@@ -459,6 +459,7 @@ jobs:
       pull-requests: write
     if: ${{ github.event_name == 'pull_request' }}
     steps:
+      - uses: actions/checkout@v3.1.0
       - uses: actions/github-script@v6.3.3
         env:
           SHA: ${{github.event.pull_request.head.sha}}
