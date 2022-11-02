@@ -1,38 +1,38 @@
 const sleep = require('../../sleep.js')
 
-module.exports = async ({github, context}) => {
-    const HEAD_REF = process.env["HEAD_REF"]
-    const common_params = {owner: context.repo.owner, repo: context.repo.repo}
-    const running = 'running'
-    const retry_count = 10
-    let result
+module.exports = async ({ github, context, core }) => {
+  const HEAD_REF = process.env.HEAD_REF
+  const commonParams = { owner: context.repo.owner, repo: context.repo.repo }
+  const running = 'running'
+  const retryCount = 10
+  let result
 
-    for (let i = 0; i < retry_count; i++) {
-        console.log("call actions.listRepoWorkflows:", common_params)
-        let workflows = await github.paginate(github.rest.actions.listRepoWorkflows, common_params)
-        workflows = workflows.filter(w => w.name === 'release')
-        const run_numbers = await Promise.all(workflows.map(async w => {
-            const list_workflow_runs_params = {
-                workflow_id: w.id, branch: HEAD_REF, ...common_params
-            }
-            console.log("call actions.listWorkflowRuns:")
-            console.log(list_workflow_runs_params)
-            const runs = await github.paginate(github.rest.actions.listWorkflowRuns, list_workflow_runs_params)
-            return runs.map(run => {
-                if (run.status !== 'completed') {
-                    return running
-                }
+  for (let i = 0; i < retryCount; i++) {
+    console.log('call actions.listRepoWorkflows:', commonParams)
+    let workflows = await github.paginate(github.rest.actions.listRepoWorkflows, commonParams)
+    workflows = workflows.filter(w => w.name === 'release')
+    const runNumbers = await Promise.all(workflows.map(async w => {
+      const listWorkflowRunsParams = {
+        workflow_id: w.id, branch: HEAD_REF, ...commonParams
+      }
+      console.log('call actions.listWorkflowRuns:')
+      console.log(listWorkflowRunsParams)
+      const runs = await github.paginate(github.rest.actions.listWorkflowRuns, listWorkflowRunsParams)
+      return runs.map(run => {
+        if (run.status !== 'completed') {
+          return running
+        }
 
-                return `v${run.run_number}`
-            })
-        }))
-        result = run_numbers.flat().filter(Boolean)
-        await sleep({result, running, retry_count})
-    }
+        return `v${run.run_number}`
+      })
+    }))
+    result = runNumbers.flat().filter(Boolean)
+    await sleep({ result, running, retry_count: retryCount, i })
+  }
 
-    if (result.includes(running)) {
-        core.setFailed('There are running runs.')
-    }
+  if (result.includes(running)) {
+    core.setFailed('There are running runs.')
+  }
 
-    return result.join(' ')
+  return result.join(' ')
 }
