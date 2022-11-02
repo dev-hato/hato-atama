@@ -20,7 +20,7 @@ jobs:
         with:
           node-version-file: .node-version
           cache: npm
-      - run: ./scripts/update_go_runtime/update_go_runtime/npm_ci.sh
+      - run: ${GITHUB_WORKSPACE}/scripts/update_go_runtime/update_go_runtime/npm_ci.sh
       - name: Get latest App Engine support version
         id: get_latest_app_engine_support_version
         uses: actions/github-script@v6.3.3
