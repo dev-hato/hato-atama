@@ -475,12 +475,11 @@ jobs:
     timeout-minutes: 1
     permissions:
       pull-requests: write
+    env:
+      ARTIFACT_PATH: ${{ github.workspace }}/tmp/artifacts
+      URLS: https://v${{ github.run_number }}-dot-hato-atama.an.r.appspot.com
     steps:
       - uses: actions/checkout@v3.1.0
-      - env:
-          WORKSPACE: ${{ github.workspace }}
-          RUN_NUMBER: ${{ github.run_number }}
-        run: bash "${GITHUB_WORKSPACE}/scripts/release/lighthouse/set_env.sh"
       - run: mkdir -p "${ARTIFACT_PATH}"
       - uses: foo-software/lighthouse-check-action@v9.0.0
         with:
