@@ -19,7 +19,7 @@ jobs:
         with:
           node-version-file: .node-version
           cache: npm
-      - run: npm ci --prefer-offline
+      - run: npm ci
       - name: Super-Linter
         uses: github/super-linter/slim@v4.9.7
         env:
