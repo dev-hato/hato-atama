@@ -194,6 +194,7 @@ github.com/cncf/xds/go v0.0.0-20211001041855-01bcc9b48dfe/go.mod h1:eXthEFrGJvWH
 github.com/cncf/xds/go v0.0.0-20211011173535-cb28da3451f1/go.mod h1:eXthEFrGJvWHgFFCl3hGmgk+/aYT6PnTQLykKQRLhEs=
 github.com/cosmtrek/air v1.27.3 h1:laO93SnYnEiJsH0QIeXyso6FJ5maSNufE5d/MmHKBmk=
 github.com/cosmtrek/air v1.27.3/go.mod h1:vrGZm+zmL5htsEr6YjqLXyjSoelgDQIl/DuOtsWVLeU=
+github.com/cosmtrek/air v1.40.4 h1:AjSlvS7IofbSf4m0BkJLm6TnBlfREwkJ9eCmLR3FLHc=
 github.com/cosmtrek/air v1.40.4/go.mod h1:Urz3nl9UBvc/rntZkXRBttYWt4sBeh2NZaGcdBbkNak=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/creack/pty v1.1.11 h1:07n33Z8lZxZ2qwegKbObQohDhXDQxiMMz1NOUGYlesw=
