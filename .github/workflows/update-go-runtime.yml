@@ -20,11 +20,7 @@ jobs:
         with:
           node-version-file: .node-version
           cache: npm
-      - run: |
-          npm_version=$(grep \"npm\" package.json \
-                        | sed -e 's/ *"npm": "^\(.*\)"/\1/g')
-          npm install --prefer-offline --location=global "npm@${npm_version}"
-          npm ci --prefer-offline
+      - run: bash "${GITHUB_WORKSPACE}/scripts/update_go_runtime/update_go_runtime/npm_ci.sh"
       - name: Get latest App Engine support version
         id: get_latest_app_engine_support_version
         uses: actions/github-script@v6.3.3
@@ -32,26 +28,8 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           result-encoding: string
           script: |
-            const axios = require('axios')
-            const cheerio = require('cheerio')
-            const {Text} = require('domhandler')
-
-            const response = await axios.get('https://cloud.google.com/appengine/docs/standard/go/runtime')
-            const $ = cheerio.load(response.data)
-            const versions = []
-
-            for (const element of $('code[dir="ltr"]').get()) {
-              const textElement = element.children[0]
-              if (textElement instanceof Text) {
-                const textElementData = textElement.data.trim()
-                if (textElementData.startsWith('runtime')) {
-                  versions.push(textElementData)
-                }
-              }
-            }
-
-            versions.sort()
-            return versions.pop()
+            const script = require(`${process.env.GITHUB_WORKSPACE}/scripts/update_go_runtime/update_go_runtime/get_latest_app_engine_support_version.js`)
+            return await script()
       - run: sed -i -e 's/runtime:.*/${{steps.get_latest_app_engine_support_version.outputs.result}}/g' app.yaml
       - uses: dev-hato/actions-diff-pr-management@v1.0.8
         with:

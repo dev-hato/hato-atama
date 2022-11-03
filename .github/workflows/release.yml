@@ -33,6 +33,7 @@ jobs:
               - '.github/workflows/release.yml'
               - 'frontend/**'
               - 'server/**'
+              - 'scripts/release/**'
               - 'test/**'
               - 'app.yaml'
               - 'go.mod'
@@ -53,14 +54,8 @@ jobs:
           node-version-file: frontend/.node-version
           cache: npm
           cache-dependency-path: frontend/package-lock.json
-      # https://github.com/elm/compiler/blob/24d3a89469e75cf7aa579442ecaf5ddfdd192ab2/installers/linux/README.md
       - name: Install Elm
-        run: |
-          elm_version="$(grep elm-version elm.json | sed -e 's/ *"elm-version": "\(.*\)",$/\1/g')"
-          curl -L -o elm.gz "https://github.com/elm/compiler/releases/download/${elm_version}/binary-for-linux-64-bit.gz"
-          gunzip elm.gz
-          chmod +x elm
-          mv elm /usr/local/bin/
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/build_frontend/install_elm.sh"
       - run: npm ci --prefer-offline
       - name: build
         run: npm run build
@@ -175,11 +170,7 @@ jobs:
       - name: Get Go version
         id: get_go_version
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
-        run: |
-          CMD="go version | awk '{print \$3}' | sed -e 's/^go//g'"
-          go_version=$(docker compose -f docker-compose.yml -f dev.docker-compose.yml run server sh -c "${CMD}")
-          echo "Go version:" "${go_version}"
-          echo "go_version=${go_version}" >> "${GITHUB_OUTPUT}"
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/format_go/get_go_version.sh"
       - name: Set up Go
         uses: actions/setup-go@v3.3.1
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
@@ -187,15 +178,10 @@ jobs:
           go-version: ${{steps.get_go_version.outputs.go_version}}
       - name: Install goimports
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
-        run: |
-          echo "$(go env GOPATH)/bin" >> "${GITHUB_PATH}"
-          go install golang.org/x/tools/cmd/goimports@latest
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/format_go/install_goimports.sh"
       - name: Format files
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
-        run: |
-          go_version=$(grep runtime app.yaml | sed -e 's/runtime: go\([0-9]\)\([0-9]*\)/\1.\2/g')
-          go mod tidy -go="${go_version}"
-          goimports -l -w .
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/format_go/format_files.sh"
       - uses: dev-hato/actions-diff-pr-management@v1.0.8
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
@@ -223,10 +209,9 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Get branch name
         id: get_branch_name
-        run: |
-          BRANCH_NAME="$(echo '${{ matrix.directory }}' | sed -e 's:/:-:g')"
-          BRANCH_NAME="${BRANCH_NAME//\./root}"
-          echo "branch_name=${BRANCH_NAME}" >> "${GITHUB_OUTPUT}"
+        env:
+          DIRECTORY: ${{ matrix.directory }}
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/update_package/get_branch_name.sh"
       - uses: actions/setup-node@v3.5.1
         with:
           node-version-file: ${{ matrix.directory }}/.node-version
@@ -259,15 +244,7 @@ jobs:
       - name: Get Dependabot Node.js version
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         id: get_dependabot_node_version
-        run: |
-          DOCKER_CMD="node --version && npm --version"
-          mapfile -t result < <(docker run ghcr.io/dependabot/dependabot-core sh -c "${DOCKER_CMD}")
-          node_version="${result[0]//v/}"
-          npm_version=${result[1]}
-          echo "Node.js version:" "${node_version}"
-          echo "npm version:" "${npm_version}"
-          echo "node_version=${node_version}" >> "${GITHUB_OUTPUT}"
-          echo "npm_version=${npm_version}" >> "${GITHUB_OUTPUT}"
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/update_version/get_dependabot_node_version.sh"
       - run: cat .env >>"$GITHUB_ENV"
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
         env:
@@ -284,45 +261,15 @@ jobs:
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         env:
           DOCKER_CONTENT_TRUST: 1
-        run: |
-          DOCKER_CMD="node --version && npm --version"
-          mapfile -t result < <(docker compose -f docker-compose.yml -f base.docker-compose.yml run frontend sh -c "${DOCKER_CMD}")
-          node_version="${result[0]//v/}"
-          npm_version=${result[1]}
-          echo "Node.js version:" "${node_version}"
-          echo "npm version:" "${npm_version}"
-          echo "node_version=${node_version}" >> "${GITHUB_OUTPUT}"
-          echo "npm_version=${npm_version}" >> "${GITHUB_OUTPUT}"
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/update_version/get_node_version.sh"
       - name: Update versions
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
-        run: |
-          DEPENDABOT_NODE_VERSION="${{steps.get_dependabot_node_version.outputs.node_version}}"
-          DEPENDABOT_NPM_VERSION="${{steps.get_dependabot_node_version.outputs.npm_version}}"
-          NODE_VERSION="${{steps.get_node_version.outputs.node_version}}"
-          NPM_VERSION="${{steps.get_node_version.outputs.npm_version}}"
-          for path in "frontend" "test/e2e" "."; do
-            echo "${NODE_VERSION}" > ${path}/.node-version
-
-            NODE_PATTERN="s/\"node\": \".*\"/\"node\": \"^${DEPENDABOT_NODE_VERSION}"
-
-            if [ "${DEPENDABOT_NODE_VERSION}" != "${NODE_VERSION}" ]
-            then
-              NODE_PATTERN+=" || ^${NODE_VERSION}"
-            fi
-
-            NODE_PATTERN+="\"/g"
-            sed -i -e "${NODE_PATTERN}" ${path}/package.json
-
-            NPM_PATTERN="s/\"npm\": \".*\"/\"npm\": \"^${DEPENDABOT_NPM_VERSION}"
-
-            if [ "${DEPENDABOT_NPM_VERSION}" != "${NPM_VERSION}" ]
-            then
-              NPM_PATTERN+=" || ^${NPM_VERSION}"
-            fi
-
-            NPM_PATTERN+="\"/g"
-            sed -i -e "${NPM_PATTERN}" ${path}/package.json
-          done
+        env:
+          DEPENDABOT_NODE_VERSION: ${{steps.get_dependabot_node_version.outputs.node_version}}
+          DEPENDABOT_NPM_VERSION: ${{steps.get_dependabot_node_version.outputs.npm_version}}
+          NODE_VERSION: ${{steps.get_node_version.outputs.node_version}}
+          NPM_VERSION: ${{steps.get_node_version.outputs.npm_version}}
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/update_version/update_versions.sh"
       - uses: dev-hato/actions-diff-pr-management@v1.0.8
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
@@ -364,33 +311,13 @@ jobs:
           HEAD_REF: ${{github.head_ref}}
         if: ${{ github.event_name == 'pull_request' }}
       - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
-      - run: |
-          dockle_version="$(cat .dockle-version)"
-          curl -L -o dockle.deb "https://github.com/goodwithtech/dockle/releases/download/v${dockle_version}/dockle_${dockle_version}_Linux-64bit.deb"
-          sudo dpkg -i dockle.deb
+      - run: bash "${GITHUB_WORKSPACE}/scripts/release/dockle/install_dockle.sh"
       - run: docker compose -f docker-compose.yml -f ${{matrix.docker_compose_file_name}} pull ${{matrix.service_name}}
       - run: docker compose -f docker-compose.yml -f ${{matrix.docker_compose_file_name}} up -d ${{matrix.service_name}}
-      - run: |
-          for image_name in $(docker compose -f docker-compose.yml -f ${{matrix.docker_compose_file_name}} images ${{matrix.service_name}} | awk 'OFS=":" {print $2,$3}' | tail -n +2); do
-            cmd="dockle --exit-code 1 "
-
-            if [[ "${image_name}" =~ "gcloud_datastore" ]] || [[ "${image_name}" =~ "server-dev" ]]; then
-              cmd+="-i DKL-LI-0003 "
-              if [[ "${image_name}" =~ "gcloud_datastore" ]]; then
-                cmd+="-af settings.py -i CIS-DI-0001 "
-              else
-                cmd+="-af credentials --timeout 600s "
-              fi
-            elif [[ "${image_name}" =~ "frontend:" ]]; then
-              cmd+="-ak NGINX_GPGKEY "
-            elif [[ "${image_name}" =~ "frontend-base" ]]; then
-              cmd+="-i CIS-DI-0006 "
-            fi
-
-            cmd+="${image_name}"
-            echo "> ${cmd}"
-            eval "${cmd}"
-          done
+      - env:
+          DOCKER_COMPOSE_FILE_NAME: ${{matrix.docker_compose_file_name}}
+          SERVICE_NAME: ${{matrix.service_name}}
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/dockle/run_dockle.sh"
 
   make-browserslist:
     runs-on: ubuntu-latest
@@ -410,12 +337,7 @@ jobs:
       - run: npm ci --prefer-offline
       - name: Set Browserslist
         id: set_browserslist
-        run: |
-          browsers="$(npx browserslist | grep firefox | sed -e 's/$/.0/')"
-          # shellcheck disable=SC2001
-          browserslist="[$(echo "${browsers}" | sed -e 's/^\([^ ]*\) \(.*\)/{browser_name: "\1", browser_version: "\2"}/' | tr '\n' ',' | sed -e 's/,$//')]"
-          echo "${browserslist}"
-          echo "browserslist=${browserslist}" >> "${GITHUB_OUTPUT}"
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/make_browserslist/set_browserslist.sh"
 
   e2e-test-mini-docker-compose:
     runs-on: ubuntu-latest
@@ -449,10 +371,9 @@ jobs:
         if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
-      - run: |
-          npm run test -- --env "API_HOST=http://localhost:${FRONTEND_PORT}/" \
-                          --spec cypress/e2e/mini/*.cy.js \
-                          --browser ${{ matrix.browser_name }}
+      - env:
+          BROWSER_NAME: ${{ matrix.browser_name }}
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/e2e_test_mini_docker_compose/run_test.sh"
         working-directory: ./test/e2e
 
   e2e-test-all-docker-compose:
@@ -487,9 +408,9 @@ jobs:
         if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
-      - run: |
-          ENV="API_HOST=http://localhost:${FRONTEND_PORT}/"
-          npm run test -- --env "${ENV}" --browser ${{ matrix.browser_name }}
+      - env:
+          BROWSER_NAME: ${{ matrix.browser_name }}
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/e2e_test_all_docker_compose/run_test.sh"
         working-directory: ./test/e2e
 
   deploy-app-engine:
@@ -507,9 +428,7 @@ jobs:
         with:
           name: frontend
           path: frontend/dist
-      - run: |
-          echo -e "env_variables:\n" >> app.yaml
-          echo -e "  ENV_NAME: \"v${GITHUB_RUN_NUMBER}\"" >> app.yaml
+      - run: bash "${GITHUB_WORKSPACE}/scripts/release/deploy_app_engine/set_config.sh"
         if: ${{ github.event_name == 'pull_request' }}
       - run: 'echo -e "env_variables:\n  ENV_NAME: \"prd\"" >> app.yaml'
         if: ${{ github.event_name == 'push' }}
@@ -528,24 +447,9 @@ jobs:
           promote: false
           version: "v${{github.run_number}}"
       - name: Wait for the deployment to complete
-        run: |
-          # 最大10分待つ
-          for i in $(seq 600); do
-            serving_status=$(gcloud app versions describe \
-                                                 "v${{github.run_number}}" \
-                                                 --service "default" \
-                                                 --format \
-                                                   "value(servingStatus)")
-            echo "${i}: servingStatus: ${serving_status}"
-
-            if [ "${serving_status}" = "SERVING" ]; then
-              exit 0
-            fi
-
-            sleep 1
-          done
-
-          exit 1
+        env:
+          RUN_NUMBER: ${{github.run_number}}
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/deploy_app_engine/wait_for_deployment.sh"
 
 
   create-pr-environment:
@@ -555,25 +459,15 @@ jobs:
       pull-requests: write
     if: ${{ github.event_name == 'pull_request' }}
     steps:
+      - uses: actions/checkout@v3.1.0
       - uses: actions/github-script@v6.3.3
+        env:
+          SHA: ${{github.event.pull_request.head.sha}}
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            let body = "${{github.event.pull_request.head.sha}} のPR用環境:"
-            body += " <a href=\"https://v" + process.env.GITHUB_RUN_NUMBER
-            body += "-dot-hato-atama.an.r.appspot.com\">サイト</a>,"
-            body += " <a href=\"https://console.cloud.google.com/logs/query;"
-            body += "query=resource.type%3D%22gae_app"
-            body += "%22%20resource.labels.module_id%3D%22default"
-            body += "%22%20resource.labels.version_id%3D%22v"
-            body += process.env.GITHUB_RUN_NUMBER
-            body += "%22?project=hato-atama\">ログ</a>"
-            await github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body,
-            })
+            const script = require(`${process.env.GITHUB_WORKSPACE}/scripts/release/create_pr_environment/create_pr_environment.js`)
+            await script({github, context})
 
   lighthouse:
     runs-on: ubuntu-latest
@@ -583,12 +477,10 @@ jobs:
       pull-requests: write
     steps:
       - uses: actions/checkout@v3.1.0
-      - run: |
-          ARTIFACT_PATH="${{ github.workspace }}/tmp/artifacts"
-          echo "ARTIFACT_PATH=${ARTIFACT_PATH}" >> "$GITHUB_ENV"
-          URLS="https://"
-          URLS+="v${{ github.run_number }}-dot-hato-atama.an.r.appspot.com"
-          echo "URLS=${URLS}" >> "${GITHUB_ENV}"
+      - env:
+          WORKSPACE: ${{ github.workspace }}
+          RUN_NUMBER: ${{ github.run_number }}
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/lighthouse/set_env.sh"
       - run: mkdir -p "${ARTIFACT_PATH}"
       - uses: foo-software/lighthouse-check-action@v9.0.0
         with:
@@ -624,12 +516,9 @@ jobs:
         if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
-      - run: |
-          API_HOST="https://"
-          API_HOST+="v${GITHUB_RUN_NUMBER}-dot-hato-atama.an.r.appspot.com"
-          npm run test -- --env "API_HOST=${API_HOST}" \
-                          --spec cypress/e2e/mini/*.cy.js \
-                          --browser ${{ matrix.browser_name }}
+      - env:
+          BROWSER_NAME: ${{ matrix.browser_name }}
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/e2e_test_mini_prd/run_test.sh"
         working-directory: ./test/e2e
 
   e2e-test-all-prd:
@@ -657,10 +546,9 @@ jobs:
         if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
-      - run: |
-          ENV="API_HOST="
-          ENV+="https://v${GITHUB_RUN_NUMBER}-dot-hato-atama.an.r.appspot.com"
-          npm run test -- --env "${ENV}" --browser ${{ matrix.browser_name }}
+      - env:
+          BROWSER_NAME: ${{ matrix.browser_name }}
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/e2e_test_all_prd/run_test.sh"
         working-directory: ./test/e2e
 
   migrating-traffic:
@@ -680,9 +568,7 @@ jobs:
           workload_identity_provider: ${{env.GCP_WORKLOAD_IDENTITY_PROVIDER}}
           service_account: ${{env.GCP_SERVICE_ACCOUNT}}
       - uses: google-github-actions/setup-gcloud@v0.6.2
-      - run: |
-          VALUE="v${GITHUB_RUN_NUMBER}=1"
-          gcloud app services set-traffic default --splits "${VALUE}"
+      - run: bash "${GITHUB_WORKSPACE}/scripts/release/migrating_traffic/set_traffic.sh"
 
   remove-app-engine-past-versions:
     runs-on: ubuntu-latest
@@ -699,67 +585,13 @@ jobs:
         id: get_run_numbers
         env:
           HEAD_REF: master
+          RUN_NUMBER: ${{github.run_number}}
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           result-encoding: string
           script: |
-            const HEAD_REF = process.env["HEAD_REF"]
-            const common_params = {
-              owner: context.repo.owner,
-              repo: context.repo.repo
-            }
-            const running = 'running'
-            const retry_count = 10
-            let result
-
-            for (let i = 0; i < retry_count; i++) {
-              console.log("call actions.listRepoWorkflows:", common_params)
-              let workflows = await github.paginate(
-                                github.rest.actions.listRepoWorkflows,
-                                common_params
-                              )
-              workflows = workflows.filter(w => w.name === 'release')
-              const run_numbers = await Promise.all(workflows.map(async w => {
-                const list_workflow_runs_params = {
-                  workflow_id: w.id,
-                  branch: HEAD_REF,
-                  ...common_params
-                }
-                console.log("call actions.listWorkflowRuns:")
-                console.log(list_workflow_runs_params)
-                let runs = await github.paginate(
-                             github.rest.actions.listWorkflowRuns,
-                             list_workflow_runs_params
-                           )
-                runs = runs.filter(r => r.run_number < ${{github.run_number}})
-                return runs.map(r => {
-                  if (r.status !== 'completed') {
-                    return running
-                  }
-
-                  return `v${r.run_number}`
-                })
-              }))
-              result = run_numbers.flat().filter(Boolean)
-              result.shift()
-
-              if (!result.includes(running) || i === retry_count - 1) {
-                break
-              }
-
-              // 完了していないrunがあった場合はリトライ
-              // sleepする時間は exponential backoff and jitter で算出している
-              // 参考: https://aws.typepad.com/sajp/2015/03/backoff.html
-              const sleep_seconds = Math.random() * (Math.pow(2, i + 1) * 100)
-              console.log(`sleep ${sleep_seconds}s`)
-              await new Promise(r => setTimeout(r, sleep_seconds * 1000))
-            }
-
-            if (result.includes(running)) {
-              core.setFailed('There are running runs.')
-            }
-
-            return result.join(' ')
+            const script = require(`${process.env.GITHUB_WORKSPACE}/scripts/release/remove_app_engine_past_versions/get_run_numbers.js`)
+            return await script({github, context, core})
       - id: 'auth'
         if: ${{ steps.get_run_numbers.outputs.result != '' }}
         name: 'Authenticate to GCP'
@@ -771,9 +603,7 @@ jobs:
         if: ${{ steps.get_run_numbers.outputs.result != '' }}
       - name: Remove app engine versions
         if: ${{ steps.get_run_numbers.outputs.result != '' }}
-        run: |
-          gcloud app versions delete --service=default \
-                                     ${{steps.get_run_numbers.outputs.result}}
+        run: gcloud app versions delete --service=default  ${{steps.get_run_numbers.outputs.result}}
 
   # docker-compose関連でPRとpushで共通して必ず完了しているべきjobが完了したか
   release-complete-check-docker-compose:

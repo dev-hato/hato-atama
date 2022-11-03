@@ -24,61 +24,8 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           result-encoding: string
           script: |
-            const HEAD_REF = process.env["HEAD_REF"]
-            const common_params = {
-              owner: context.repo.owner,
-              repo: context.repo.repo
-            }
-            const running = 'running'
-            const retry_count = 10
-            let result
-
-            for (let i = 0; i < retry_count; i++) {
-              console.log("call actions.listRepoWorkflows:", common_params)
-              let workflows = await github.paginate(
-                                github.rest.actions.listRepoWorkflows,
-                                common_params
-                              )
-              workflows = workflows.filter(w => w.name === 'release')
-              const run_numbers = await Promise.all(workflows.map(async w => {
-                const list_workflow_runs_params = {
-                  workflow_id: w.id,
-                  branch: HEAD_REF,
-                  ...common_params
-                }
-                console.log("call actions.listWorkflowRuns:")
-                console.log(list_workflow_runs_params)
-                const runs = await github.paginate(
-                               github.rest.actions.listWorkflowRuns,
-                               list_workflow_runs_params
-                             )
-                return runs.map(run => {
-                  if (run.status !== 'completed') {
-                    return running
-                  }
-
-                  return `v${run.run_number}`
-                })
-              }))
-              result = run_numbers.flat().filter(Boolean)
-
-              if (!result.includes(running) || i === retry_count - 1) {
-                break
-              }
-
-              // 完了していないrunがあった場合はリトライ
-              // sleepする時間は exponential backoff and jitter で算出している
-              // 参考: https://aws.typepad.com/sajp/2015/03/backoff.html
-              const sleep_seconds = Math.random() * (Math.pow(2, i + 1) * 100)
-              console.log(`sleep ${sleep_seconds}s`)
-              await new Promise(r => setTimeout(r, sleep_seconds * 1000))
-            }
-
-            if (result.includes(running)) {
-              core.setFailed('There are running runs.')
-            }
-
-            return result.join(' ')
+            const script = require(`${process.env.GITHUB_WORKSPACE}/scripts/remove_app_engine_versions/remove_app_engine_versions/get_run_numbers.js`)
+            return await script({github, context, core})
       - id: 'auth'
         if: ${{ steps.get_run_numbers.outputs.result != '' }}
         name: 'Authenticate to GCP'
@@ -89,9 +36,7 @@ jobs:
       - uses: google-github-actions/setup-gcloud@v0.6.2
         if: ${{ steps.get_run_numbers.outputs.result != '' }}
       - if: ${{ steps.get_run_numbers.outputs.result != '' }}
-        run: |
-          gcloud app versions delete --service=default \
-                                     ${{steps.get_run_numbers.outputs.result}}
+        run: gcloud app versions delete --service=default ${{steps.get_run_numbers.outputs.result}}
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
