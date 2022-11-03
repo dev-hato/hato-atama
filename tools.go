@@ -4,6 +4,6 @@
 package tools
 
 import (
-	_ "github.com/cosmtrek/air"
-	_ "golang.org/x/tools/cmd/goimports"
+	_ "github.com/cosmtrek/air"          //nolint:typecheck
+	_ "golang.org/x/tools/cmd/goimports" //nolint:typecheck
 )
