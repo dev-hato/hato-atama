@@ -69,6 +69,7 @@ jobs:
     env:
       DOCKER_BUILDKIT: 1
       COMPOSE_DOCKER_CLI_BUILD: 1
+      REPOSITORY: ${{github.repository}}
     permissions:
       contents: read
       packages: write
@@ -91,7 +92,6 @@ jobs:
         env:
           HEAD_REF: ${{github.head_ref}}
         if: ${{ github.event_name == 'pull_request' }}
-      - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
       - name: Build and push
         uses: docker/bake-action@v2.3.0
         env:
@@ -107,6 +107,7 @@ jobs:
     env:
       DOCKER_BUILDKIT: 1
       COMPOSE_DOCKER_CLI_BUILD: 1
+      REPOSITORY: ${{github.repository}}
     permissions:
       contents: read
       packages: write
@@ -128,7 +129,6 @@ jobs:
         env:
           HEAD_REF: ${{github.head_ref}}
         if: ${{ github.event_name == 'pull_request' }}
-      - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
       - name: Build and push (dev)
         uses: docker/bake-action@v2.3.0
         env:
@@ -153,6 +153,7 @@ jobs:
       pull-requests: write
     env:
       DOCKER_CONTENT_TRUST: 1
+      REPOSITORY: ${{github.repository}}
     steps:
       - uses: actions/checkout@v3.1.0
         with:
@@ -164,7 +165,6 @@ jobs:
         env:
           HEAD_REF: ${{github.head_ref}}
         if: github.event_name == 'pull_request'
-      - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
       - if: github.event_name != 'pull_request' || github.event.action != 'closed'
         run: docker compose -f docker-compose.yml -f dev.docker-compose.yml pull
       - name: Get Go version
@@ -302,6 +302,7 @@ jobs:
             service_name: "frontend"
     env:
       DOCKER_CONTENT_TRUST: 1
+      REPOSITORY: ${{github.repository}}
     steps:
       - uses: actions/checkout@v3.1.0
       - run: sudo chown -R 1000:1000 server/
@@ -310,7 +311,6 @@ jobs:
         env:
           HEAD_REF: ${{github.head_ref}}
         if: ${{ github.event_name == 'pull_request' }}
-      - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
       - run: bash "${GITHUB_WORKSPACE}/scripts/release/dockle/install_dockle.sh"
       - run: docker compose -f docker-compose.yml -f ${{matrix.docker_compose_file_name}} pull ${{matrix.service_name}}
       - run: docker compose -f docker-compose.yml -f ${{matrix.docker_compose_file_name}} up -d ${{matrix.service_name}}
@@ -350,6 +350,7 @@ jobs:
         include: ${{fromJson(needs.make-browserslist.outputs.browserslist)}}
     env:
       DOCKER_CONTENT_TRUST: 1
+      REPOSITORY: ${{github.repository}}
     steps:
       - uses: actions/checkout@v3.1.0
       - run: cat .env >>"$GITHUB_ENV"
@@ -357,7 +358,6 @@ jobs:
         env:
           HEAD_REF: ${{github.head_ref}}
         if: ${{ github.event_name == 'pull_request' }}
-      - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
       - run: docker compose -f docker-compose.yml -f staging.docker-compose.yml pull
       - run: docker compose -f docker-compose.yml -f staging.docker-compose.yml up -d --wait
       - uses: actions/setup-node@v3.5.1
@@ -387,6 +387,7 @@ jobs:
         include: ${{fromJson(needs.make-browserslist.outputs.browserslist)}}
     env:
       DOCKER_CONTENT_TRUST: 1
+      REPOSITORY: ${{github.repository}}
     steps:
       - uses: actions/checkout@v3.1.0
       - run: cat .env >>"$GITHUB_ENV"
@@ -394,7 +395,6 @@ jobs:
         env:
           HEAD_REF: ${{github.head_ref}}
         if: ${{ github.event_name == 'pull_request' }}
-      - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
       - run: docker compose -f docker-compose.yml -f staging.docker-compose.yml pull
       - run: docker compose -f docker-compose.yml -f staging.docker-compose.yml up -d --wait
       - uses: actions/setup-node@v3.5.1
@@ -475,12 +475,11 @@ jobs:
     timeout-minutes: 1
     permissions:
       pull-requests: write
+    env:
+      ARTIFACT_PATH: ${{ github.workspace }}/tmp/artifacts
+      URLS: https://v${{ github.run_number }}-dot-hato-atama.an.r.appspot.com
     steps:
       - uses: actions/checkout@v3.1.0
-      - env:
-          WORKSPACE: ${{ github.workspace }}
-          RUN_NUMBER: ${{ github.run_number }}
-        run: bash "${GITHUB_WORKSPACE}/scripts/release/lighthouse/set_env.sh"
       - run: mkdir -p "${ARTIFACT_PATH}"
       - uses: foo-software/lighthouse-check-action@v9.0.0
         with:

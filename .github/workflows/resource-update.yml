@@ -64,12 +64,13 @@ jobs:
 
   update-go:
     runs-on: ubuntu-latest
+    env:
+      REPOSITORY: ${{github.repository}}
     steps:
       - uses: actions/checkout@v3.1.0
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
-      - run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
       - run: docker compose -f docker-compose.yml -f dev.docker-compose.yml pull
       - name: Get Go version
         id: get_go_version
