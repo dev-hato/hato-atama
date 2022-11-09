@@ -27,7 +27,7 @@
     "textlint-rule-terminology": "3.0.4"
   },
   "engines": {
-    "node": "^16.18.1 || ^19.0.0",
+    "node": "^16.18.1 || ^19.0.1",
     "npm": "^8.19.2"
   }
 }
