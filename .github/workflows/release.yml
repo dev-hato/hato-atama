@@ -337,6 +337,7 @@ jobs:
         env:
           HEAD_REF: ${{github.head_ref}}
         if: ${{ github.event_name == 'pull_request' }}
+      - run: cat .env >>"$GITHUB_ENV"
       - run: bash "${GITHUB_WORKSPACE}/scripts/release/run_docker_compose.sh"
       - uses: actions/setup-node@v3.5.1
         with:
@@ -348,6 +349,7 @@ jobs:
         if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
+      - run: cat .env >>"$GITHUB_ENV"
       - run: bash "${GITHUB_WORKSPACE}/scripts/release/set_docker_compose_test_env.sh"
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
@@ -372,6 +374,7 @@ jobs:
         env:
           HEAD_REF: ${{github.head_ref}}
         if: ${{ github.event_name == 'pull_request' }}
+      - run: cat .env >>"$GITHUB_ENV"
       - run: bash "${GITHUB_WORKSPACE}/scripts/release/run_docker_compose.sh"
       - uses: actions/setup-node@v3.5.1
         with:
@@ -382,6 +385,7 @@ jobs:
         if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
+      - run: cat .env >>"$GITHUB_ENV"
       - run: bash "${GITHUB_WORKSPACE}/scripts/release/set_docker_compose_test_env.sh"
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
