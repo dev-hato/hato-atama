@@ -26,9 +26,7 @@ jobs:
           cache: npm
           cache-dependency-path: frontend/package-lock.json
       - name: ncu install
-        run: npx npm-check-updates -u
-      - name: npm update
-        run: npm install
+        run: bash "${GITHUB_WORKSPACE}/scripts/resource_update/update.sh"
       - uses: dev-hato/actions-diff-pr-management@v1.0.8
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
@@ -52,9 +50,7 @@ jobs:
           cache: npm
           cache-dependency-path: test/e2e/package-lock.json
       - name: ncu install
-        run: npx npm-check-updates -u
-      - name: npm update
-        run: npm install
+        run: bash "${GITHUB_WORKSPACE}/scripts/resource_update/update.sh"
       - uses: dev-hato/actions-diff-pr-management@v1.0.8
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
@@ -71,18 +67,15 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
-      - run: docker compose -f docker-compose.yml -f dev.docker-compose.yml pull
       - name: Get Go version
         id: get_go_version
-        run: bash "${GITHUB_WORKSPACE}/scripts/resource_update/update_go/get_go_version.sh"
+        run: bash "${GITHUB_WORKSPACE}/scripts/get_go_version.sh"
       - name: Set up Go
         uses: actions/setup-go@v3.3.1
         with:
           go-version: ${{steps.get_go_version.outputs.go_version}}
       - name: go mod update
-        run: go get -u ./...
-      - name: go mod tidy
-        run: go mod tidy
+        run: bash "${GITHUB_WORKSPACE}/scripts/resource_update/update_go/run_go_mod_tidy.sh"
       - uses: dev-hato/actions-diff-pr-management@v1.0.8
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
