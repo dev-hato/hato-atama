@@ -343,15 +343,15 @@ jobs:
           node-version-file: test/e2e/.node-version
           cache: npm
           cache-dependency-path: test/e2e/package-lock.json
-      - run: npm ci
         working-directory: ./test/e2e
       - uses: browser-actions/setup-firefox@v0.0.0
         if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
+      - run: bash "${GITHUB_WORKSPACE}/scripts/release/set_mini_env.sh"
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
-        run: bash "${GITHUB_WORKSPACE}/scripts/release/e2e_test_mini_docker_compose/run_test.sh"
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/run_mini_test.sh"
         working-directory: ./test/e2e
 
   e2e-test-all-docker-compose:
@@ -382,10 +382,10 @@ jobs:
         if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
-      - run: bash "${GITHUB_WORKSPACE}/scripts/release/e2e_test_all_docker_compose/set_env.sh"
+      - run: bash "${GITHUB_WORKSPACE}/scripts/release/set_all_env.sh"
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
-        run: bash "${GITHUB_WORKSPACE}/scripts/release/run_test.sh"
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/run_all_test.sh"
         working-directory: ./test/e2e
 
   deploy-app-engine:
@@ -488,9 +488,10 @@ jobs:
         if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
+      - run: bash "${GITHUB_WORKSPACE}/scripts/release/set_mini_env.sh"
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
-        run: bash "${GITHUB_WORKSPACE}/scripts/release/e2e_test_mini_prd/run_test.sh"
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/run_mini_test.sh"
         working-directory: ./test/e2e
 
   e2e-test-all-prd:
@@ -516,10 +517,10 @@ jobs:
         if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
-      - run: bash "${GITHUB_WORKSPACE}/scripts/release/e2e_test_all_prd/set_env.sh"
+      - run: bash "${GITHUB_WORKSPACE}/scripts/release/set_all_env.sh"
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
-        run: bash "${GITHUB_WORKSPACE}/scripts/release/run_test.sh"
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/run_all_test.sh"
         working-directory: ./test/e2e
 
   migrating-traffic:
