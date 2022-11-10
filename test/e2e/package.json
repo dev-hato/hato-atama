@@ -13,7 +13,7 @@
     "eslint-plugin-cypress": "2.12.1"
   },
   "engines": {
-    "node": "^16.18.1 || ^19.0.1",
-    "npm": "^8.19.2"
+    "node": "^16.18.1 || ^#1 [internal] load build definition from Dockerfile",
+    "npm": "^8.19.2 || ^#1 transferring dockerfile: 1.97kB done"
   }
 }
