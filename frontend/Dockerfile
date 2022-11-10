@@ -5,10 +5,6 @@ ARG TARGETPLATFORM
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends ca-certificates curl \
-    && rm -rf /var/lib/apt/lists
-
 COPY elm/elm_arm64 /usr/local/bin/elm
 
 WORKDIR /usr/src/app
@@ -16,13 +12,18 @@ WORKDIR /usr/src/app
 COPY frontend/elm.json ./
 
 # https://github.com/elm/compiler/blob/24d3a89469e75cf7aa579442ecaf5ddfdd192ab2/installers/linux/README.md
-RUN if [ "${TARGETPLATFORM}" != "linux/arm64" ]; then \
-        elm_version="$(grep elm-version elm.json | sed -e 's/ *"elm-version": "\(.*\)",$/\1/g')"; \
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends ca-certificates curl yq \
+    if [ "${TARGETPLATFORM}" != "linux/arm64" ]; then \
+        elm_version="$(yq '."elm-version"' elm.json)"; \
         curl -L -o elm.gz "https://github.com/elm/compiler/releases/download/${elm_version}/binary-for-linux-64-bit.gz"; \
         gunzip elm.gz; \
         chmod +x elm; \
         mv elm /usr/local/bin/; \
-    fi
+    fi \
+    && apt-get remove -y yq \
+    && apt-get autoremove -y \
+    && rm -rf /var/lib/apt/lists
 
 RUN find / -type f -perm /u+s -ignore_readdir_race -exec chmod u-s {} \; \
     && find / -type f -perm /g+s -ignore_readdir_race -exec chmod g-s {} \; \
