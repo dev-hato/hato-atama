@@ -4,7 +4,9 @@ FROM debian:bullseye-slim
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-RUN apt-get update \
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys CC86BB64 \
+    && add-apt-repository ppa:rmescandon/yq \
+    && apt-get update \
     && apt-get install -y --no-install-recommends build-essential \
         automake \
         autotools-dev \
