@@ -225,8 +225,6 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    env:
-      DOCKER_CMD: "node --version && npm --version"
     steps:
       - uses: actions/checkout@v3.1.0
         with:
