@@ -4,9 +4,7 @@ FROM debian:bullseye-slim
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys CC86BB64 \
-    && add-apt-repository ppa:rmescandon/yq \
-    && apt-get update \
+RUN apt-get update \
     && apt-get install -y --no-install-recommends build-essential \
         automake \
         autotools-dev \
@@ -37,7 +35,7 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys CC86BB64 \
         ghc \
         cabal-install \
         libmpfr-dev \
-        yq \
+        jq \
        && apt-get autoremove -y \
        && apt-get clean \
        && rm -rf /var/lib/apt/lists/*
@@ -45,7 +43,7 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys CC86BB64 \
 WORKDIR /
 
 COPY frontend/elm.json ./
-RUN elm_version="$(yq '."elm-version"' elm.json)" \
+RUN elm_version="$(jq -r '."elm-version"' elm.json)" \
     && git clone -b "${elm_version}" https://github.com/elm/compiler.git
 
 WORKDIR /compiler
