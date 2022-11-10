@@ -1,14 +1,5 @@
 #!/usr/bin/env bash
 
-docker compose -f docker-compose.yml -f base.docker-compose.yml pull frontend
-mapfile -t result < <(docker compose -f docker-compose.yml -f base.docker-compose.yml run frontend sh -c "${DOCKER_CMD}")
-node_version="${result[0]//v/}"
-npm_version=${result[1]}
-echo "Node.js version:" "${node_version}"
-echo "npm version:" "${npm_version}"
-NODE_VERSION="${node_version}"
-NPM_VERSION="${npm_version}"
-
 for path in "frontend" "test/e2e" "."; do
   echo "${NODE_VERSION}" >${path}/.node-version
 
