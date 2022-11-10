@@ -382,9 +382,10 @@ jobs:
         if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
+      - run: bash "${GITHUB_WORKSPACE}/scripts/release/e2e_test_all_docker_compose/set_env.sh"
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
-        run: bash "${GITHUB_WORKSPACE}/scripts/release/e2e_test_all_docker_compose/run_test.sh"
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/run_test.sh"
         working-directory: ./test/e2e
 
   deploy-app-engine:
@@ -515,9 +516,10 @@ jobs:
         if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
+      - run: bash "${GITHUB_WORKSPACE}/scripts/release/e2e_test_all_prd/set_env.sh"
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
-        run: bash "${GITHUB_WORKSPACE}/scripts/release/e2e_test_all_prd/run_test.sh"
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/run_test.sh"
         working-directory: ./test/e2e
 
   migrating-traffic:
