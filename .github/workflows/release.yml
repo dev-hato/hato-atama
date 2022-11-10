@@ -348,7 +348,7 @@ jobs:
         if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
-      - run: bash "${GITHUB_WORKSPACE}/scripts/release/set_mini_env.sh"
+      - run: bash "${GITHUB_WORKSPACE}/scripts/release/set_mini_test_env.sh"
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
         run: bash "${GITHUB_WORKSPACE}/scripts/release/run_mini_test.sh"
@@ -382,7 +382,7 @@ jobs:
         if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
-      - run: bash "${GITHUB_WORKSPACE}/scripts/release/set_all_env.sh"
+      - run: bash "${GITHUB_WORKSPACE}/scripts/release/set_all_test_env.sh"
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
         run: bash "${GITHUB_WORKSPACE}/scripts/release/run_all_test.sh"
@@ -488,7 +488,7 @@ jobs:
         if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
-      - run: bash "${GITHUB_WORKSPACE}/scripts/release/set_mini_env.sh"
+      - run: bash "${GITHUB_WORKSPACE}/scripts/release/set_mini_test_env.sh"
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
         run: bash "${GITHUB_WORKSPACE}/scripts/release/run_mini_test.sh"
@@ -517,7 +517,7 @@ jobs:
         if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
-      - run: bash "${GITHUB_WORKSPACE}/scripts/release/set_all_env.sh"
+      - run: bash "${GITHUB_WORKSPACE}/scripts/release/set_all_test_env.sh"
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
         run: bash "${GITHUB_WORKSPACE}/scripts/release/run_all_test.sh"
