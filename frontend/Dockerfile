@@ -24,7 +24,7 @@ RUN apt-get update \
     && apt-get remove -y yq \
     && apt-get autoremove -y \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists
+    && rm -rf /var/lib/apt/lists/*
 
 RUN find / -type f -perm /u+s -ignore_readdir_race -exec chmod u-s {} \; \
     && find / -type f -perm /g+s -ignore_readdir_race -exec chmod g-s {} \; \
