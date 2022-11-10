@@ -225,6 +225,8 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+    env:
+      DOCKER_CMD: "node --version && npm --version"
     steps:
       - uses: actions/checkout@v3.1.0
         with:
@@ -244,6 +246,7 @@ jobs:
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         env:
           DOCKER_CONTENT_TRUST: 1
+          REPOSITORY: ${{github.repository}}
         run: bash "${GITHUB_WORKSPACE}/scripts/release/update_version/get_node_version.sh"
       - name: Update versions
         if: github.event_name != 'pull_request' || github.event.action != 'closed'

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-DOCKER_CMD="node --version && npm --version"
+docker compose -f docker-compose.yml -f base.docker-compose.yml pull frontend
 mapfile -t result < <(docker compose -f docker-compose.yml -f base.docker-compose.yml run frontend sh -c "${DOCKER_CMD}")
 node_version="${result[0]//v/}"
 npm_version=${result[1]}

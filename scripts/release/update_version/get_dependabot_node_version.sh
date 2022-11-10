@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-DOCKER_CMD="node --version && npm --version"
 mapfile -t result < <(docker run ghcr.io/dependabot/dependabot-core sh -c "${DOCKER_CMD}")
 node_version="${result[0]//v/}"
 npm_version=${result[1]}
