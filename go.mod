@@ -7,5 +7,5 @@ require (
 	github.com/cosmtrek/air v1.40.4
 	github.com/go-playground/validator/v10 v10.11.1
 	github.com/labstack/echo/v4 v4.9.1
-	golang.org/x/tools v0.1.12
+	golang.org/x/tools v0.3.0
 )
