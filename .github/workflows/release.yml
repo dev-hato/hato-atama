@@ -233,6 +233,10 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
       - run: bash "${GITHUB_WORKSPACE}/scripts/release/change_file_and_env.sh"
+      - name: Get Dependabot Node.js version
+        if: github.event_name != 'pull_request' || github.event.action != 'closed'
+        id: get_dependabot_node_version
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/update_version/get_dependabot_node_version.sh"
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
         env:
           HEAD_REF: ${{github.head_ref}}
@@ -242,6 +246,8 @@ jobs:
         env:
           DOCKER_CONTENT_TRUST: 1
           REPOSITORY: ${{github.repository}}
+          DEPENDABOT_NODE_VERSION: ${{steps.get_dependabot_node_version.outputs.node_version}}
+          DEPENDABOT_NPM_VERSION: ${{steps.get_dependabot_node_version.outputs.npm_version}}
         run: bash "${GITHUB_WORKSPACE}/scripts/release/update_version/update_versions.sh"
       - uses: dev-hato/actions-diff-pr-management@v1.0.8
         with:
