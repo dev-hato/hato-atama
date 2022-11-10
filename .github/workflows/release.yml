@@ -54,8 +54,8 @@ jobs:
           node-version-file: frontend/.node-version
           cache: npm
           cache-dependency-path: frontend/package-lock.json
-      - name: Install Elm
-        run: bash "${GITHUB_WORKSPACE}/scripts/release/build_frontend/install_elm.sh"
+      - name: Build
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/build_frontend/build.sh"
       - uses: actions/upload-artifact@v3.1.1
         with:
           name: frontend
@@ -172,7 +172,7 @@ jobs:
           go-version: ${{steps.get_go_version.outputs.go_version}}
       - name: Install goimports
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
-        run: bash "${GITHUB_WORKSPACE}/scripts/release/format_go/install_goimports.sh"
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/format_go/run_goimports.sh"
       - uses: dev-hato/actions-diff-pr-management@v1.0.8
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
@@ -203,17 +203,17 @@ jobs:
           node-version-file: ${{ matrix.directory }}/.node-version
           cache: npm
           cache-dependency-path: ${{ matrix.directory }}/package-lock.json
-      - name: Get branch name
-        id: get_branch_name
+      - name: Set env and Get branch name
+        id: set_env_and_get_branch_name
         env:
           DIRECTORY: ${{ matrix.directory }}
-        run: bash "${GITHUB_WORKSPACE}/scripts/release/update_package/get_branch_name.sh"
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/update_package/set_env_and_npm_install.sh"
       - if: matrix.directory == 'frontend'
         run: npx update-browserslist-db
       - uses: dev-hato/actions-diff-pr-management@v1.0.8
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
-          branch-name-prefix: ${{steps.get_branch_name.outputs.branch_name}}
+          branch-name-prefix: ${{steps.set_env_and_get_branch_name.outputs.branch_name}}
           pr-title-prefix: package.jsonやpackage-lock.jsonを直してあげたよ！
           repo-name: ${{ github.event.pull_request.head.repo.full_name }}
 
