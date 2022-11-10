@@ -42,7 +42,7 @@ RUN apt-get update \
 WORKDIR /
 
 COPY frontend/elm.json ./
-RUN elm_version="$(grep elm-version elm.json | sed -e 's/ *"elm-version": "\(.*\)",$/\1/g')" \
+RUN elm_version="$(yq '."elm-version"' elm.json)" \
     && git clone -b "${elm_version}" https://github.com/elm/compiler.git
 
 WORKDIR /compiler
