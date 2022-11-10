@@ -14,7 +14,7 @@ COPY frontend/elm.json ./
 # https://github.com/elm/compiler/blob/24d3a89469e75cf7aa579442ecaf5ddfdd192ab2/installers/linux/README.md
 RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates curl yq \
-    if [ "${TARGETPLATFORM}" != "linux/arm64" ]; then \
+    && if [ "${TARGETPLATFORM}" != "linux/arm64" ]; then \
         elm_version="$(yq '."elm-version"' elm.json)"; \
         curl -L -o elm.gz "https://github.com/elm/compiler/releases/download/${elm_version}/binary-for-linux-64-bit.gz"; \
         gunzip elm.gz; \
