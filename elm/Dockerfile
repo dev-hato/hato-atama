@@ -35,7 +35,9 @@ RUN apt-get update \
         ghc \
         cabal-install \
         libmpfr-dev \
-        jq \
+        wget \
+       && wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq \
+       && chmod +x /usr/bin/yq \
        && apt-get autoremove -y \
        && apt-get clean \
        && rm -rf /var/lib/apt/lists/*
@@ -43,7 +45,7 @@ RUN apt-get update \
 WORKDIR /
 
 COPY frontend/elm.json ./
-RUN elm_version="$(jq -r '."elm-version"' elm.json)" \
+RUN elm_version="$(yq '."elm-version"' elm.json)" \
     && git clone -b "${elm_version}" https://github.com/elm/compiler.git
 
 WORKDIR /compiler

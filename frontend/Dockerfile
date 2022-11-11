@@ -13,15 +13,18 @@ COPY frontend/elm.json ./
 
 # https://github.com/elm/compiler/blob/24d3a89469e75cf7aa579442ecaf5ddfdd192ab2/installers/linux/README.md
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends ca-certificates curl jq \
+    && apt-get install -y --no-install-recommends ca-certificates curl wget \
     && if [ "${TARGETPLATFORM}" != "linux/arm64" ]; then \
-        elm_version="$(jq -r '."elm-version"' elm.json)"; \
+        wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq; \
+        chmod +x /usr/bin/yq; \
+        elm_version="$(yq '."elm-version"' elm.json)"; \
         curl -L -o elm.gz "https://github.com/elm/compiler/releases/download/${elm_version}/binary-for-linux-64-bit.gz"; \
         gunzip elm.gz; \
         chmod +x elm; \
         mv elm /usr/local/bin/; \
+        rm /usr/bin/yq; \
     fi \
-    && apt-get remove -y jq \
+    && apt-get remove -y wget \
     && apt-get autoremove -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
