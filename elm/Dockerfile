@@ -36,7 +36,7 @@ RUN apt-get update \
         cabal-install \
         libmpfr-dev \
         curl \
-       && curl https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o /usr/bin/yq \
+       && curl -L https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o /usr/bin/yq \
        && chmod +x /usr/bin/yq \
        && apt-get autoremove -y \
        && apt-get clean \

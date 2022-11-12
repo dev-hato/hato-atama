@@ -17,7 +17,7 @@ COPY frontend/elm.json ./
 
 # https://github.com/elm/compiler/blob/24d3a89469e75cf7aa579442ecaf5ddfdd192ab2/installers/linux/README.md
 RUN if [ "${TARGETPLATFORM}" != "linux/arm64" ]; then \
-        curl https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o /usr/bin/yq; \
+        curl -L https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o /usr/bin/yq; \
         chmod +x /usr/bin/yq; \
         elm_version="$(yq '."elm-version"' elm.json)"; \
         curl -L -o elm.gz "https://github.com/elm/compiler/releases/download/${elm_version}/binary-for-linux-64-bit.gz"; \
