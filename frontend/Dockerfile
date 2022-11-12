@@ -15,7 +15,7 @@ COPY frontend/elm.json ./
 RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates curl wget \
     && if [ "${TARGETPLATFORM}" != "linux/arm64" ]; then \
-        wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq; \
+        wget --progress=dot:giga https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq; \
         chmod +x /usr/bin/yq; \
         elm_version="$(yq '."elm-version"' elm.json)"; \
         curl -L -o elm.gz "https://github.com/elm/compiler/releases/download/${elm_version}/binary-for-linux-64-bit.gz"; \
