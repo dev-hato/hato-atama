@@ -344,7 +344,6 @@ jobs:
           node-version-file: test/e2e/.node-version
           cache: npm
           cache-dependency-path: test/e2e/package-lock.json
-        working-directory: ./test/e2e
       - uses: browser-actions/setup-firefox@v0.0.0
         if: matrix.browser_name == 'firefox'
         with:
