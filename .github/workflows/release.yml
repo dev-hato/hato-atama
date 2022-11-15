@@ -54,11 +54,8 @@ jobs:
           node-version-file: frontend/.node-version
           cache: npm
           cache-dependency-path: frontend/package-lock.json
-      - name: Install Elm
-        run: bash "${GITHUB_WORKSPACE}/scripts/release/build_frontend/install_elm.sh"
-      - run: npm ci
-      - name: build
-        run: npm run build
+      - name: Build
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/build_frontend/build.sh"
       - uses: actions/upload-artifact@v3.1.1
         with:
           name: frontend
@@ -159,18 +156,15 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
-      - run: sudo chown -R 1000:1000 server/
-      - run: cat .env >>"$GITHUB_ENV"
+      - run: bash "${GITHUB_WORKSPACE}/scripts/release/change_file_and_env.sh"
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
         env:
           HEAD_REF: ${{github.head_ref}}
         if: github.event_name == 'pull_request'
-      - if: github.event_name != 'pull_request' || github.event.action != 'closed'
-        run: docker compose -f docker-compose.yml -f dev.docker-compose.yml pull
       - name: Get Go version
         id: get_go_version
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
-        run: bash "${GITHUB_WORKSPACE}/scripts/release/format_go/get_go_version.sh"
+        run: bash "${GITHUB_WORKSPACE}/scripts/get_go_version.sh"
       - name: Set up Go
         uses: actions/setup-go@v3.3.1
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
@@ -178,10 +172,7 @@ jobs:
           go-version: ${{steps.get_go_version.outputs.go_version}}
       - name: Install goimports
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
-        run: bash "${GITHUB_WORKSPACE}/scripts/release/format_go/install_goimports.sh"
-      - name: Format files
-        if: github.event_name != 'pull_request' || github.event.action != 'closed'
-        run: bash "${GITHUB_WORKSPACE}/scripts/release/format_go/format_files.sh"
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/format_go/run_goimports.sh"
       - uses: dev-hato/actions-diff-pr-management@v1.0.8
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
@@ -207,23 +198,22 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
-      - name: Get branch name
-        id: get_branch_name
-        env:
-          DIRECTORY: ${{ matrix.directory }}
-        run: bash "${GITHUB_WORKSPACE}/scripts/release/update_package/get_branch_name.sh"
       - uses: actions/setup-node@v3.5.1
         with:
           node-version-file: ${{ matrix.directory }}/.node-version
           cache: npm
           cache-dependency-path: ${{ matrix.directory }}/package-lock.json
-      - run: npm install
+      - name: Set env and Get branch name
+        id: set_env_and_get_branch_name
+        env:
+          DIRECTORY: ${{ matrix.directory }}
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/update_package/set_env_and_npm_install.sh"
       - if: matrix.directory == 'frontend'
         run: npx update-browserslist-db
       - uses: dev-hato/actions-diff-pr-management@v1.0.8
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
-          branch-name-prefix: ${{steps.get_branch_name.outputs.branch_name}}
+          branch-name-prefix: ${{steps.set_env_and_get_branch_name.outputs.branch_name}}
           pr-title-prefix: package.jsonやpackage-lock.jsonを直してあげたよ！
           repo-name: ${{ github.event.pull_request.head.repo.full_name }}
 
@@ -235,32 +225,28 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+    env:
+      DOCKER_CMD: "node --version && npm --version"
     steps:
       - uses: actions/checkout@v3.1.0
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
-      - run: sudo chown -R 1000:1000 server/
+      - run: bash "${GITHUB_WORKSPACE}/scripts/release/change_file_and_env.sh"
       - name: Get Dependabot Node.js version
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         id: get_dependabot_node_version
         run: bash "${GITHUB_WORKSPACE}/scripts/release/update_version/get_dependabot_node_version.sh"
-      - run: cat .env >>"$GITHUB_ENV"
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
         env:
           HEAD_REF: ${{github.head_ref}}
         if: github.event_name == 'pull_request'
-      - if: github.event_name != 'pull_request' || github.event.action != 'closed'
-        run: echo "REPOSITORY=${{github.repository}}" >> "${GITHUB_ENV}"
-      - if: github.event_name != 'pull_request' || github.event.action != 'closed'
-        run: docker compose -f docker-compose.yml -f base.docker-compose.yml pull frontend
-        env:
-          DOCKER_CONTENT_TRUST: 1
       - name: Get Node.js version
         id: get_node_version
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         env:
           DOCKER_CONTENT_TRUST: 1
+          REPOSITORY: ${{github.repository}}
         run: bash "${GITHUB_WORKSPACE}/scripts/release/update_version/get_node_version.sh"
       - name: Update versions
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
@@ -305,15 +291,10 @@ jobs:
       REPOSITORY: ${{github.repository}}
     steps:
       - uses: actions/checkout@v3.1.0
-      - run: sudo chown -R 1000:1000 server/
-      - run: cat .env >>"$GITHUB_ENV"
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
         env:
           HEAD_REF: ${{github.head_ref}}
         if: ${{ github.event_name == 'pull_request' }}
-      - run: bash "${GITHUB_WORKSPACE}/scripts/release/dockle/install_dockle.sh"
-      - run: docker compose -f docker-compose.yml -f ${{matrix.docker_compose_file_name}} pull ${{matrix.service_name}}
-      - run: docker compose -f docker-compose.yml -f ${{matrix.docker_compose_file_name}} up -d ${{matrix.service_name}}
       - env:
           DOCKER_COMPOSE_FILE_NAME: ${{matrix.docker_compose_file_name}}
           SERVICE_NAME: ${{matrix.service_name}}
@@ -334,7 +315,6 @@ jobs:
           node-version-file: frontend/.node-version
           cache: npm
           cache-dependency-path: frontend/package-lock.json
-      - run: npm ci
       - name: Set Browserslist
         id: set_browserslist
         run: bash "${GITHUB_WORKSPACE}/scripts/release/make_browserslist/set_browserslist.sh"
@@ -358,22 +338,20 @@ jobs:
         env:
           HEAD_REF: ${{github.head_ref}}
         if: ${{ github.event_name == 'pull_request' }}
-      - run: docker compose -f docker-compose.yml -f staging.docker-compose.yml pull
-      - run: docker compose -f docker-compose.yml -f staging.docker-compose.yml up -d --wait
+      - run: bash "${GITHUB_WORKSPACE}/scripts/release/run_docker_compose.sh"
       - uses: actions/setup-node@v3.5.1
         with:
           node-version-file: test/e2e/.node-version
           cache: npm
           cache-dependency-path: test/e2e/package-lock.json
-      - run: npm ci
-        working-directory: ./test/e2e
       - uses: browser-actions/setup-firefox@v0.0.0
         if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
+      - run: bash "${GITHUB_WORKSPACE}/scripts/release/set_docker_compose_test_env.sh"
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
-        run: bash "${GITHUB_WORKSPACE}/scripts/release/e2e_test_mini_docker_compose/run_test.sh"
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/run_mini_test.sh"
         working-directory: ./test/e2e
 
   e2e-test-all-docker-compose:
@@ -395,22 +373,20 @@ jobs:
         env:
           HEAD_REF: ${{github.head_ref}}
         if: ${{ github.event_name == 'pull_request' }}
-      - run: docker compose -f docker-compose.yml -f staging.docker-compose.yml pull
-      - run: docker compose -f docker-compose.yml -f staging.docker-compose.yml up -d --wait
+      - run: bash "${GITHUB_WORKSPACE}/scripts/release/run_docker_compose.sh"
       - uses: actions/setup-node@v3.5.1
         with:
           node-version-file: test/e2e/.node-version
           cache: npm
           cache-dependency-path: test/e2e/package-lock.json
-      - run: npm ci
-        working-directory: ./test/e2e
       - uses: browser-actions/setup-firefox@v0.0.0
         if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
+      - run: bash "${GITHUB_WORKSPACE}/scripts/release/set_docker_compose_test_env.sh"
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
-        run: bash "${GITHUB_WORKSPACE}/scripts/release/e2e_test_all_docker_compose/run_test.sh"
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/run_all_test.sh"
         working-directory: ./test/e2e
 
   deploy-app-engine:
@@ -509,15 +485,14 @@ jobs:
           node-version-file: test/e2e/.node-version
           cache: npm
           cache-dependency-path: test/e2e/package-lock.json
-      - run: npm ci
-        working-directory: ./test/e2e
       - uses: browser-actions/setup-firefox@v0.0.0
         if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
+      - run: bash "${GITHUB_WORKSPACE}/scripts/release/set_prod_test_env.sh"
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
-        run: bash "${GITHUB_WORKSPACE}/scripts/release/e2e_test_mini_prd/run_test.sh"
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/run_mini_test.sh"
         working-directory: ./test/e2e
 
   e2e-test-all-prd:
@@ -539,15 +514,14 @@ jobs:
           node-version-file: test/e2e/.node-version
           cache: npm
           cache-dependency-path: test/e2e/package-lock.json
-      - run: npm ci
-        working-directory: ./test/e2e
       - uses: browser-actions/setup-firefox@v0.0.0
         if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
+      - run: bash "${GITHUB_WORKSPACE}/scripts/release/set_prod_test_env.sh"
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
-        run: bash "${GITHUB_WORKSPACE}/scripts/release/e2e_test_all_prd/run_test.sh"
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/run_all_test.sh"
         working-directory: ./test/e2e
 
   migrating-traffic:

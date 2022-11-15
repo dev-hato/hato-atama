@@ -6,3 +6,5 @@ curl -L -o elm.gz "https://github.com/elm/compiler/releases/download/${elm_versi
 gunzip elm.gz
 chmod +x elm
 mv elm /usr/local/bin/
+npm ci
+npm run build
