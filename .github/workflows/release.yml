@@ -173,7 +173,7 @@ jobs:
       - name: Install goimports
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         run: bash "${GITHUB_WORKSPACE}/scripts/release/format_go/run_goimports.sh"
-      - uses: dev-hato/actions-diff-pr-management@v1.0.8
+      - uses: dev-hato/actions-diff-pr-management@v1.0.9
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           branch-name-prefix: fix-format
@@ -210,7 +210,7 @@ jobs:
         run: bash "${GITHUB_WORKSPACE}/scripts/release/update_package/set_env_and_npm_install.sh"
       - if: matrix.directory == 'frontend'
         run: npx update-browserslist-db
-      - uses: dev-hato/actions-diff-pr-management@v1.0.8
+      - uses: dev-hato/actions-diff-pr-management@v1.0.9
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           branch-name-prefix: ${{steps.set_env_and_get_branch_name.outputs.branch_name}}
@@ -256,7 +256,7 @@ jobs:
           NODE_VERSION: ${{steps.get_node_version.outputs.node_version}}
           NPM_VERSION: ${{steps.get_node_version.outputs.npm_version}}
         run: bash "${GITHUB_WORKSPACE}/scripts/release/update_version/update_versions.sh"
-      - uses: dev-hato/actions-diff-pr-management@v1.0.8
+      - uses: dev-hato/actions-diff-pr-management@v1.0.9
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           branch-name-prefix: fix-version
