@@ -5,6 +5,9 @@ on:
   schedule:
     - cron: '0 0 */1 * *' # runs daily
   workflow_dispatch: # allows for manual invocation
+env:
+  GCP_WORKLOAD_IDENTITY_PROVIDER: 'projects/765091727073/locations/global/workloadIdentityPools/hato-atama-workload-identity/providers/github'
+  GCP_SERVICE_ACCOUNT: 'gcr-cleaner@hato-atama.iam.gserviceaccount.com'
 
 jobs:
   gcr-cleaner:
