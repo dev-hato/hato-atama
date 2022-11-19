@@ -12,6 +12,9 @@ env:
 jobs:
   gcr-cleaner:
     runs-on: 'ubuntu-latest'
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - id: 'auth'
         name: 'Authenticate to GCP'
