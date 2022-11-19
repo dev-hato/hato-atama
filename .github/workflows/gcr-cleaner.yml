@@ -32,7 +32,7 @@ jobs:
       - uses: 'docker://us-docker.pkg.dev/gcr-cleaner/gcr-cleaner/gcr-cleaner-cli'
         with:
           args: >-
-            -repo=asia.gcr.io/hato-atama
+            -repo=asia.gcr.io/hato-atama/app-engine-tmp
             -grace=48h
             -dry-run=true
             -recursive=true
