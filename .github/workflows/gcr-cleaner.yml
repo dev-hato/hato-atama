@@ -33,6 +33,5 @@ jobs:
         with:
           args: >-
             -repo=asia-docker.pkg.dev/hato-atama/asia.gcr.io
-#            -grace=48h
             -dry-run=true
             -recursive=true
