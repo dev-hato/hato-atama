@@ -34,3 +34,6 @@ jobs:
           args: >-
             -repo=asia.gcr.io/hato-atama
             -grace=48h
+            -dry_run=true
+            -recursive=true
+            
