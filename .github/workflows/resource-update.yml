@@ -27,7 +27,7 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
       - name: ncu install
         run: bash "${GITHUB_WORKSPACE}/scripts/resource_update/update.sh"
-      - uses: dev-hato/actions-diff-pr-management@v1.0.8
+      - uses: dev-hato/actions-diff-pr-management@v1.0.9
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           branch-name-prefix: ${{ github.event.inputs.base-branch-name }}-update-frontend
@@ -51,7 +51,7 @@ jobs:
           cache-dependency-path: test/e2e/package-lock.json
       - name: ncu install
         run: bash "${GITHUB_WORKSPACE}/scripts/resource_update/update.sh"
-      - uses: dev-hato/actions-diff-pr-management@v1.0.8
+      - uses: dev-hato/actions-diff-pr-management@v1.0.9
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           branch-name-prefix: ${{ github.event.inputs.base-branch-name }}-update-test-e2e
@@ -76,7 +76,7 @@ jobs:
           go-version: ${{steps.get_go_version.outputs.go_version}}
       - name: go mod update
         run: bash "${GITHUB_WORKSPACE}/scripts/resource_update/update_go/run_go_mod_tidy.sh"
-      - uses: dev-hato/actions-diff-pr-management@v1.0.8
+      - uses: dev-hato/actions-diff-pr-management@v1.0.9
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           branch-name-prefix: ${{ github.event.inputs.base-branch-name }}-update-go
