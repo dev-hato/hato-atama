@@ -22,6 +22,7 @@ jobs:
         with:
           workload_identity_provider: ${{env.GCP_WORKLOAD_IDENTITY_PROVIDER}}
           service_account: ${{env.GCP_SERVICE_ACCOUNT}}
+          create_credentials_file: false
 
       # customize based on the gcr-cleaner flags
       - uses: 'docker://us-docker.pkg.dev/gcr-cleaner/gcr-cleaner/gcr-cleaner-cli'
