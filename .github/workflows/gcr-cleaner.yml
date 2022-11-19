@@ -10,6 +10,12 @@ jobs:
   gcr-cleaner:
     runs-on: 'ubuntu-latest'
     steps:
+      - id: 'auth'
+        name: 'Authenticate to GCP'
+        uses: google-github-actions/auth@v1.0.0
+        with:
+          workload_identity_provider: ${{env.GCP_WORKLOAD_IDENTITY_PROVIDER}}
+          service_account: ${{env.GCP_SERVICE_ACCOUNT}}
 #      # configure based on your registry
 #      - uses: 'docker/login-action@v2'
 #        with:
