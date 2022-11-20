@@ -25,6 +25,7 @@ jobs:
     if: github.event_name != 'pull_request' || github.event.action != 'closed'
     steps:
       - uses: actions/checkout@v3.1.0
+      - run: exit 1
       - uses: dorny/paths-filter@v2.11.1
         id: changes
         with:
