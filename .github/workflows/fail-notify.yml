@@ -1,5 +1,5 @@
 ---
-name: fail-comment
+name: fail-notify
 
 on:
   workflow_run:
@@ -19,19 +19,25 @@ on:
       - completed
 
 jobs:
-  fail-comment:
+  fail-notify:
     runs-on: ubuntu-latest
     if: github.event.workflow_run.conclusion == 'failure'
     steps:
-      - uses: actions/github-script@v6.3.3
-        env:
-          PULL_REQUESTS: ${{github.event.workflow_run.pull_requests}}
-          WORKFLOW_RUN_URL: ${{github.event.workflow_run.html_url}}
+      - name: Get slack payload
+        id: get_slack_payload
+        uses: actions/github-script@v6.3.3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
+          result-encoding: string
           script: |
-            const script = require(`${process.env.GITHUB_WORKSPACE}/scripts/fail_comment/fail_comment/comment.js`)
-            await script({github, context})
+            const script = require(`${process.env.GITHUB_WORKSPACE}/scripts/fail_notify/fail_notify/get_slack_payload.js`)
+            return script({context})
+      - uses: slackapi/slack-github-action@v1.23.0
+        with:
+          channel-id: ${{secrets.SLACK_CHANNEL_ID}}
+          payload: ${{steps.get_slack_payload.outputs.result}}
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
