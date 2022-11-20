@@ -25,7 +25,7 @@ jobs:
           service_account: ${{env.GCP_SERVICE_ACCOUNT}}
 
       # customize based on the gcr-cleaner flags
-      - uses: 'docker://us-docker.pkg.dev/gcr-cleaner/gcr-cleaner/gcr-cleaner-cli'
+      - uses: docker://us-docker.pkg.dev/gcr-cleaner/gcr-cleaner/gcr-cleaner-cli:v0.10.0
         with:
           args: >-
             -repo=asia-docker.pkg.dev/hato-atama/asia.gcr.io
