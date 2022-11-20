@@ -4,7 +4,7 @@ module.exports = async ({github, context}) => {
             issue_number: pr.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
-            body: "CIが失敗したっぽ......\n${{github.event.workflow_run.html_url}}"
+            body: `CIが失敗したっぽ......\n${process.env.WORKFLOW_RUN_URL}`
         })
     }
 }

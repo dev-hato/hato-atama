@@ -14,6 +14,7 @@ jobs:
       - uses: actions/github-script@v6.3.3
         env:
           PULL_REQUESTS: ${{github.event.workflow_run.pull_requests}}
+          WORKFLOW_RUN_URL: ${{github.event.workflow_run.html_url}}
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
