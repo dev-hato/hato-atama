@@ -16,16 +16,16 @@ jobs:
       id-token: write
       contents: read
     steps:
+      - uses: actions/checkout@v3.1.0
       - id: 'auth'
         name: 'Authenticate to GCP'
         uses: google-github-actions/auth@v1.0.0
         with:
           workload_identity_provider: ${{env.GCP_WORKLOAD_IDENTITY_PROVIDER}}
           service_account: ${{env.GCP_SERVICE_ACCOUNT}}
-          create_credentials_file: false
 
       # customize based on the gcr-cleaner flags
-      - uses: 'docker://us-docker.pkg.dev/gcr-cleaner/gcr-cleaner/gcr-cleaner-cli'
+      - uses: docker://us-docker.pkg.dev/gcr-cleaner/gcr-cleaner/gcr-cleaner-cli:0.10.0
         with:
           args: >-
             -repo=asia-docker.pkg.dev/hato-atama/asia.gcr.io
