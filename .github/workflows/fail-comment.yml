@@ -3,6 +3,18 @@ name: fail-comment
 
 on:
   workflow_run:
+    workflows:
+      - Add to Task List
+      - CodeQL
+      - format-json-yml
+      - gcr-cleaner
+      - release
+      - remove-app-engine-versions
+      - renovate-config-validator
+      - resource-update
+      - super-linter
+      - update-gitleaks
+      - update-go-runtime
     types:
       - completed
 
