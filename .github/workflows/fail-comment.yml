@@ -1,0 +1,38 @@
+---
+name: fail-comment
+
+on:
+  workflow_run:
+    workflows:
+      - Add to Task List
+      - CodeQL
+      - format-json-yml
+      - gcr-cleaner
+      - release
+      - remove-app-engine-versions
+      - renovate-config-validator
+      - resource-update
+      - super-linter
+      - update-gitleaks
+      - update-go-runtime
+    types:
+      - completed
+
+jobs:
+  fail-comment:
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'failure'
+    steps:
+      - uses: actions/github-script@v6.3.3
+        env:
+          PULL_REQUESTS: ${{github.event.workflow_run.pull_requests}}
+          WORKFLOW_RUN_URL: ${{github.event.workflow_run.html_url}}
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const script = require(`${process.env.GITHUB_WORKSPACE}/scripts/fail_comment/fail_comment/comment.js`)
+            await script({github, context})
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
