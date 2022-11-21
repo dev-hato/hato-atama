@@ -18,7 +18,7 @@ module.exports = ({ context }) => {
   } else if (context.payload.workflow_run.head_commit && context.payload.workflow_run.head_repository) {
     payload.attachments.unshift({
       title: 'コミット',
-      value: `<${context.payload.workflow_run.head_commit.message}|${context.payload.workflow_run.head_repository.html_url}/commits/${context.payload.workflow_run.head_commit.id}>`
+      value: `<${context.payload.workflow_run.head_commit.message}|${context.payload.workflow_run.head_repository.html_url}/commit/${context.payload.workflow_run.head_commit.id}>`
     })
   }
 
