@@ -23,6 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.workflow_run.conclusion == 'failure'
     steps:
+      - uses: actions/checkout@v3.1.0
       - name: Get slack payload
         id: get_slack_payload
         uses: actions/github-script@v6.3.3
@@ -38,7 +39,3 @@ jobs:
           payload: ${{steps.get_slack_payload.outputs.result}}
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
-  cancel-in-progress: true
