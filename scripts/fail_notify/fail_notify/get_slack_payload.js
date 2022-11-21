@@ -1,4 +1,5 @@
 module.exports = ({ context }) => {
+  console.log(context.payload)
   const payload = {
     text: 'CIが失敗したっぽ......',
     attachments: [
