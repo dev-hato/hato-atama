@@ -13,7 +13,7 @@ module.exports = ({ context }) => {
   if (context.payload.workflow_run.event === 'pull_request') {
     payload.attachments.unshift({
       title: 'PR',
-      value: context.payload.workflow_run.pull_requests.map(p => `<${p}|${context.payload.workflow_run.pulls_url.replace('{/number}', `/${p}`)}>`).join('\n')
+      value: context.payload.workflow_run.pull_requests.map(p => p.number).map(n => `<${n}|${context.payload.workflow_run.head_repository.html_url}/pulls/${n}>`).join('\n')
     })
   } else if (context.payload.workflow_run.head_commit && context.payload.workflow_run.head_repository) {
     payload.attachments.unshift({
