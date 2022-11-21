@@ -23,6 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.workflow_run.conclusion == 'failure'
     steps:
+      - uses: actions/checkout@v3.1.0
       - name: Get slack payload
         id: get_slack_payload
         uses: actions/github-script@v6.3.3
