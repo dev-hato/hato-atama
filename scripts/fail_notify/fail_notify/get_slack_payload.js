@@ -1,3 +1,4 @@
+// https://api.slack.com/reference/surfaces/formatting#escaping
 function escape (s) {
   for (const replaceRule of [['&', '&amp;'], ['<', '&lt;'], ['>', '&gt;']]) {
     s = s.replaceAll(replaceRule[0], replaceRule[1])
