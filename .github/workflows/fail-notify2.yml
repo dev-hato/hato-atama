@@ -1,0 +1,35 @@
+---
+name: fail-notify2
+
+on:
+  pull_request:
+
+jobs:
+  fail-notify2:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: slackapi/slack-github-action@v1.23.0
+        with:
+          channel-id: ${{secrets.SLACK_CHANNEL_ID}}
+          payload: |
+            {
+              "text": "CIが失敗したっぽ......",
+              "attachments": [
+                {
+                  "color": "danger",
+                  "fields": [
+                    {
+                      "title": "PR",
+                      "value": "<CIを失敗させてみる|https://github.com/dev-hato/hato-atama/pulls/2080>"
+                    },
+                    {
+                      "title": "詳細",
+                      "value": "<3528511912|https://github.com/dev-hato/hato-atama/actions/runs/3528511912>",
+                      "short": true
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
