@@ -20,11 +20,11 @@ jobs:
                   "fields": [
                     {
                       "title": "PR",
-                      "value": "<https://github.com/dev-hato/hato-atama/pulls/2080|CIを失敗させてみる>"
+                      "value": "<CIを失敗させてみる|https://github.com/dev-hato/hato-atama/pulls/2080>"
                     },
                     {
                       "title": "詳細",
-                      "value": "<https://github.com/dev-hato/hato-atama/actions/runs/3528511912|3528511912>",
+                      "value": "<3528511912|https://github.com/dev-hato/hato-atama/actions/runs/3528511912>",
                       "short": true
                     }
                   ]
