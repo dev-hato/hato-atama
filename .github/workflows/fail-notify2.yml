@@ -16,12 +16,10 @@ jobs:
               "text": "CIが失敗したっぽ......",
               "attachments": [
                 {
+                  "title": "PR",
+                  "text": "<https://github.com/dev-hato/hato-atama/pull/2080|CIを失敗させてみる>",
                   "color": "danger",
                   "fields": [
-                    {
-                      "title": "PR",
-                      "value": "<https://github.com/dev-hato/hato-atama/pulls/2080|CIを失敗させてみる>"
-                    },
                     {
                       "title": "詳細",
                       "value": "<https://github.com/dev-hato/hato-atama/actions/runs/3528511912|3528511912>",
