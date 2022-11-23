@@ -19,7 +19,7 @@ module.exports = ({ context }) => {
       displayTitle = displayTitle.replaceAll(replaceRule[0], replaceRule[1])
     }
 
-    if (context.payload.workflow_run.event === 'pull_request' && context.payload.workflow_run.pull_requests) {
+    if (context.payload.workflow_run.event === 'pull_request' && context.payload.workflow_run.pull_requests.length > 0) {
       attachment.title = 'Pull Request'
       attachment.text = context.payload.workflow_run.pull_requests.map(p => `<${context.payload.workflow_run.head_repository.html_url}/pull/${p.number}|${displayTitle}>`).join('\n')
     } else if (context.payload.workflow_run.head_commit) {
