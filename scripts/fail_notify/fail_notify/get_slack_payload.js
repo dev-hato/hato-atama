@@ -1,5 +1,4 @@
 module.exports = ({ context }) => {
-  console.log(context.payload)
   const attachment = {
     color: 'danger',
     fields: [
