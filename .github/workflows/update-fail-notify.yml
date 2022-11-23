@@ -1,0 +1,31 @@
+---
+name: update-fail-notify
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - closed
+  push:
+    branches:
+      - master
+jobs:
+  update-fail-notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3.1.0
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+      - run: |
+          workflows_dir=.github/workflows
+          fail_notify_workflow_file="${workflows_dir}/fail-notify.yml"
+          workflows="$(find "${workflows_dir}" -not -path "${fail_notify_workflow_file}" -type f -exec yq '.name' {} \; | sort | sed -e 's/^\(.*\)$/"\1"/g' | tr '\n' ',' | sed -e 's/,$//g')"
+          yq -i ".on.workflow_run.workflows=[${workflows}]" "${fail_notify_workflow_file}"
+      - uses: dev-hato/actions-diff-pr-management@v1.0.9
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          branch-name-prefix: update-fail-notify
+          pr-title-prefix: fail-notifyを修正したよ！
+          repo-name: ${{ github.event.pull_request.head.repo.full_name }}
