@@ -1,11 +1,12 @@
 module.exports = ({ context }) => {
   console.log(context.payload)
-  const payload = {
-    text: 'CIが失敗したっぽ......',
-    attachments: [
+  const attachment = {
+    color: 'danger',
+    fields: [
       {
         title: '詳細',
-        value: `<${context.payload.workflow_run.id}|${context.payload.workflow_run.html_url}>`
+        value: `<${context.payload.workflow_run.html_url}|${context.payload.workflow_run.id}>`,
+        short: true
       }
     ]
   }
@@ -17,16 +18,15 @@ module.exports = ({ context }) => {
   }
 
   if (context.payload.workflow_run.event === 'pull_request') {
-    payload.attachments.unshift({
-      title: 'PR',
-      value: context.payload.workflow_run.pull_requests.map(p => `<${displayTitle}|${context.payload.workflow_run.head_repository.html_url}/pulls/${p.number}>`).join('\n')
-    })
+    attachment.title = 'Pull Request'
+    attachment.text = context.payload.workflow_run.pull_requests.map(p => `<${context.payload.workflow_run.head_repository.html_url}/pull/${p.number}|${displayTitle}>`).join('\n')
   } else if (context.payload.workflow_run.head_commit && context.payload.workflow_run.head_repository) {
-    payload.attachments.unshift({
-      title: 'コミット',
-      value: `<${displayTitle}|${context.payload.workflow_run.head_repository.html_url}/commit/${context.payload.workflow_run.head_commit.id}>`
-    })
+    attachment.title = 'コミット'
+    attachment.text = `<${context.payload.workflow_run.head_repository.html_url}/commit/${context.payload.workflow_run.head_commit.id}|${displayTitle}>`
   }
 
-  return JSON.stringify(payload)
+  return JSON.stringify({
+    text: 'CIが失敗したっぽ......',
+    attachments: [attachment]
+  })
 }
