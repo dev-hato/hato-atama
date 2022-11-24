@@ -69,6 +69,10 @@ jobs:
           echo '3' ${{ github.ref_name }}
           echo '4' ${{ github.head_ref }}
           echo '5' ${{ github.base_ref }}
+          echo '6' ${{ github.sha }}
+          echo '7' ${{ github.sha_name }}
+          echo '8' ${{ github.head_sha }}
+          echo '9' ${{ github.base_sha }}
       - uses: actions/checkout@v3.1.0
         with:
           fetch-depth: 0
