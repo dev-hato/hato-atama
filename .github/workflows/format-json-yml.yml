@@ -2,15 +2,7 @@
 name: format-json-yml
 
 on:
-  pull_request:
-    types:
-      - opened
-      - synchronize
-      - reopened
-      - closed
   push:
-    branches:
-      - master
 
 permissions:
   contents: write
