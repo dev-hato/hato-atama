@@ -31,6 +31,7 @@ jobs:
           echo '8' ${{ github.head_sha }}
           echo '9' ${{ github.base_sha }}
           echo '10' ${{ github.repository }}
+          echo '11' ${{github.event.pull_request.head.sha || github.sha}}
       - uses: actions/checkout@v3.1.0
         with:
           fetch-depth: 0
