@@ -30,6 +30,7 @@ jobs:
           echo '7' ${{ github.sha_name }}
           echo '8' ${{ github.head_sha }}
           echo '9' ${{ github.base_sha }}
+          echo '10' ${{ github.repository }}
       - uses: actions/checkout@v3.1.0
         with:
           fetch-depth: 0
