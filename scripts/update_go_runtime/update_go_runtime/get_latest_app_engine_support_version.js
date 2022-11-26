@@ -1,11 +1,18 @@
 const axios = require('axios')
 const cheerio = require('cheerio')
-const Encoding = require('encoding-japanese')
+const chardet = require('chardet');
+const iconv = require('iconv-lite');
 const { Text } = require('domhandler')
 
 module.exports = async () => {
-  const response = await axios.get('https://cloud.google.com/appengine/docs/standard/go/runtime', {responseEncoding: 'binary'})
-  const $ = cheerio.load(response.data.toString('utf-8'),{ decodeEntities: false })
+  const response = await axios.get('https://cloud.google.com/appengine/docs/standard/go/runtime', {responseEncoding: 'arraybuffer'})
+  const encoding = chardet.detect(response.data)
+  if (!encoding) {
+    throw new Error('chardet failed to detect encoding')
+  }
+  const data = iconv.decode(response.data, encoding)
+  console.log(data)
+  const $ = cheerio.load(data)
   const versions = []
 
   for (const element of $('code[dir="ltr"]').get()) {
