@@ -18,5 +18,8 @@ module.exports = async () => {
   }
 
   versions.sort()
-  return versions.pop()
+  console.log(versions)
+  const a=versions.pop()
+  console.log(a)
+  return a
 }
