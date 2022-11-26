@@ -6,6 +6,7 @@ on:
     workflows:
       - Add to Task List
       - CodeQL
+      - check-fail-notify
       - format-json-yml
       - gcr-cleaner
       - release
@@ -17,7 +18,6 @@ on:
       - update-go-runtime
     types:
       - completed
-
 jobs:
   fail-notify:
     runs-on: ubuntu-latest
