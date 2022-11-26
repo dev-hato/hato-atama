@@ -9,9 +9,9 @@ module.exports = async () => {
 
   for (const element of $('code[dir="ltr"]').get()) {
     const textElement = element.children[0]
+    console.log(element.children[0])
     if (textElement instanceof Text) {
       const textElementData = textElement.data.trim()
-      console.log(textElementData)
       if (textElementData.startsWith('runtime')) {
         versions.push(textElementData)
       }
