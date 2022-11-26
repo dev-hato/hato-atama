@@ -9,6 +9,8 @@ module.exports = async () => {
   const $ = cheerio.load(n)
   const versions = []
 
+  console.log($('code[dir="ltr"]').get())
+
   for (const element of $('code[dir="ltr"]').get()) {
     const textElement = element.children[0]
     if (textElement instanceof Text) {
