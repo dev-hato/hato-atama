@@ -1,5 +1,5 @@
 ---
-runtime: go116
+undefined
 main: ./server
 handlers:
   - url: /api/.*
