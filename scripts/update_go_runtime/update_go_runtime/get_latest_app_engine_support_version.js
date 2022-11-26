@@ -5,7 +5,7 @@ const { Text } = require('domhandler')
 
 module.exports = async () => {
   const response = await axios.get('https://cloud.google.com/appengine/docs/standard/go/runtime',{ responseType: 'arraybuffer' })
-  const data=Encoding.convert(Buffer.from(response.data),'utf-8')
+  const data=Encoding.convert(Buffer.from(response.data),'UNICODE')
   console.log(data)
   const $ = cheerio.load(data)
   const versions = []
