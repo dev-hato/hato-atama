@@ -10,7 +10,7 @@ module.exports = async () => {
   if (!encoding) {
     throw new Error('chardet failed to detect encoding')
   }
-  const data = iconv.decode(response.data, encoding)
+  const data = iconv.decode(response.data, 'utf-8')
   console.log(data)
   const $ = cheerio.load(data)
   const versions = []
