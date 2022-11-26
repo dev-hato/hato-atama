@@ -1,18 +1,9 @@
-const axios = require('axios')
+const fs = require('fs')
 const cheerio = require('cheerio')
-const chardet = require('chardet');
-const iconv = require('iconv-lite');
 const { Text } = require('domhandler')
 
 module.exports = async () => {
-  const response = await axios.get('https://cloud.google.com/appengine/docs/standard/go/runtime', {responseType: 'arraybuffer'})
-  const encoding = chardet.detect(response.data)
-  if (!encoding) {
-    throw new Error('chardet failed to detect encoding')
-  }
-  const data = iconv.decode(response.data, 'utf-8')
-  console.log(data)
-  const $ = cheerio.load(data)
+  const $ = cheerio.load(fs.readFileSync('runtime.html'))
   const versions = []
 
   for (const element of $('code[dir="ltr"]').get()) {
