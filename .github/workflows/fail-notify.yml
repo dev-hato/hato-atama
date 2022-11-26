@@ -1,6 +1,5 @@
 ---
 name: fail-notify
-
 on:
   workflow_run:
     workflows:
