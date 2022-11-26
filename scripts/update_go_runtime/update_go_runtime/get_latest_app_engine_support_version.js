@@ -11,6 +11,7 @@ module.exports = async () => {
     const textElement = element.children[0]
     if (textElement instanceof Text) {
       const textElementData = textElement.data.trim()
+      console.log(textElementData)
       if (textElementData.startsWith('runtime')) {
         versions.push(textElementData)
       }
