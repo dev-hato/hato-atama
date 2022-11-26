@@ -26,7 +26,11 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y nkf
-          echo "html=$(curl https://cloud.google.com/appengine/docs/standard/go/runtime | nkf -Lu)" >>"${GITHUB_OUTPUT}"
+          html="$(curl https://cloud.google.com/appengine/docs/standard/go/runtime | nkf -Lu)"
+          html="${html//'%'/'%25'}"
+          html="${html//$'\n'/'%0A'}"
+          html="${html//$'\r'/'%0D'}"
+          echo "html=${html}" >>"${GITHUB_OUTPUT}"
       - name: Get latest App Engine support version
         id: get_latest_app_engine_support_version
         uses: actions/github-script@v6.3.3
