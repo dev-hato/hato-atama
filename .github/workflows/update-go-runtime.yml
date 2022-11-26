@@ -22,13 +22,16 @@ jobs:
           node-version-file: .node-version
           cache: npm
       - run: bash "${GITHUB_WORKSPACE}/scripts/update_go_runtime/update_go_runtime/npm_ci.sh"
-      - run: |
+      - id: get-html
+        run: |
           sudo apt-get update
           sudo apt-get install -y nkf
-          curl https://cloud.google.com/appengine/docs/standard/go/runtime | nkf -Lu
+          echo "html=$(curl https://cloud.google.com/appengine/docs/standard/go/runtime | nkf -Lu)" >>"${GITHUB_OUTPUT}"
       - name: Get latest App Engine support version
         id: get_latest_app_engine_support_version
         uses: actions/github-script@v6.3.3
+        env:
+          HTML: ${{steps.get-html.outputs.html}}
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           result-encoding: string
