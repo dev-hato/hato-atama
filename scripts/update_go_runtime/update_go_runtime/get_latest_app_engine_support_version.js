@@ -6,7 +6,7 @@ const { Text } = require('domhandler')
 module.exports = async () => {
   const response = await axios.get('https://cloud.google.com/appengine/docs/standard/go/runtime',{responseType: 'arraybuffer',
     responseEncoding: 'binary'})
-  const n=iconv.decode(Buffer.from(response.data), 'windows-31j')
+  const n=iconv.decode(Buffer.from(response.data), 'utf-8')
   console.log(n)
   const $ = cheerio.load(n)
   const versions = []
