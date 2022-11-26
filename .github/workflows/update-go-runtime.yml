@@ -25,7 +25,7 @@ jobs:
       - run: |
           sudo apt-get update
           sudo apt-get install -y nkf
-          curl https://cloud.google.com/appengine/docs/standard/go/runtime | nkf --guess
+          curl https://cloud.google.com/appengine/docs/standard/go/runtime | nkf -Lu
       - name: Get latest App Engine support version
         id: get_latest_app_engine_support_version
         uses: actions/github-script@v6.3.3
