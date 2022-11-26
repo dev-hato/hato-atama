@@ -4,12 +4,13 @@ const { Text } = require('domhandler')
 
 module.exports = async () => {
   const response = await axios.get('https://cloud.google.com/appengine/docs/standard/go/runtime')
-  const $ = cheerio.load(response.data)
+  const n=response.data
+  console.log(n)
+  const $ = cheerio.load(n)
   const versions = []
 
   for (const element of $('code[dir="ltr"]').get()) {
     const textElement = element.children[0]
-    console.log(element.children[0])
     if (textElement instanceof Text) {
       const textElementData = textElement.data.trim()
       if (textElementData.startsWith('runtime')) {
