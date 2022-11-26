@@ -1,8 +1,13 @@
+const axios = require('axios')
 const cheerio = require('cheerio')
+const Encoding = require('encoding-japanese')
 const { Text } = require('domhandler')
 
 module.exports = async () => {
-  const $ = cheerio.load(process.env.HTML)
+  const response = await axios.get('https://cloud.google.com/appengine/docs/standard/go/runtime',{ responseType: 'arraybuffer' })
+  const data=Encoding.convert(Buffer.from(response.data),'utf-8')
+  console.log(data)
+  const $ = cheerio.load(data)
   const versions = []
 
   for (const element of $('code[dir="ltr"]').get()) {
