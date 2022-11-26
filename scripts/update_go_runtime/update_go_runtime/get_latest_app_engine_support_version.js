@@ -3,7 +3,7 @@ const cheerio = require('cheerio')
 const { Text } = require('domhandler')
 
 module.exports = async () => {
-  const response = await axios.get('https://cloud.google.com/appengine/docs/standard/go/runtime')
+  const response = await axios.get('https://cloud.google.com/appengine/docs/standard/go/runtime',{responseEncoding: 'utf8'})
   const n=response.data
   console.log(n)
   const $ = cheerio.load(n)
