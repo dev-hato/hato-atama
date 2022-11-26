@@ -27,12 +27,11 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
       - name: ncu install
         run: bash "${GITHUB_WORKSPACE}/scripts/resource_update/update.sh"
-      - uses: dev-hato/actions-diff-pr-management@v1.0.9
+      - uses: dev-hato/actions-diff-pr-management@fix_params
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           branch-name-prefix: ${{ github.event.inputs.base-branch-name }}-update-frontend
           pr-title-prefix: Update frontend
-          repo-name: dev-hato/hato-atama
 
   update-test-e2e:
     runs-on: ubuntu-latest
@@ -51,12 +50,11 @@ jobs:
           cache-dependency-path: test/e2e/package-lock.json
       - name: ncu install
         run: bash "${GITHUB_WORKSPACE}/scripts/resource_update/update.sh"
-      - uses: dev-hato/actions-diff-pr-management@v1.0.9
+      - uses: dev-hato/actions-diff-pr-management@fix_params
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           branch-name-prefix: ${{ github.event.inputs.base-branch-name }}-update-test-e2e
           pr-title-prefix: Update test/e2e
-          repo-name: dev-hato/hato-atama
 
   update-go:
     runs-on: ubuntu-latest
@@ -76,9 +74,8 @@ jobs:
           go-version: ${{steps.get_go_version.outputs.go_version}}
       - name: go mod update
         run: bash "${GITHUB_WORKSPACE}/scripts/resource_update/update_go/run_go_mod_tidy.sh"
-      - uses: dev-hato/actions-diff-pr-management@v1.0.9
+      - uses: dev-hato/actions-diff-pr-management@fix_params
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           branch-name-prefix: ${{ github.event.inputs.base-branch-name }}-update-go
           pr-title-prefix: Update go
-          repo-name: dev-hato/hato-atama
