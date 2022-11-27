@@ -1,0 +1,25 @@
+---
+name: check-fail-notify
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - closed
+  push:
+    branches:
+      - master
+jobs:
+  check-fail-notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3.1.0
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Get diff
+        id: get_diff
+        run: bash "${GITHUB_WORKSPACE}/scripts/check_fail_notify/check_fail_notify/get_diff.sh"
+      - if: steps.get_diff.outputs.diff != ''
+        run: exit 1
