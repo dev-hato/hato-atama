@@ -1,10 +1,9 @@
-const axios = require('axios')
+const fs = require('fs')
 const cheerio = require('cheerio')
 const { Text } = require('domhandler')
 
 module.exports = async () => {
-  const response = await axios.get('https://cloud.google.com/appengine/docs/standard/go/runtime')
-  const $ = cheerio.load(response.data)
+  const $ = cheerio.load(fs.readFileSync('runtime.html'))
   const versions = []
 
   for (const element of $('code[dir="ltr"]').get()) {
