@@ -178,7 +178,6 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           branch-name-prefix: fix-format
           pr-title-prefix: formatが間違ってたので直してあげたよ！
-          repo-name: ${{ github.event.pull_request.head.repo.full_name }}
 
   # npm installを実行し、package.jsonやpackage-lock.jsonに差分があればPRを作る
   update-package:
@@ -215,7 +214,6 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           branch-name-prefix: ${{steps.set_env_and_get_branch_name.outputs.branch_name}}
           pr-title-prefix: package.jsonやpackage-lock.jsonを直してあげたよ！
-          repo-name: ${{ github.event.pull_request.head.repo.full_name }}
 
   # .node-version や package.json のNode.js・npmのバージョンをDockerイメージと同期させる
   update-version:
@@ -261,7 +259,6 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           branch-name-prefix: fix-version
           pr-title-prefix: nodeのバージョンを直してあげたよ！
-          repo-name: ${{ github.event.pull_request.head.repo.full_name }}
 
   update-dockle:
     runs-on: ubuntu-latest
