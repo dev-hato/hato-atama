@@ -17,7 +17,7 @@ env:
   GCP_SERVICE_ACCOUNT: 'actions-deploy@hato-atama.iam.gserviceaccount.com'
 
 jobs:
-  # App Engineにデプロイされるファイルの差分の有無を判定する
+  # App Engineにデプロイされるファイルの差分の有無を判定するaaa
   check-deploy-diff:
     runs-on: ubuntu-latest
     outputs:
