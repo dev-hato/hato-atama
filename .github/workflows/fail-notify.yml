@@ -8,6 +8,7 @@ on:
       - check-fail-notify
       - format-json-yml
       - gcr-cleaner
+      - github-actions-cache-cleaner
       - release
       - remove-app-engine-versions
       - renovate-config-validator
