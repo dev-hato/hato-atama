@@ -166,7 +166,7 @@ jobs:
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         run: bash "${GITHUB_WORKSPACE}/scripts/get_go_version.sh"
       - name: Set up Go
-        uses: actions/setup-go@v3.4.0
+        uses: actions/setup-go@v3.5.0
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         with:
           go-version: ${{steps.get_go_version.outputs.go_version}}
