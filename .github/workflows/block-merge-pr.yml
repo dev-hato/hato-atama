@@ -21,7 +21,7 @@ jobs:
           script: |
             for (const label of context.payload.pull_request.labels) {
               if (label.name === 'duplicate') {
-                return 1;
+                throw new Error();
               }
             }
 
