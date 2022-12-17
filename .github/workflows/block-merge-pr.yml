@@ -17,13 +17,9 @@ jobs:
       - uses: actions/github-script@v6.3.3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
-          result-encoding: string
           script: |
-            for (const label of context.payload.pull_request.labels) {
-              if (label.name === 'do not merge') {
-                throw new Error('「do not merge」ラベルが付与されているためマージできません。');
-              }
-            }
+            const script = require(`${process.env.GITHUB_WORKSPACE}/scripts/block-merge-pr/block-merge-pr/check-labels.js`)
+            script()
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
