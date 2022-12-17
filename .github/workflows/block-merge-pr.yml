@@ -19,7 +19,11 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           result-encoding: string
           script: |
-            console.log(context.payload.pull_request.labels)
+            for (const label of context.payload.pull_request.labels) {
+              if (label.name === 'duplicate') {
+                return 1;
+              }
+            }
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
