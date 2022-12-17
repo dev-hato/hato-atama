@@ -1,0 +1,26 @@
+---
+name: block-merge-pr
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - labeled
+      - unlabeled
+
+jobs:
+  block-merge-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v6.3.3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          result-encoding: string
+          script: |
+            console.log(github.event.pull_request)
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
