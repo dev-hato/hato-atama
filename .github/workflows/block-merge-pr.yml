@@ -20,7 +20,7 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             const script = require(`${process.env.GITHUB_WORKSPACE}/scripts/block-merge-pr/block-merge-pr/check-labels.js`)
-            script()
+            script({context})
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
