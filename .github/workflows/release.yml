@@ -170,6 +170,7 @@ jobs:
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         with:
           go-version: ${{steps.get_go_version.outputs.go_version}}
+          cache: true
       - name: Install goimports
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         run: bash "${GITHUB_WORKSPACE}/scripts/release/format_go/run_goimports.sh"

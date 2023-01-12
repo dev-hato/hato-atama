@@ -72,6 +72,7 @@ jobs:
         uses: actions/setup-go@v3.5.0
         with:
           go-version: ${{steps.get_go_version.outputs.go_version}}
+          cache: true
       - name: go mod update
         run: bash "${GITHUB_WORKSPACE}/scripts/resource_update/update_go/run_go_mod_tidy.sh"
       - uses: dev-hato/actions-diff-pr-management@v1.1.1
