@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	cloud.google.com/go/datastore v1.10.0
-	github.com/cosmtrek/air v1.40.4
+	github.com/cosmtrek/air v1.41.0
 	github.com/go-playground/validator/v10 v10.11.1
 	github.com/labstack/echo/v4 v4.10.0
 	golang.org/x/tools v0.1.12
@@ -14,9 +14,9 @@ require (
 	cloud.google.com/go v0.105.0 // indirect
 	cloud.google.com/go/compute v1.12.1 // indirect
 	cloud.google.com/go/compute/metadata v0.2.1 // indirect
-	github.com/creack/pty v1.1.11 // indirect
-	github.com/fatih/color v1.10.0 // indirect
-	github.com/fsnotify/fsnotify v1.4.9 // indirect
+	github.com/creack/pty v1.1.18 // indirect
+	github.com/fatih/color v1.13.0 // indirect
+	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
@@ -25,12 +25,12 @@ require (
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.2.0 // indirect
 	github.com/googleapis/gax-go/v2 v2.7.0 // indirect
-	github.com/imdario/mergo v0.3.12 // indirect
+	github.com/imdario/mergo v0.3.13 // indirect
 	github.com/labstack/gommon v0.4.0 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.16 // indirect
-	github.com/pelletier/go-toml v1.8.1 // indirect
+	github.com/pelletier/go-toml v1.9.5 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect
 	go.opencensus.io v0.24.0 // indirect
