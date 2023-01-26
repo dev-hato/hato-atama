@@ -432,7 +432,7 @@ jobs:
     if: ${{ github.event_name == 'pull_request' }}
     steps:
       - uses: actions/checkout@v3.3.0
-      - uses: actions/github-script@v6.3.3
+      - uses: actions/github-script@v6.4.0
         env:
           SHA: ${{github.event.pull_request.head.sha}}
         with:
@@ -550,7 +550,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3.3.0
       - name: Get run numbers
-        uses: actions/github-script@v6.3.3
+        uses: actions/github-script@v6.4.0
         id: get_run_numbers
         env:
           HEAD_REF: master
