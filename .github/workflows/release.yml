@@ -453,7 +453,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3.3.0
       - run: mkdir -p "${ARTIFACT_PATH}"
-      - uses: foo-software/lighthouse-check-action@v9.1.0
+      - uses: foo-software/lighthouse-check-action@v9.1.1
         with:
           gitHubAccessToken: ${{ secrets.GITHUB_TOKEN }}
           urls: ${{ env.URLS }}
