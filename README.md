@@ -19,12 +19,12 @@
 
 #### 編集するとhot reloadが走る、開発に適したバージョン
 ```sh
-TAG_NAME=`git symbolic-ref --short HEAD | sed -e "s:/:-:g" | sed -e "s/^master$/latest/g"` docker compose -f docker-compose.yml -f dev.docker-compose.yml up --build
+TAG_NAME=`git symbolic-ref --short HEAD | sed -e "s:/:-:g" | sed -e "s/^master$/latest/g"` docker compose -f compose.yml -f dev.compose.yml up --build
 ```
 
 #### 限りなく本番のapp engineに近い設定で動くバージョン
 ```sh
-TAG_NAME=`git symbolic-ref --short HEAD | sed -e "s:/:-:g" | sed -e "s/^master$/latest/g"` docker compose -f docker-compose.yml -f staging.docker-compose.yml up --build
+TAG_NAME=`git symbolic-ref --short HEAD | sed -e "s:/:-:g" | sed -e "s/^master$/latest/g"` docker compose -f compose.yml -f staging.compose.yml up --build
 ```
 
 ## ARM64環境に対応したElmコンパイラに関して
