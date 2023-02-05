@@ -4,10 +4,10 @@ bash "${GITHUB_WORKSPACE}/scripts/release/change_file_and_env.sh"
 dockle_version="$(cat .dockle-version)"
 curl -L -o dockle.deb "https://github.com/goodwithtech/dockle/releases/download/v${dockle_version}/dockle_${dockle_version}_Linux-64bit.deb"
 sudo dpkg -i dockle.deb
-docker compose -f docker-compose.yml -f "${DOCKER_COMPOSE_FILE_NAME}" pull "${SERVICE_NAME}"
-docker compose -f docker-compose.yml -f "${DOCKER_COMPOSE_FILE_NAME}" up -d "${SERVICE_NAME}"
+docker compose -f compose.yml -f "${DOCKER_COMPOSE_FILE_NAME}" pull "${SERVICE_NAME}"
+docker compose -f compose.yml -f "${DOCKER_COMPOSE_FILE_NAME}" up -d "${SERVICE_NAME}"
 
-for image_name in $(docker compose -f docker-compose.yml -f "${DOCKER_COMPOSE_FILE_NAME}" images "${SERVICE_NAME}" | awk 'OFS=":" {print $2,$3}' | tail -n +2); do
+for image_name in $(docker compose -f compose.yml -f "${DOCKER_COMPOSE_FILE_NAME}" images "${SERVICE_NAME}" | awk 'OFS=":" {print $2,$3}' | tail -n +2); do
   cmd="dockle --exit-code 1 "
 
   if [[ "${image_name}" =~ "gcloud_datastore" ]] || [[ "${image_name}" =~ "server-dev" ]]; then

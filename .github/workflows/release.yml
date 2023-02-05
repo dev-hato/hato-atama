@@ -96,7 +96,7 @@ jobs:
         with:
           push: true
           targets: frontend
-          files: docker-compose.yml,base.docker-compose.yml
+          files: compose.yml,base.compose.yml
 
   docker-compose-build:
     runs-on: ubuntu-latest
@@ -132,14 +132,14 @@ jobs:
           DOCKER_CONTENT_TRUST: 1
         with:
           push: true
-          files: docker-compose.yml,dev.docker-compose.yml
+          files: compose.yml,dev.compose.yml
       - name: Build and push (staging)
         uses: docker/bake-action@v2.3.0
         env:
           DOCKER_CONTENT_TRUST: 1
         with:
           push: true
-          files: docker-compose.yml,staging.docker-compose.yml
+          files: compose.yml,staging.compose.yml
 
   format-go:
     runs-on: ubuntu-latest
@@ -278,9 +278,9 @@ jobs:
       - update-dockle
     strategy:
       matrix:
-        docker_compose_file_name: ["dev.docker-compose.yml", "staging.docker-compose.yml"]
+        docker_compose_file_name: ["dev.compose.yml", "staging.compose.yml"]
         include:
-          - docker_compose_file_name: "base.docker-compose.yml"
+          - docker_compose_file_name: "base.compose.yml"
             service_name: "frontend"
     env:
       DOCKER_CONTENT_TRUST: 1
