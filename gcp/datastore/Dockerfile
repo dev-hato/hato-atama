@@ -1,4 +1,4 @@
-FROM gcr.io/google.com/cloudsdktool/google-cloud-cli:417.0.1-emulators
+FROM gcr.io/google.com/cloudsdktool/google-cloud-cli:418.0.0-emulators
 
 RUN find / -type f -perm /u+s -ignore_readdir_race -exec chmod u-s {} \; \
     && find / -type f -perm /g+s -ignore_readdir_race -exec chmod g-s {} \;
