@@ -15,12 +15,16 @@ for image_name in $(docker compose -f compose.yml -f "${DOCKER_COMPOSE_FILE_NAME
     if [[ "${image_name}" =~ "gcloud_datastore" ]]; then
       cmd+="-af settings.py -i CIS-DI-0001 "
     else
-      cmd+="-af credentials --timeout 600s "
+      cmd+="-af credentials "
     fi
   elif [[ "${image_name}" =~ "frontend:" ]]; then
     cmd+="-ak NGINX_GPGKEY "
   elif [[ "${image_name}" =~ "frontend-base" ]]; then
     cmd+="-i CIS-DI-0006 "
+  fi
+  
+  if [[ "${image_name}" =~ "server-dev" ]] || [[ "${image_name}" =~ "server-base" ]]; then
+    cmd+="--timeout 600s "
   fi
 
   cmd+="${image_name}"
