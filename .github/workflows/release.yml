@@ -281,6 +281,8 @@ jobs:
         docker_compose_file_name: ["dev.compose.yml", "staging.compose.yml"]
         include:
           - docker_compose_file_name: "base.compose.yml"
+            service_name: "server"
+          - docker_compose_file_name: "base.compose.yml"
             service_name: "frontend"
     env:
       DOCKER_CONTENT_TRUST: 1
