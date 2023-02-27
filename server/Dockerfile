@@ -1,4 +1,4 @@
-FROM golang:1.20.1-bullseye as build
+FROM golang:1.20.1-bullseye as base
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 ARG TARGETPLATFORM
@@ -8,6 +8,8 @@ WORKDIR /go/app
 COPY go.mod go.sum ./
 COPY ping ping
 COPY server server
+
+FROM base as build
 
 WORKDIR /go/app/ping
 RUN mapfile -t PLATFORM < <(echo "${TARGETPLATFORM}" | tr '/' ' ') \
