@@ -11,6 +11,8 @@ COPY server server
 
 FROM base as build
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 WORKDIR /go/app/ping
 RUN mapfile -t PLATFORM < <(echo "${TARGETPLATFORM}" | tr '/' ' ') \
     && CGO_ENABLED=0 GOOS=linux GOARCH=${PLATFORM[2]} go build -o ping
