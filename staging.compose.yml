@@ -10,6 +10,9 @@ services:
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server-base:${TAG_NAME:-latest}
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server-base
     image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server:${TAG_NAME:-latest}
+    depends_on:
+      gcloud_datastore:
+        condition: service_healthy
   frontend:
     build:
       cache_from:

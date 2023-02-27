@@ -36,9 +36,6 @@ services:
       PORT: ${PORT}
     ports:
       - "${PORT}:${PORT}"
-    depends_on:
-      gcloud_datastore:
-        condition: service_healthy
   frontend:
     build:
       context: .

@@ -11,6 +11,9 @@ services:
     image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server-dev:${TAG_NAME:-latest}
     volumes:
       - ./server:/go/app/server
+    depends_on:
+      gcloud_datastore:
+        condition: service_healthy
   frontend:
     build:
       target: build
