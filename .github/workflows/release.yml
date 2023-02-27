@@ -95,7 +95,7 @@ jobs:
           DOCKER_CONTENT_TRUST: 1
         with:
           push: true
-          targets: frontend
+          targets: server,frontend
           files: compose.yml,base.compose.yml
 
   docker-compose-build:
