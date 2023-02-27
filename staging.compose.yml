@@ -7,6 +7,8 @@ services:
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server-dev:${TAG_NAME:-latest}
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server-dev
+        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server-base:${TAG_NAME:-latest}
+        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server-base
     image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server:${TAG_NAME:-latest}
   frontend:
     build:

@@ -1,5 +1,12 @@
 ---
 services:
+  server:
+    build:
+      target: base
+      cache_from:
+        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server-base:${TAG_NAME:-latest}
+        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server-base
+    image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server-base:${TAG_NAME:-latest}
   frontend:
     build:
       target: base
