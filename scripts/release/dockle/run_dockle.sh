@@ -10,19 +10,22 @@ docker compose -f compose.yml -f "${DOCKER_COMPOSE_FILE_NAME}" up -d "${SERVICE_
 for image_name in $(docker compose -f compose.yml -f "${DOCKER_COMPOSE_FILE_NAME}" images "${SERVICE_NAME}" | awk 'OFS=":" {print $2,$3}' | tail -n +2); do
   cmd="dockle --exit-code 1 "
 
-  if [[ "${image_name}" =~ "gcloud_datastore" ]] || [[ "${image_name}" =~ "server-dev" ]]; then
+  if [[ "${image_name}" =~ "gcloud_datastore" ]] || [[ "${image_name}" =~ "server-dev" ]] || [[ "${image_name}" =~ "server-base" ]]; then
     cmd+="-i DKL-LI-0003 "
-    if [[ "${image_name}" =~ "gcloud_datastore" ]]; then
-      cmd+="-af settings.py -i CIS-DI-0001 "
-    else
-      cmd+="-af credentials "
-    fi
   elif [[ "${image_name}" =~ "frontend:" ]]; then
     cmd+="-ak NGINX_GPGKEY "
-  elif [[ "${image_name}" =~ "frontend-base" ]]; then
+  fi
+
+  if [[ "${image_name}" =~ "gcloud_datastore" ]]; then
+    cmd+="-af settings.py -i CIS-DI-0001 "
+  elif [[ "${image_name}" =~ "server-dev" ]]; then
+    cmd+="-af credentials "
+  fi
+
+  if [[ "${image_name}" =~ "frontend-base" ]] || [[ "${image_name}" =~ "server-base" ]]; then
     cmd+="-i CIS-DI-0006 "
   fi
-  
+
   if [[ "${image_name}" =~ "server-dev" ]] || [[ "${image_name}" =~ "server-base" ]]; then
     cmd+="--timeout 600s "
   fi
