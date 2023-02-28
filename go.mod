@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	cloud.google.com/go/datastore v1.10.0
-	github.com/cosmtrek/air v1.41.0
+	github.com/cosmtrek/air v1.42.0
 	github.com/go-playground/validator/v10 v10.11.2
 	github.com/labstack/echo/v4 v4.10.2
 	golang.org/x/tools v0.1.12
@@ -15,7 +15,7 @@ require (
 	cloud.google.com/go/compute v1.12.1 // indirect
 	cloud.google.com/go/compute/metadata v0.2.1 // indirect
 	github.com/creack/pty v1.1.18 // indirect
-	github.com/fatih/color v1.13.0 // indirect
+	github.com/fatih/color v1.14.1 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
