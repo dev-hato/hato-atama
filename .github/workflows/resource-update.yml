@@ -69,7 +69,7 @@ jobs:
         id: get_go_version
         run: bash "${GITHUB_WORKSPACE}/scripts/get_go_version.sh"
       - name: Set up Go
-        uses: actions/setup-go@v3.5.0
+        uses: actions/setup-go@v4.0.0
         with:
           go-version: ${{steps.get_go_version.outputs.go_version}}
       - name: go mod update
