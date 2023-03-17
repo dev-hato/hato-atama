@@ -342,7 +342,7 @@ jobs:
           node-version-file: test/e2e/.node-version
           cache: npm
           cache-dependency-path: test/e2e/package-lock.json
-      - uses: browser-actions/setup-firefox@v1.1.0
+      - uses: browser-actions/setup-firefox@v1.1.1
         if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
@@ -377,7 +377,7 @@ jobs:
           node-version-file: test/e2e/.node-version
           cache: npm
           cache-dependency-path: test/e2e/package-lock.json
-      - uses: browser-actions/setup-firefox@v1.1.0
+      - uses: browser-actions/setup-firefox@v1.1.1
         if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
@@ -483,7 +483,7 @@ jobs:
           node-version-file: test/e2e/.node-version
           cache: npm
           cache-dependency-path: test/e2e/package-lock.json
-      - uses: browser-actions/setup-firefox@v1.1.0
+      - uses: browser-actions/setup-firefox@v1.1.1
         if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
@@ -512,7 +512,7 @@ jobs:
           node-version-file: test/e2e/.node-version
           cache: npm
           cache-dependency-path: test/e2e/package-lock.json
-      - uses: browser-actions/setup-firefox@v1.1.0
+      - uses: browser-actions/setup-firefox@v1.1.1
         if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
