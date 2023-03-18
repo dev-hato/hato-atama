@@ -10,7 +10,9 @@ services:
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server-base
     image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server-dev:${TAG_NAME:-latest}
     volumes:
-      - ./server:/go/app/server
+      - type: bind
+          source: ./server
+          target: /go/app/server
     depends_on:
       gcloud_datastore:
         condition: service_healthy
@@ -24,7 +26,9 @@ services:
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend-base
     image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend-dev:${TAG_NAME:-latest}
     volumes:
-      - ./frontend/src:/usr/src/app/src
+      - type: bind
+          source: ./frontend/src
+          target: /usr/src/app/src
     depends_on:
       server:
         condition: service_healthy
