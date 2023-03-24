@@ -1,4 +1,4 @@
-FROM node:19.8.1-bullseye-slim as base
+FROM --platform=linux/arm64 node:19.8.1-bullseye as base
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 ARG TARGETPLATFORM
@@ -33,7 +33,7 @@ RUN find / -type f -perm /u+s -ignore_readdir_race -exec chmod u-s {} \; \
 
 USER node
 
-FROM base as build
+FROM --platform=linux/arm64 base as build
 
 COPY frontend/.npmrc .
 COPY frontend/package*.json ./
