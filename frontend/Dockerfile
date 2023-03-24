@@ -9,23 +9,23 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates curl \
     && rm -rf /var/lib/apt/lists
 
-COPY elm/elm_arm64 /usr/local/bin/elm
+# COPY elm/elm_arm64 /usr/local/bin/elm
 
 WORKDIR /usr/src/app
 
 COPY frontend/elm.json ./
 
 # https://github.com/elm/compiler/blob/24d3a89469e75cf7aa579442ecaf5ddfdd192ab2/installers/linux/README.md
-RUN if [ "${TARGETPLATFORM}" != "linux/arm64" ]; then \
-        curl -L https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o /usr/bin/yq; \
-        chmod +x /usr/bin/yq; \
-        elm_version="$(yq '."elm-version"' elm.json)"; \
-        curl -L -o elm.gz "https://github.com/elm/compiler/releases/download/${elm_version}/binary-for-linux-64-bit.gz"; \
-        gunzip elm.gz; \
-        chmod +x elm; \
-        mv elm /usr/local/bin/; \
-        rm /usr/bin/yq; \
-    fi
+#RUN if [ "${TARGETPLATFORM}" != "linux/arm64" ]; then \
+#        curl -L https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o /usr/bin/yq; \
+#        chmod +x /usr/bin/yq; \
+#        elm_version="$(yq '."elm-version"' elm.json)"; \
+#        curl -L -o elm.gz "https://github.com/elm/compiler/releases/download/${elm_version}/binary-for-linux-64-bit.gz"; \
+#        gunzip elm.gz; \
+#        chmod +x elm; \
+#        mv elm /usr/local/bin/; \
+#        rm /usr/bin/yq; \
+#    fi
 
 RUN find / -type f -perm /u+s -ignore_readdir_race -exec chmod u-s {} \; \
     && find / -type f -perm /g+s -ignore_readdir_race -exec chmod g-s {} \; \
@@ -42,6 +42,7 @@ RUN npm ci
 COPY frontend/webpack.config.js ./
 COPY frontend/src ./src
 COPY frontend/public ./public
+
 RUN npm run build \
     && rm -rf /home/node/.npm
 
