@@ -7,15 +7,15 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates curl \
-    && curl -L https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o /usr/bin/yq \
-    && chmod +x /usr/bin/yq \
     && rm -rf /var/lib/apt/lists
 
 WORKDIR /usr/src/app
 
 COPY frontend/elm.json ./
 
-RUN elm_version="$(yq -r '."elm-version"' elm.json)"; \
+RUN curl -L https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o /usr/bin/yq \
+        && chmod +x /usr/bin/yq; \
+    elm_version="$(yq -r '."elm-version"' elm.json)"; \
     case ${TARGETPLATFORM} in \
       "linux/arm64") \
         curl -L https://github.com/elm/compiler/releases/download/${elm_version}/binary-for-linux-arm64.gz -o elm.gz \
