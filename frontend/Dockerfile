@@ -1,4 +1,6 @@
-FROM node:19.8.1-bullseye-slim as base
+ARG TARGETARCH
+
+FROM --platform=$TARGETPLATFORM node:19.8.1-bullseye-slim as base
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 ARG TARGETPLATFORM
@@ -7,25 +9,27 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates curl \
+    && curl -L https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o /usr/bin/yq \
+    && chmod +x /usr/bin/yq \
     && rm -rf /var/lib/apt/lists
-
-COPY elm/elm_arm64 /usr/local/bin/elm
 
 WORKDIR /usr/src/app
 
 COPY frontend/elm.json ./
 
-# https://github.com/elm/compiler/blob/24d3a89469e75cf7aa579442ecaf5ddfdd192ab2/installers/linux/README.md
-RUN if [ "${TARGETPLATFORM}" != "linux/arm64" ]; then \
-        curl -L https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o /usr/bin/yq; \
-        chmod +x /usr/bin/yq; \
-        elm_version="$(yq '."elm-version"' elm.json)"; \
-        curl -L -o elm.gz "https://github.com/elm/compiler/releases/download/${elm_version}/binary-for-linux-64-bit.gz"; \
-        gunzip elm.gz; \
-        chmod +x elm; \
-        mv elm /usr/local/bin/; \
-        rm /usr/bin/yq; \
-    fi
+RUN case "${TARGETARCH}" in \
+      "arm64") \
+        elm_version="$(yq -r '."elm-version"' elm.json)"; \
+        curl -L https://github.com/elm/compiler/releases/download/${elm_version}/binary-for-linux-arm64.gz -o elm.gz \
+        ;; \
+      *) \
+        elm_version="$(yq -r '."elm-version"' elm.json)"; \
+        curl -L https://github.com/elm/compiler/releases/download/${elm_version}/binary-for-linux-64-bit.gz -o elm.gz \
+        ;; \
+    esac \
+    && gunzip elm.gz \
+    && chmod +x elm \
+    && mv elm /usr/local/bin/
 
 RUN find / -type f -perm /u+s -ignore_readdir_race -exec chmod u-s {} \; \
     && find / -type f -perm /g+s -ignore_readdir_race -exec chmod g-s {} \; \
