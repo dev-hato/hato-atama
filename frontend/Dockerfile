@@ -15,12 +15,13 @@ COPY frontend/elm.json ./
 
 RUN curl -L "https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64" -o /usr/bin/yq \
     && chmod +x /usr/bin/yq \
-    && elm_version="$(yq -r '."elm-version"' elm.json)" \
     && case ${TARGETPLATFORM} in \
       "linux/arm64") \
+        elm_version="$(yq -r '."elm-version"' elm.json)"; \
         curl -L https://github.com/elm/compiler/releases/download/${elm_version}/binary-for-linux-arm64.gz -o elm.gz \
         ;; \
       *) \
+        elm_version="$(yq -r '."elm-version"' elm.json)"; \
         curl -L https://github.com/elm/compiler/releases/download/${elm_version}/binary-for-linux-64-bit.gz -o elm.gz \
         ;; \
     esac \
