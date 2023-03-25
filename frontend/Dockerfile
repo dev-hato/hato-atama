@@ -1,5 +1,3 @@
-ARG TARGETARCH
-
 FROM --platform=$TARGETPLATFORM node:19.8.1-bullseye-slim as base
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -17,8 +15,8 @@ WORKDIR /usr/src/app
 
 COPY frontend/elm.json ./
 
-RUN case ${TARGETARCH} in \
-      "arm64") \
+RUN case ${TARGETPLATFORM} in \
+      "linux/arm64") \
         elm_version="$(yq -r '."elm-version"' elm.json)"; \
         curl -L https://github.com/elm/compiler/releases/download/${elm_version}/binary-for-linux-arm64.gz -o elm.gz \
         ;; \
