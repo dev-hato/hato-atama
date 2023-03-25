@@ -17,11 +17,11 @@ RUN curl -L "https://github.com/mikefarah/yq/releases/latest/download/yq_linux_a
     && chmod +x /usr/bin/yq \
     && case ${TARGETPLATFORM} in \
       "linux/arm64") \
-        elm_version="$(yq -r '."elm-version"' elm.json)"; \
+        elm_version="$(yq -r '."elm-version"' elm.json)" \
         curl -L https://github.com/elm/compiler/releases/download/${elm_version}/binary-for-linux-arm64.gz -o elm.gz \
         ;; \
       *) \
-        elm_version="$(yq -r '."elm-version"' elm.json)"; \
+        elm_version="$(yq -r '."elm-version"' elm.json)" \
         curl -L https://github.com/elm/compiler/releases/download/${elm_version}/binary-for-linux-64-bit.gz -o elm.gz \
         ;; \
     esac \
