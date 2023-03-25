@@ -17,7 +17,7 @@ WORKDIR /usr/src/app
 
 COPY frontend/elm.json ./
 
-RUN case "${TARGETARCH}" in \
+RUN case ${TARGETARCH} in \
       "arm64") \
         elm_version="$(yq -r '."elm-version"' elm.json)"; \
         curl -L https://github.com/elm/compiler/releases/download/${elm_version}/binary-for-linux-arm64.gz -o elm.gz \
