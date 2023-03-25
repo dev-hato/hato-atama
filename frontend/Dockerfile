@@ -27,7 +27,8 @@ RUN case ${TARGETPLATFORM} in \
     esac \
     && gunzip elm.gz \
     && chmod +x elm \
-    && mv elm /usr/local/bin/
+    && mv elm /usr/local/bin/ \
+    && rm /usr/bin/yq
 
 RUN find / -type f -perm /u+s -ignore_readdir_race -exec chmod u-s {} \; \
     && find / -type f -perm /g+s -ignore_readdir_race -exec chmod g-s {} \; \
