@@ -13,7 +13,7 @@ WORKDIR /usr/src/app
 
 COPY frontend/elm.json ./
 
-RUN curl -L https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o /usr/bin/yq \
+RUN curl -L "https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64" -o /usr/bin/yq \
         && chmod +x /usr/bin/yq; \
     elm_version="$(yq -r '."elm-version"' elm.json)"; \
     case ${TARGETPLATFORM} in \
