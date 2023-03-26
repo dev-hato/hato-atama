@@ -21,8 +21,5 @@
       ],
       "allowedVersions": "<0.2.0"
     }
-  ],
-  "lockFileMaintenance": {
-    "enabled": true
-  }
+  ]
 }
