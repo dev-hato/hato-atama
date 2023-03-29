@@ -412,7 +412,7 @@ jobs:
           service_account: ${{env.GCP_SERVICE_ACCOUNT}}
       - uses: google-github-actions/setup-gcloud@v1.1.0
       - name: Deploy to App Engine
-        uses: google-github-actions/deploy-appengine@v1.2.2
+        uses: google-github-actions/deploy-appengine@v1.2.6
         with:
           deliverables: app.yaml
           project_id: hato-atama
