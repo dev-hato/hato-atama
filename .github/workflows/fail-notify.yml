@@ -26,7 +26,7 @@ jobs:
       - uses: actions/checkout@v3.5.0
       - name: Get slack payload
         id: get_slack_payload
-        uses: actions/github-script@v6.4.0
+        uses: actions/github-script@v6.4.1
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           result-encoding: string
