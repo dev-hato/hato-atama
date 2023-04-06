@@ -24,7 +24,7 @@ jobs:
       - run: bash "${GITHUB_WORKSPACE}/scripts/update_go_runtime/update_go_runtime/get_html.sh"
       - name: Get latest App Engine support version
         id: get_latest_app_engine_support_version
-        uses: actions/github-script@v6.4.0
+        uses: actions/github-script@v6.4.1
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           result-encoding: string
