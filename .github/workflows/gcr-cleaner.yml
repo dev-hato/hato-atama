@@ -16,7 +16,7 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v3.5.1
+      - uses: actions/checkout@v3.5.2
       - id: 'auth'
         name: 'Authenticate to GCP'
         uses: google-github-actions/auth@v1.0.0
