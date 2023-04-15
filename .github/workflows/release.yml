@@ -52,8 +52,14 @@ jobs:
       - uses: actions/setup-node@v3.6.0
         with:
           node-version-file: frontend/.node-version
-          cache: npm
-          cache-dependency-path: frontend/package-lock.json
+      - uses: actions/cache@v3.3.1
+        with:
+          path: |
+            ~/.npm
+          key: node-cache-${{ runner.os }}-npm-${{ github.workflow }}-${{ hashFiles('frontend/package-lock.json') }}
+          restore-keys: |
+            node-cache-${{ runner.os }}-npm-${{ github.workflow }}-${{ hashFiles('frontend/package-lock.json') }}
+            node-cache-${{ runner.os }}-npm-${{ github.workflow }}-
       - name: Build
         run: bash "${GITHUB_WORKSPACE}/scripts/release/build_frontend/build.sh"
       - uses: actions/upload-artifact@v3.1.2
@@ -200,8 +206,14 @@ jobs:
       - uses: actions/setup-node@v3.6.0
         with:
           node-version-file: ${{ matrix.directory }}/.node-version
-          cache: npm
-          cache-dependency-path: ${{ matrix.directory }}/package-lock.json
+      - uses: actions/cache@v3.3.1
+        with:
+          path: |
+            ~/.npm
+          key: node-cache-${{ runner.os }}-npm-${{ github.workflow }}-${{ hashFiles('${{ matrix.directory }}/package-lock.json') }}
+          restore-keys: |
+            node-cache-${{ runner.os }}-npm-${{ github.workflow }}-${{ hashFiles('${{ matrix.directory }}/package-lock.json') }}
+            node-cache-${{ runner.os }}-npm-${{ github.workflow }}-
       - name: Set env and Get branch name
         id: set_env_and_get_branch_name
         env:
@@ -309,8 +321,14 @@ jobs:
       - uses: actions/setup-node@v3.6.0
         with:
           node-version-file: frontend/.node-version
-          cache: npm
-          cache-dependency-path: frontend/package-lock.json
+      - uses: actions/cache@v3.3.1
+        with:
+          path: |
+            ~/.npm
+          key: node-cache-${{ runner.os }}-npm-${{ github.workflow }}-${{ hashFiles('frontend/package-lock.json') }}
+          restore-keys: |
+            node-cache-${{ runner.os }}-npm-${{ github.workflow }}-${{ hashFiles('frontend/package-lock.json') }}
+            node-cache-${{ runner.os }}-npm-${{ github.workflow }}-
       - name: Set Browserslist
         id: set_browserslist
         run: bash "${GITHUB_WORKSPACE}/scripts/release/make_browserslist/set_browserslist.sh"
@@ -338,8 +356,14 @@ jobs:
       - uses: actions/setup-node@v3.6.0
         with:
           node-version-file: test/e2e/.node-version
-          cache: npm
-          cache-dependency-path: test/e2e/package-lock.json
+      - uses: actions/cache@v3.3.1
+        with:
+          path: |
+            ~/.npm
+          key: node-cache-${{ runner.os }}-npm-${{ github.workflow }}-${{ hashFiles('test/e2e/package-lock.json') }}
+          restore-keys: |
+            node-cache-${{ runner.os }}-npm-${{ github.workflow }}-${{ hashFiles('test/e2e/package-lock.json') }}
+            node-cache-${{ runner.os }}-npm-${{ github.workflow }}-
       - uses: browser-actions/setup-firefox@v1.1.1
         if: matrix.browser_name == 'firefox'
         with:
@@ -373,8 +397,14 @@ jobs:
       - uses: actions/setup-node@v3.6.0
         with:
           node-version-file: test/e2e/.node-version
-          cache: npm
-          cache-dependency-path: test/e2e/package-lock.json
+      - uses: actions/cache@v3.3.1
+        with:
+          path: |
+            ~/.npm
+          key: node-cache-${{ runner.os }}-npm-${{ github.workflow }}-${{ hashFiles('test/e2e/package-lock.json') }}
+          restore-keys: |
+            node-cache-${{ runner.os }}-npm-${{ github.workflow }}-${{ hashFiles('test/e2e/package-lock.json') }}
+            node-cache-${{ runner.os }}-npm-${{ github.workflow }}-
       - uses: browser-actions/setup-firefox@v1.1.1
         if: matrix.browser_name == 'firefox'
         with:
@@ -479,8 +509,14 @@ jobs:
       - uses: actions/setup-node@v3.6.0
         with:
           node-version-file: test/e2e/.node-version
-          cache: npm
-          cache-dependency-path: test/e2e/package-lock.json
+      - uses: actions/cache@v3.3.1
+        with:
+          path: |
+            ~/.npm
+          key: node-cache-${{ runner.os }}-npm-${{ github.workflow }}-${{ hashFiles('test/e2e/package-lock.json') }}
+          restore-keys: |
+            node-cache-${{ runner.os }}-npm-${{ github.workflow }}-${{ hashFiles('test/e2e/package-lock.json') }}
+            node-cache-${{ runner.os }}-npm-${{ github.workflow }}-
       - uses: browser-actions/setup-firefox@v1.1.1
         if: matrix.browser_name == 'firefox'
         with:
@@ -508,8 +544,14 @@ jobs:
       - uses: actions/setup-node@v3.6.0
         with:
           node-version-file: test/e2e/.node-version
-          cache: npm
-          cache-dependency-path: test/e2e/package-lock.json
+      - uses: actions/cache@v3.3.1
+        with:
+          path: |
+            ~/.npm
+          key: node-cache-${{ runner.os }}-npm-${{ github.workflow }}-${{ hashFiles('test/e2e/package-lock.json') }}
+          restore-keys: |
+            node-cache-${{ runner.os }}-npm-${{ github.workflow }}-${{ hashFiles('test/e2e/package-lock.json') }}
+            node-cache-${{ runner.os }}-npm-${{ github.workflow }}-
       - uses: browser-actions/setup-firefox@v1.1.1
         if: matrix.browser_name == 'firefox'
         with:

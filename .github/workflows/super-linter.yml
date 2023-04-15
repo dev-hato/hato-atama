@@ -18,7 +18,14 @@ jobs:
       - uses: actions/setup-node@v3.6.0
         with:
           node-version-file: .node-version
-          cache: npm
+      - uses: actions/cache@v3.3.1
+        with:
+          path: |
+            ~/.npm
+          key: node-cache-${{ runner.os }}-npm-${{ github.workflow }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            node-cache-${{ runner.os }}-npm-${{ github.workflow }}-${{ hashFiles('package-lock.json') }}
+            node-cache-${{ runner.os }}-npm-${{ github.workflow }}-
       - run: npm ci
       - name: Super-Linter
         uses: github/super-linter/slim@v5.0.0
