@@ -90,7 +90,7 @@ jobs:
           HEAD_REF: ${{github.head_ref}}
         if: ${{ github.event_name == 'pull_request' }}
       - name: Build and push
-        uses: docker/bake-action@v3.0.0
+        uses: docker/bake-action@v3.0.1
         env:
           DOCKER_CONTENT_TRUST: 1
         with:
@@ -127,14 +127,14 @@ jobs:
           HEAD_REF: ${{github.head_ref}}
         if: ${{ github.event_name == 'pull_request' }}
       - name: Build and push (dev)
-        uses: docker/bake-action@v3.0.0
+        uses: docker/bake-action@v3.0.1
         env:
           DOCKER_CONTENT_TRUST: 1
         with:
           push: true
           files: compose.yml,dev.compose.yml
       - name: Build and push (staging)
-        uses: docker/bake-action@v3.0.0
+        uses: docker/bake-action@v3.0.1
         env:
           DOCKER_CONTENT_TRUST: 1
         with:
