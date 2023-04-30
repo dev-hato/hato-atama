@@ -153,14 +153,16 @@ jobs:
       REPOSITORY: ${{github.repository}}
     steps:
       - uses: actions/checkout@v3.5.2
+        if: github.event_name != 'pull_request' || github.event.action != 'closed'
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
-      - run: bash "${GITHUB_WORKSPACE}/scripts/release/change_file_and_env.sh"
+      - if: github.event_name != 'pull_request' || github.event.action != 'closed'
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/change_file_and_env.sh"
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
         env:
           HEAD_REF: ${{github.head_ref}}
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && github.event.action != 'closed'
       - name: Get Go version
         id: get_go_version
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
@@ -194,16 +196,19 @@ jobs:
       pull-requests: write
     steps:
       - uses: actions/checkout@v3.5.2
+        if: github.event_name != 'pull_request' || github.event.action != 'closed'
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
       - uses: actions/setup-node@v3.6.0
+        if: github.event_name != 'pull_request' || github.event.action != 'closed'
         with:
           node-version-file: ${{ matrix.directory }}/.node-version
           cache: npm
           cache-dependency-path: ${{ matrix.directory }}/package-lock.json
       - name: Set env and Get branch name
         id: set_env_and_get_branch_name
+        if: github.event_name != 'pull_request' || github.event.action != 'closed'
         env:
           DIRECTORY: ${{ matrix.directory }}
         run: bash "${GITHUB_WORKSPACE}/scripts/release/update_package/set_env_and_npm_install.sh"
@@ -225,10 +230,12 @@ jobs:
       DOCKER_CMD: "node --version && npm --version"
     steps:
       - uses: actions/checkout@v3.5.2
+        if: github.event_name != 'pull_request' || github.event.action != 'closed'
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
-      - run: bash "${GITHUB_WORKSPACE}/scripts/release/change_file_and_env.sh"
+      - if: github.event_name != 'pull_request' || github.event.action != 'closed'
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/change_file_and_env.sh"
       - name: Get Dependabot Node.js version
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         id: get_dependabot_node_version
@@ -236,7 +243,7 @@ jobs:
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
         env:
           HEAD_REF: ${{github.head_ref}}
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && github.event.action != 'closed'
       - name: Get Node.js version
         id: get_node_version
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
@@ -262,6 +269,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3.5.2
+        if: github.event_name != 'pull_request' || github.event.action != 'closed'
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}

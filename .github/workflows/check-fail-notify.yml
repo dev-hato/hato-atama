@@ -2,11 +2,6 @@
 name: check-fail-notify
 on:
   pull_request:
-    types:
-      - opened
-      - synchronize
-      - reopened
-      - closed
   push:
     branches:
       - master
