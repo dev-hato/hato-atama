@@ -202,7 +202,7 @@ jobs:
       - name: Get Dependabot Node.js version
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         id: get_dependabot_node_version
-        run: bash "${GITHUB_WORKSPACE}/scripts/release/update_packages/get_dependabot_node_version.sh"
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/update_package/get_dependabot_node_version.sh"
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
         env:
           HEAD_REF: ${{github.head_ref}}
@@ -213,7 +213,7 @@ jobs:
         env:
           DOCKER_CONTENT_TRUST: 1
           REPOSITORY: ${{github.repository}}
-        run: bash "${GITHUB_WORKSPACE}/scripts/release/update_packages/get_node_version.sh"
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/update_package/get_node_version.sh"
       - name: Update packages (.)
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         env:
@@ -221,7 +221,7 @@ jobs:
           DEPENDABOT_NPM_VERSION: ${{steps.get_dependabot_node_version.outputs.npm_version}}
           NODE_VERSION: ${{steps.get_node_version.outputs.node_version}}
           NPM_VERSION: ${{steps.get_node_version.outputs.npm_version}}
-        run: bash "${GITHUB_WORKSPACE}/scripts/release/update_packages/update_packages.sh"
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/update_package/update_package.sh"
       - name: Update packages (frontend)
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         env:
@@ -229,7 +229,7 @@ jobs:
           DEPENDABOT_NPM_VERSION: ${{steps.get_dependabot_node_version.outputs.npm_version}}
           NODE_VERSION: ${{steps.get_node_version.outputs.node_version}}
           NPM_VERSION: ${{steps.get_node_version.outputs.npm_version}}
-        run: bash "${GITHUB_WORKSPACE}/scripts/release/update_packages/update_packages.sh"
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/update_package/update_package.sh"
         working-directory: frontend
       - name: Update packages (test/e2e)
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
@@ -238,7 +238,7 @@ jobs:
           DEPENDABOT_NPM_VERSION: ${{steps.get_dependabot_node_version.outputs.npm_version}}
           NODE_VERSION: ${{steps.get_node_version.outputs.node_version}}
           NPM_VERSION: ${{steps.get_node_version.outputs.npm_version}}
-        run: bash "${GITHUB_WORKSPACE}/scripts/release/update_packages/update_packages.sh"
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/update_package/update_package.sh"
         working-directory: test/e2e
       - uses: dev-hato/actions-diff-pr-management@v1.1.3
         with:
