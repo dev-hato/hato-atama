@@ -221,7 +221,7 @@ jobs:
           DEPENDABOT_NPM_VERSION: ${{steps.get_dependabot_node_version.outputs.npm_version}}
           NODE_VERSION: ${{steps.get_node_version.outputs.node_version}}
           NPM_VERSION: ${{steps.get_node_version.outputs.npm_version}}
-        run: bash "${GITHUB_WORKSPACE}/scripts/release/update_package/update_version.sh"
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/update_package/update_versions.sh"
       - name: Update packages (.)
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         run: npm install
