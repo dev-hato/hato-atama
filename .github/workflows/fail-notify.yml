@@ -16,6 +16,7 @@ on:
       - super-linter
       - update-gitleaks
       - update-go-runtime
+      - Dependency Review
     types:
       - completed
 jobs:
