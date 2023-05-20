@@ -1,6 +1,9 @@
 name: 'Dependency Review'
 on:
   pull_request:
+  push:
+    branches:
+      - master
 
 jobs:
   dependency-review:
