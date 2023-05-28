@@ -5,6 +5,7 @@ on:
     workflows:
       - Add to Task List
       - CodeQL
+      - Dependency Review
       - check-fail-notify
       - format-json-yml
       - gcr-cleaner
