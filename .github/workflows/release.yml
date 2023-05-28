@@ -181,45 +181,8 @@ jobs:
           branch-name-prefix: fix-format
           pr-title-prefix: formatが間違ってたので直してあげたよ！
 
-  # npm installを実行し、package.jsonやpackage-lock.jsonに差分があればPRを作る
+  # .node-version や package.json のNode.js・npmのバージョンをDockerイメージと同期させ、npm installを実行した結果、差分があればPRを作る
   update-package:
-    runs-on: ubuntu-latest
-    needs: update-version
-    strategy:
-      matrix:
-        directory: ['frontend', 'test/e2e', '.']
-    defaults:
-      run:
-        working-directory: ${{ matrix.directory }}
-    permissions:
-      contents: write
-      pull-requests: write
-    steps:
-      - uses: actions/checkout@v3.5.2
-        if: github.event_name != 'pull_request' || github.event.action != 'closed'
-        with:
-          fetch-depth: 0
-          ref: ${{ github.event.pull_request.head.sha }}
-      - uses: actions/setup-node@v3.6.0
-        if: github.event_name != 'pull_request' || github.event.action != 'closed'
-        with:
-          node-version-file: ${{ matrix.directory }}/.node-version
-          cache: npm
-          cache-dependency-path: ${{ matrix.directory }}/package-lock.json
-      - name: Set env and Get branch name
-        id: set_env_and_get_branch_name
-        if: github.event_name != 'pull_request' || github.event.action != 'closed'
-        env:
-          DIRECTORY: ${{ matrix.directory }}
-        run: bash "${GITHUB_WORKSPACE}/scripts/release/update_package/set_env_and_npm_install.sh"
-      - uses: dev-hato/actions-diff-pr-management@v1.1.3
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          branch-name-prefix: ${{steps.set_env_and_get_branch_name.outputs.branch_name}}
-          pr-title-prefix: package.jsonやpackage-lock.jsonを直してあげたよ！
-
-  # .node-version や package.json のNode.js・npmのバージョンをDockerイメージと同期させる
-  update-version:
     runs-on: ubuntu-latest
     needs: docker-compose-build-base
     if: always() && (needs.docker-compose-build-base.result == 'success' || (github.event_name == 'pull_request' && github.event.action == 'closed'))
@@ -239,7 +202,7 @@ jobs:
       - name: Get Dependabot Node.js version
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         id: get_dependabot_node_version
-        run: bash "${GITHUB_WORKSPACE}/scripts/release/update_version/get_dependabot_node_version.sh"
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/update_package/get_dependabot_node_version.sh"
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
         env:
           HEAD_REF: ${{github.head_ref}}
@@ -250,7 +213,7 @@ jobs:
         env:
           DOCKER_CONTENT_TRUST: 1
           REPOSITORY: ${{github.repository}}
-        run: bash "${GITHUB_WORKSPACE}/scripts/release/update_version/get_node_version.sh"
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/update_package/get_node_version.sh"
       - name: Update versions
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         env:
@@ -258,7 +221,34 @@ jobs:
           DEPENDABOT_NPM_VERSION: ${{steps.get_dependabot_node_version.outputs.npm_version}}
           NODE_VERSION: ${{steps.get_node_version.outputs.node_version}}
           NPM_VERSION: ${{steps.get_node_version.outputs.npm_version}}
-        run: bash "${GITHUB_WORKSPACE}/scripts/release/update_version/update_versions.sh"
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/update_package/update_versions.sh"
+      - uses: actions/setup-node@v3.6.0
+        if: github.event_name != 'pull_request' || github.event.action != 'closed'
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - name: Update packages (.)
+        if: github.event_name != 'pull_request' || github.event.action != 'closed'
+        run: npm install
+      - uses: actions/setup-node@v3.6.0
+        if: github.event_name != 'pull_request' || github.event.action != 'closed'
+        with:
+          node-version-file: frontend/.node-version
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Update packages (frontend)
+        run: npm install
+        working-directory: frontend
+      - uses: actions/setup-node@v3.6.0
+        if: github.event_name != 'pull_request' || github.event.action != 'closed'
+        with:
+          node-version-file: test/e2e/.node-version
+          cache: npm
+          cache-dependency-path: test/e2e/package-lock.json
+      - name: Update packages (test/e2e)
+        if: github.event_name != 'pull_request' || github.event.action != 'closed'
+        run: npm install
+        working-directory: test/e2e
       - uses: dev-hato/actions-diff-pr-management@v1.1.3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}

@@ -25,12 +25,12 @@
     "elm-webpack-loader": "8.0.0",
     "html-loader": "4.2.0",
     "html-webpack-plugin": "5.5.1",
-    "webpack": "5.83.1",
+    "webpack": "5.84.1",
     "webpack-cli": "5.1.1",
     "webpack-dev-server": "4.15.0"
   },
   "engines": {
-    "node": "^16.19.0 || ^20.1.0",
-    "npm": "^8.19.2 || ^9.6.4"
+    "node": "^16.19.0 || ^20.2.0",
+    "npm": "^8.19.2 || ^9.6.6"
   }
 }
