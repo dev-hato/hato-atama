@@ -5,7 +5,7 @@ go 1.20
 require (
 	cloud.google.com/go/datastore v1.11.0
 	github.com/cosmtrek/air v1.44.0
-	github.com/go-playground/validator/v10 v10.14.0
+	github.com/go-playground/validator/v10 v10.14.1
 	github.com/labstack/echo/v4 v4.10.2
 	golang.org/x/tools v0.6.0
 )
