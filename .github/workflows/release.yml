@@ -233,6 +233,9 @@ jobs:
       - name: Update packages (.)
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         run: npm install
+      - uses: pnpm/action-setup@v2
+        with:
+          version: latest
       - uses: actions/setup-node@v3.6.0
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         with:
