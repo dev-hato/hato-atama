@@ -33,5 +33,6 @@
   "engines": {
     "node": "^16.19.0 || ^20.3.0",
     "pnpm": "^8.6.2"
-  }
+  },
+  "packageManager": "pnpm"
 }
