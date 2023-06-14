@@ -8,6 +8,7 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates curl \
     && rm -rf /var/lib/apt/lists
+RUN npm install -g pnpm
 
 COPY elm/elm_arm64 /usr/local/bin/elm
 
@@ -37,18 +38,18 @@ FROM base as build
 
 COPY frontend/.npmrc .
 COPY frontend/package*.json ./
-RUN npm ci
+RUN pnpm install
 
 COPY frontend/webpack.config.js ./
 COPY frontend/src ./src
 COPY frontend/public ./public
-RUN npm run build \
+RUN pnpm run build \
     && rm -rf /home/node/.npm
 
 COPY frontend/healthcheck.sh .
 
 HEALTHCHECK --interval=5s --retries=20 CMD ["./healthcheck.sh"]
-CMD ["npm", "run", "dev"]
+CMD ["pnpm", "run", "dev"]
 
 FROM nginx:1.25.0
 
