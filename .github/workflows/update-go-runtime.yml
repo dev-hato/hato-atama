@@ -39,7 +39,7 @@ jobs:
         env:
           GO_VERSION: ${{steps.get_latest_app_engine_support_version.outputs.result}}
         run: bash "${GITHUB_WORKSPACE}/scripts/update_go_runtime/update_go_runtime/update_go_version.sh"
-      - uses: dev-hato/actions-diff-pr-management@v1.1.4
+      - uses: dev-hato/actions-diff-pr-management@v1.1.5
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           branch-name-prefix: update-go-runtime
