@@ -35,7 +35,7 @@ services:
       DATASTORE_EMULATOR_HOST: "gcloud_datastore:${GCLOUD_DATASOURCE_PORT}"
       PORT: ${PORT}
     ports:
-      - "${PORT}:${PORT}"
+      - "127.0.0.1:${PORT}:${PORT}"
   frontend:
     build:
       context: .
@@ -50,4 +50,4 @@ services:
       PORT: ${PORT}
       FRONTEND_PORT: ${FRONTEND_PORT}
     ports:
-      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
+      - "127.0.0.1:${FRONTEND_PORT}:${FRONTEND_PORT}"
