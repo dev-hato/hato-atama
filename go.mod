@@ -3,7 +3,7 @@ module github.com/dev-hato/hato-atama
 go 1.20
 
 require (
-	cloud.google.com/go/datastore v1.12.0
+	cloud.google.com/go/datastore v1.12.1
 	github.com/cosmtrek/air v1.44.0
 	github.com/go-playground/validator/v10 v10.14.1
 	github.com/labstack/echo/v4 v4.10.2
