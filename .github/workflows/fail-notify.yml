@@ -16,7 +16,6 @@ on:
       - resource-update
       - super-linter
       - update-gitleaks
-      - update-go-runtime
     types:
       - completed
 jobs:
