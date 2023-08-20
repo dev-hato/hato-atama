@@ -410,6 +410,7 @@ jobs:
           workload_identity_provider: ${{env.GCP_WORKLOAD_IDENTITY_PROVIDER}}
           service_account: ${{env.GCP_SERVICE_ACCOUNT}}
       - uses: google-github-actions/setup-gcloud@v1.1.1
+      - run: gcloud components list
       - name: Deploy to App Engine
         uses: google-github-actions/deploy-appengine@v1.2.7
         with:
