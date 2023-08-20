@@ -1,5 +1,7 @@
 ---
-runtime: go120
+runtime: go
+runtime_config:
+  operating_system: "ubuntu22"
 main: ./server
 handlers:
   - url: /api/.*
