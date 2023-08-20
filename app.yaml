@@ -1,5 +1,6 @@
 ---
 runtime: go
+env: flex
 runtime_config:
   operating_system: "ubuntu22"
 main: ./server
