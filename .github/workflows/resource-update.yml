@@ -1,6 +1,5 @@
 ---
 name: resource-update
-
 on:
   workflow_dispatch:
     inputs:
@@ -8,7 +7,6 @@ on:
         description: "base branch name"
         required: false
         default: "master"
-
 jobs:
   update-frontend:
     runs-on: ubuntu-latest
@@ -35,7 +33,6 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           branch-name-prefix: ${{ github.event.inputs.base-branch-name }}-update-frontend
           pr-title-prefix: Update frontend
-
   update-test-e2e:
     runs-on: ubuntu-latest
     defaults:
@@ -61,7 +58,6 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           branch-name-prefix: ${{ github.event.inputs.base-branch-name }}-update-test-e2e
           pr-title-prefix: Update test/e2e
-
   update-go:
     runs-on: ubuntu-latest
     env:
