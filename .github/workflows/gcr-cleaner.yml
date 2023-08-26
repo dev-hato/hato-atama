@@ -1,6 +1,5 @@
 # .github/workflows/gcr-cleaner.yml
 name: 'gcr-cleaner'
-
 on:
   schedule:
     - cron: '0 0 */1 * *' # runs daily
@@ -8,7 +7,6 @@ on:
 env:
   GCP_WORKLOAD_IDENTITY_PROVIDER: 'projects/765091727073/locations/global/workloadIdentityPools/hato-atama-workload-identity/providers/github'
   GCP_SERVICE_ACCOUNT: 'gcr-cleaner@hato-atama.iam.gserviceaccount.com'
-
 jobs:
   gcr-cleaner:
     runs-on: 'ubuntu-latest'
@@ -23,12 +21,8 @@ jobs:
         with:
           workload_identity_provider: ${{env.GCP_WORKLOAD_IDENTITY_PROVIDER}}
           service_account: ${{env.GCP_SERVICE_ACCOUNT}}
-
       # customize based on the gcr-cleaner flags
       - uses: docker://us-docker.pkg.dev/gcr-cleaner/gcr-cleaner/gcr-cleaner-cli:0.10.0
         with:
           args: >-
-            -repo=asia-docker.pkg.dev/hato-atama/asia.gcr.io
-            -grace=48h
-            -tag-filter-any ".*"
-            -recursive=true
+            -repo=asia-docker.pkg.dev/hato-atama/asia.gcr.io -grace=48h -tag-filter-any ".*" -recursive=true

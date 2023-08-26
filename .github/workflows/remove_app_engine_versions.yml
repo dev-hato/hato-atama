@@ -1,11 +1,9 @@
 ---
 name: remove-app-engine-versions
-
 on:
   pull_request:
     types:
       - closed
-
 jobs:
   remove-app-engine-versions:
     runs-on: ubuntu-latest
@@ -37,7 +35,6 @@ jobs:
         if: ${{ steps.get_run_numbers.outputs.result != '' }}
       - if: ${{ steps.get_run_numbers.outputs.result != '' }}
         run: gcloud app versions delete --service=default ${{steps.get_run_numbers.outputs.result}}
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
