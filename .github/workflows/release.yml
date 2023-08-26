@@ -1,6 +1,5 @@
 ---
 name: release
-
 on:
   push:
     branches:
@@ -11,11 +10,9 @@ on:
       - synchronize
       - reopened
       - closed
-
 env:
   GCP_WORKLOAD_IDENTITY_PROVIDER: 'projects/765091727073/locations/global/workloadIdentityPools/hato-atama-workload-identity/providers/github'
   GCP_SERVICE_ACCOUNT: 'actions-deploy@hato-atama.iam.gserviceaccount.com'
-
 jobs:
   # App Engineにデプロイされるファイルの差分の有無を判定する
   check-deploy-diff:
@@ -39,7 +36,6 @@ jobs:
               - 'go.mod'
               - 'go.sum'
               - '.gcloudignore'
-
   build-frontend:
     runs-on: ubuntu-latest
     needs: check-deploy-diff
@@ -60,7 +56,6 @@ jobs:
         with:
           name: frontend
           path: frontend/dist
-
   docker-compose-build-base:
     runs-on: ubuntu-latest
     env:
@@ -97,7 +92,6 @@ jobs:
           push: true
           targets: server,frontend
           files: compose.yml,base.compose.yml
-
   docker-compose-build:
     runs-on: ubuntu-latest
     needs: docker-compose-build-base
@@ -140,7 +134,6 @@ jobs:
         with:
           push: true
           files: compose.yml,staging.compose.yml
-
   format-go:
     runs-on: ubuntu-latest
     needs: docker-compose-build-base
@@ -180,7 +173,6 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           branch-name-prefix: fix-format
           pr-title-prefix: formatが間違ってたので直してあげたよ！
-
   # .node-version や package.json のNode.js・npmのバージョンをDockerイメージと同期させ、npm installを実行した結果、差分があればPRを作る
   update-package:
     runs-on: ubuntu-latest
@@ -255,7 +247,6 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           branch-name-prefix: fix-version
           pr-title-prefix: nodeのバージョンを直してあげたよ！
-
   update-dockle:
     runs-on: ubuntu-latest
     steps:
@@ -267,7 +258,6 @@ jobs:
       - uses: dev-hato/actions-update-dockle@v0.0.61
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
-
   dockle:
     runs-on: ubuntu-latest
     needs:
@@ -294,7 +284,6 @@ jobs:
           DOCKER_COMPOSE_FILE_NAME: ${{matrix.docker_compose_file_name}}
           SERVICE_NAME: ${{matrix.service_name}}
         run: bash "${GITHUB_WORKSPACE}/scripts/release/dockle/run_dockle.sh"
-
   make-browserslist:
     runs-on: ubuntu-latest
     needs: update-package
@@ -313,7 +302,6 @@ jobs:
       - name: Set Browserslist
         id: set_browserslist
         run: bash "${GITHUB_WORKSPACE}/scripts/release/make_browserslist/set_browserslist.sh"
-
   e2e-test-mini-docker-compose:
     runs-on: ubuntu-latest
     needs:
@@ -348,7 +336,6 @@ jobs:
           BROWSER_NAME: ${{ matrix.browser_name }}
         run: bash "${GITHUB_WORKSPACE}/scripts/release/run_mini_test.sh"
         working-directory: ./test/e2e
-
   e2e-test-all-docker-compose:
     runs-on: ubuntu-latest
     needs:
@@ -383,7 +370,6 @@ jobs:
           BROWSER_NAME: ${{ matrix.browser_name }}
         run: bash "${GITHUB_WORKSPACE}/scripts/release/run_all_test.sh"
         working-directory: ./test/e2e
-
   deploy-app-engine:
     runs-on: ubuntu-latest
     needs:
@@ -421,8 +407,6 @@ jobs:
         env:
           RUN_NUMBER: ${{github.run_number}}
         run: bash "${GITHUB_WORKSPACE}/scripts/release/deploy_app_engine/wait_for_deployment.sh"
-
-
   create-pr-environment:
     runs-on: ubuntu-latest
     needs: deploy-app-engine
@@ -439,7 +423,6 @@ jobs:
           script: |
             const script = require(`${process.env.GITHUB_WORKSPACE}/scripts/release/create_pr_environment/create_pr_environment.js`)
             await script({github, context})
-
   lighthouse:
     runs-on: ubuntu-latest
     needs: deploy-app-engine
@@ -461,7 +444,6 @@ jobs:
         with:
           name: Lighthouse reports
           path: ${{ env.ARTIFACT_PATH }}
-
   e2e-test-mini-prd:
     runs-on: ubuntu-latest
     timeout-minutes: 2
@@ -489,7 +471,6 @@ jobs:
           BROWSER_NAME: ${{ matrix.browser_name }}
         run: bash "${GITHUB_WORKSPACE}/scripts/release/run_mini_test.sh"
         working-directory: ./test/e2e
-
   e2e-test-all-prd:
     runs-on: ubuntu-latest
     timeout-minutes: 3
@@ -518,7 +499,6 @@ jobs:
           BROWSER_NAME: ${{ matrix.browser_name }}
         run: bash "${GITHUB_WORKSPACE}/scripts/release/run_all_test.sh"
         working-directory: ./test/e2e
-
   migrating-traffic:
     runs-on: ubuntu-latest
     needs:
@@ -537,7 +517,6 @@ jobs:
           service_account: ${{env.GCP_SERVICE_ACCOUNT}}
       - uses: google-github-actions/setup-gcloud@v1.1.1
       - run: bash "${GITHUB_WORKSPACE}/scripts/release/migrating_traffic/set_traffic.sh"
-
   remove-app-engine-past-versions:
     runs-on: ubuntu-latest
     needs:
@@ -572,7 +551,6 @@ jobs:
       - name: Remove app engine versions
         if: ${{ steps.get_run_numbers.outputs.result != '' }}
         run: gcloud app versions delete --service=default  ${{steps.get_run_numbers.outputs.result}}
-
   # docker-compose関連でPRとpushで共通して必ず完了しているべきjobが完了したか
   release-complete-check-docker-compose:
     runs-on: ubuntu-latest
@@ -584,7 +562,6 @@ jobs:
       - e2e-test-all-docker-compose
     steps:
       - run: exit 0
-
   # PRとpushで共通して完了しているべきjobが完了したか
   release-complete-check:
     runs-on: ubuntu-latest
@@ -599,7 +576,6 @@ jobs:
         run: exit 0
       - if: (github.repository == 'dev-hato/hato-atama' && needs.check-deploy-diff.outputs.deploy-files == 'true' && (needs.lighthouse.result != 'success' || needs.e2e-test-mini-prd.result != 'success')) || needs.release-complete-check-docker-compose.result != 'success'
         run: exit 1
-
   # PRをトリガーとした場合に完了しているべきjobが完了したか
   # forkしたリポジトリからdev-hato/hato-atamaへPRを出した場合やforkしたリポジトリ上でPRを立てた場合はdeploy-app-engineがskipされていても完了したものと見なす
   pr-test-complete:
@@ -614,7 +590,6 @@ jobs:
         run: exit 0
       - if: needs.release-complete-check.result != 'success' || (github.repository == github.event.pull_request.head.repo.full_name && github.repository == 'dev-hato/hato-atama' && needs.check-deploy-diff.outputs.deploy-files == 'true' && needs.create-pr-environment.result != 'success')
         run: exit 1
-
   # pushをトリガーとした場合に完了しているべきjobが完了したか
   release-complete:
     runs-on: ubuntu-latest
@@ -628,7 +603,6 @@ jobs:
         run: exit 0
       - if: needs.release-complete-check.result != 'success' || (github.repository == 'dev-hato/hato-atama' && needs.check-deploy-diff.outputs.deploy-files == 'true' && needs.remove-app-engine-past-versions.result != 'success')
         run: exit 1
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: true
