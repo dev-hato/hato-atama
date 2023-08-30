@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "cypress": "12.17.4",
+    "cypress": "13.0.0",
     "eslint-plugin-cypress": "2.14.0"
   },
   "engines": {
