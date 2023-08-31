@@ -14,14 +14,6 @@
   "ignoreDeps": [
     "go"
   ],
-  "packageRules": [
-    {
-      "matchPackageNames": [
-        "golang.org/x/tools"
-      ],
-      "allowedVersions": "<0.2.0"
-    }
-  ],
   "constraints": {
     "go": "1.20"
   }
