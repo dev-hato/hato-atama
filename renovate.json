@@ -10,11 +10,5 @@
     "**/__tests__/**",
     "**/tests/**",
     "**/__fixtures__/**"
-  ],
-  "ignoreDeps": [
-    "go"
-  ],
-  "constraints": {
-    "go": "1.20"
-  }
+  ]
 }
