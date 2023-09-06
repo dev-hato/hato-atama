@@ -295,7 +295,6 @@ jobs:
         with:
           node-version-file: .node-version
           cache: npm
-      - run: npm ci
       # lintする
       - id: lint
         run: bash "${GITHUB_WORKSPACE}/scripts/release/lint_textlint/lint.sh"
@@ -327,11 +326,9 @@ jobs:
         with:
           node-version-file: .node-version
           cache: npm
-      - if: github.event_name != 'pull_request' || github.event.action != 'closed'
-        run: npm ci
       # textlintでformatする
       - if: github.event_name != 'pull_request' || github.event.action != 'closed'
-        run: find . -type f -name "*.md" -not -path "./node_modules/*" -print0 | xargs -0 npx textlint --fix
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/format_textlint/format.sh"
         continue-on-error: true
       - uses: dev-hato/actions-diff-pr-management@v1.1.6
         with:
