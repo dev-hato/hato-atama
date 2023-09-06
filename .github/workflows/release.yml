@@ -284,6 +284,16 @@ jobs:
           DOCKER_COMPOSE_FILE_NAME: ${{matrix.docker_compose_file_name}}
           SERVICE_NAME: ${{matrix.service_name}}
         run: bash "${GITHUB_WORKSPACE}/scripts/release/dockle/run_dockle.sh"
+  lint-textlint:
+    runs-on: ubuntu-latest
+    needs: update-package
+    steps:
+      - uses: actions/checkout@v4.0.0
+      - uses: actions/setup-node@v3.8.1
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - run: bash "${GITHUB_WORKSPACE}/scripts/release/lint_textlint/lint.sh"
   format-textlint:
     runs-on: ubuntu-latest
     needs: update-package
@@ -298,7 +308,6 @@ jobs:
         with:
           node-version-file: .node-version
           cache: npm
-      # textlintでformatする
       - if: github.event_name != 'pull_request' || github.event.action != 'closed'
         run: bash "${GITHUB_WORKSPACE}/scripts/release/format_textlint/format.sh"
         continue-on-error: true
@@ -594,11 +603,12 @@ jobs:
       - e2e-test-mini-prd
       - check-deploy-diff
       - release-complete-check-docker-compose
+      - lint-textlint
       - format-textlint
     steps:
-      - if: (github.repository != 'dev-hato/hato-atama' || needs.check-deploy-diff.outputs.deploy-files == 'false' || (needs.lighthouse.result == 'success' && needs.e2e-test-mini-prd.result == 'success' && needs.format-textlint.result == 'success')) && needs.release-complete-check-docker-compose.result == 'success'
+      - if: (github.repository != 'dev-hato/hato-atama' || needs.check-deploy-diff.outputs.deploy-files == 'false' || (needs.lighthouse.result == 'success' && needs.e2e-test-mini-prd.result == 'success' && needs.lint-textlint.result == 'success' && needs.format-textlint.result == 'success')) && needs.release-complete-check-docker-compose.result == 'success'
         run: exit 0
-      - if: (github.repository == 'dev-hato/hato-atama' && needs.check-deploy-diff.outputs.deploy-files == 'true' && (needs.lighthouse.result != 'success' || needs.e2e-test-mini-prd.result != 'success' || needs.format-textlint.result != 'success')) || needs.release-complete-check-docker-compose.result != 'success'
+      - if: (github.repository == 'dev-hato/hato-atama' && needs.check-deploy-diff.outputs.deploy-files == 'true' && (needs.lighthouse.result != 'success' || needs.e2e-test-mini-prd.result != 'success' || needs.lint-textlint.result != 'success' || needs.format-textlint.result != 'success')) || needs.release-complete-check-docker-compose.result != 'success'
         run: exit 1
   # PRをトリガーとした場合に完了しているべきjobが完了したか
   # forkしたリポジトリからdev-hato/hato-atamaへPRを出した場合やforkしたリポジトリ上でPRを立てた場合はdeploy-app-engineがskipされていても完了したものと見なす
