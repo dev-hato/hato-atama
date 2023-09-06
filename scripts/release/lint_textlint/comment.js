@@ -19,12 +19,11 @@ module.exports = async ({ github, context }) => {
     await github.rest.issues.deleteComment(issuesDeleteCommentParams)
   }
 
-  const result = process.env.RESULT
   const issuesCreateCommentParams = {
     issue_number: context.issue.number,
     owner: context.repo.owner,
     repo: context.repo.repo,
-    body: '日本語のLint結果だよ！🕊🕊🕊\n```\n' + result + '\n```'
+    body: '日本語のLint結果だよ！🕊🕊🕊\n```\n' + process.env.RESULT + '\n```'
   }
   console.log('call issues.createComment:', issuesCreateCommentParams)
   await github.rest.issues.createComment(issuesCreateCommentParams)
