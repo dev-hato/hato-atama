@@ -12,7 +12,8 @@
     "**/__fixtures__/**"
   ],
   "ignoreDeps": [
-    "go"
+    "go",
+    "node-fetch"
   ],
   "constraints": {
     "go": "1.20"
