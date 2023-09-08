@@ -4,6 +4,7 @@
     "@textlint-ja/textlint-rule-no-insert-dropping-sa": "2.0.1",
     "cheerio": "1.0.0-rc.12",
     "domhandler": "5.0.3",
+    "node-fetch": "2.6.12",
     "renovate": "36.87.1",
     "textlint": "13.3.3",
     "textlint-filter-rule-comments": "1.2.2",
