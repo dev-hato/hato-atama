@@ -10,5 +10,9 @@
     "**/__tests__/**",
     "**/tests/**",
     "**/__fixtures__/**"
+  ],
+  "ignoreDeps": [
+    "go",
+    "node-fetch"
   ]
 }
