@@ -12,8 +12,13 @@
     "**/__fixtures__/**"
   ],
   "ignoreDeps": [
-    "go",
-    "node-fetch"
+    "go"
+  ],
+  "packageRules": [
+    {
+      "matchPackageNames": "node-fetch",
+      "allowedVersions": "!/2.6.13$/"
+    }
   ],
   "constraints": {
     "go": "1.20"
