@@ -12,7 +12,6 @@ on:
       - github-actions-cache-cleaner
       - release
       - remove-app-engine-versions
-      - renovate-config-validator
       - resource-update
       - super-linter
       - update-gitleaks
