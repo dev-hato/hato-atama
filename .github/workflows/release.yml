@@ -21,7 +21,7 @@ jobs:
       deploy-files: ${{ steps.changes.outputs.deploy-files }}
     if: github.event_name != 'pull_request' || github.event.action != 'closed'
     steps:
-      - uses: actions/checkout@v4.0.0
+      - uses: actions/checkout@v4.1.0
       - uses: dorny/paths-filter@v2.11.1
         id: changes
         with:
@@ -44,7 +44,7 @@ jobs:
       run:
         working-directory: frontend
     steps:
-      - uses: actions/checkout@v4.0.0
+      - uses: actions/checkout@v4.1.0
       - uses: actions/setup-node@v3.8.1
         with:
           node-version-file: frontend/.node-version
@@ -67,7 +67,7 @@ jobs:
       packages: write
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed' && github.repository == github.event.pull_request.head.repo.full_name)
     steps:
-      - uses: actions/checkout@v4.0.0
+      - uses: actions/checkout@v4.1.0
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3.0.0
         with:
@@ -103,7 +103,7 @@ jobs:
       contents: read
       packages: write
     steps:
-      - uses: actions/checkout@v4.0.0
+      - uses: actions/checkout@v4.1.0
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3.0.0
         with:
@@ -145,7 +145,7 @@ jobs:
       DOCKER_CONTENT_TRUST: 1
       REPOSITORY: ${{github.repository}}
     steps:
-      - uses: actions/checkout@v4.0.0
+      - uses: actions/checkout@v4.1.0
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         with:
           fetch-depth: 0
@@ -184,7 +184,7 @@ jobs:
     env:
       DOCKER_CMD: "node --version && npm --version"
     steps:
-      - uses: actions/checkout@v4.0.0
+      - uses: actions/checkout@v4.1.0
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         with:
           fetch-depth: 0
@@ -250,7 +250,7 @@ jobs:
   update-dockle:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.0.0
+      - uses: actions/checkout@v4.1.0
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         with:
           fetch-depth: 0
@@ -275,7 +275,7 @@ jobs:
       DOCKER_CONTENT_TRUST: 1
       REPOSITORY: ${{github.repository}}
     steps:
-      - uses: actions/checkout@v4.0.0
+      - uses: actions/checkout@v4.1.0
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
         env:
           HEAD_REF: ${{github.head_ref}}
@@ -293,7 +293,7 @@ jobs:
       run:
         working-directory: frontend
     steps:
-      - uses: actions/checkout@v4.0.0
+      - uses: actions/checkout@v4.1.0
       - uses: actions/setup-node@v3.8.1
         with:
           node-version-file: frontend/.node-version
@@ -315,7 +315,7 @@ jobs:
       DOCKER_CONTENT_TRUST: 1
       REPOSITORY: ${{github.repository}}
     steps:
-      - uses: actions/checkout@v4.0.0
+      - uses: actions/checkout@v4.1.0
       - run: cat .env >>"$GITHUB_ENV"
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
         env:
@@ -349,7 +349,7 @@ jobs:
       DOCKER_CONTENT_TRUST: 1
       REPOSITORY: ${{github.repository}}
     steps:
-      - uses: actions/checkout@v4.0.0
+      - uses: actions/checkout@v4.1.0
       - run: cat .env >>"$GITHUB_ENV"
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
         env:
@@ -380,7 +380,7 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v4.0.0
+      - uses: actions/checkout@v4.1.0
       - uses: actions/download-artifact@v3.0.2
         with:
           name: frontend
@@ -414,7 +414,7 @@ jobs:
       pull-requests: write
     if: ${{ github.event_name == 'pull_request' }}
     steps:
-      - uses: actions/checkout@v4.0.0
+      - uses: actions/checkout@v4.1.0
       - uses: actions/github-script@v6.4.1
         env:
           SHA: ${{github.event.pull_request.head.sha}}
@@ -433,7 +433,7 @@ jobs:
       ARTIFACT_PATH: ${{ github.workspace }}/tmp/artifacts
       URLS: https://v${{ github.run_number }}-dot-hato-atama.an.r.appspot.com
     steps:
-      - uses: actions/checkout@v4.0.0
+      - uses: actions/checkout@v4.1.0
       - run: mkdir -p "${ARTIFACT_PATH}"
       - uses: foo-software/lighthouse-check-action@v10.0.0
         with:
@@ -456,7 +456,7 @@ jobs:
         browser_name: ["chrome", "chromium", "electron", "edge"]
         include: ${{fromJson(needs.make-browserslist.outputs.browserslist)}}
     steps:
-      - uses: actions/checkout@v4.0.0
+      - uses: actions/checkout@v4.1.0
       - uses: actions/setup-node@v3.8.1
         with:
           node-version-file: test/e2e/.node-version
@@ -484,7 +484,7 @@ jobs:
         include: ${{fromJson(needs.make-browserslist.outputs.browserslist)}}
     if: ${{ github.event_name == 'push' }}
     steps:
-      - uses: actions/checkout@v4.0.0
+      - uses: actions/checkout@v4.1.0
       - uses: actions/setup-node@v3.8.1
         with:
           node-version-file: test/e2e/.node-version
@@ -508,7 +508,7 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v4.0.0
+      - uses: actions/checkout@v4.1.0
       - id: 'auth'
         name: 'Authenticate to GCP'
         uses: google-github-actions/auth@v1.1.1
@@ -526,7 +526,7 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v4.0.0
+      - uses: actions/checkout@v4.1.0
       - name: Get run numbers
         uses: actions/github-script@v6.4.1
         id: get_run_numbers
