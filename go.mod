@@ -1,10 +1,12 @@
 module github.com/dev-hato/hato-atama
 
-go 1.20
+go 1.21
+
+toolchain go1.21.2
 
 require (
 	cloud.google.com/go/datastore v1.15.0
-	github.com/cosmtrek/air v1.44.0
+	github.com/cosmtrek/air v1.45.0
 	github.com/go-playground/validator/v10 v10.15.5
 	github.com/labstack/echo/v4 v4.11.1
 	golang.org/x/tools v0.14.0
@@ -14,6 +16,7 @@ require (
 	cloud.google.com/go v0.110.7 // indirect
 	cloud.google.com/go/compute v1.23.0 // indirect
 	cloud.google.com/go/compute/metadata v0.2.3 // indirect
+	dario.cat/mergo v1.0.0 // indirect
 	github.com/bep/godartsass v0.16.0 // indirect
 	github.com/bep/golibsass v1.1.0 // indirect
 	github.com/cli/safeexec v1.0.0 // indirect
@@ -31,7 +34,6 @@ require (
 	github.com/google/s2a-go v0.1.4 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.2.4 // indirect
 	github.com/googleapis/gax-go/v2 v2.12.0 // indirect
-	github.com/imdario/mergo v0.3.13 // indirect
 	github.com/labstack/gommon v0.4.0 // indirect
 	github.com/leodido/go-urn v1.2.4 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect

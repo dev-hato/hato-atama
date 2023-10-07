@@ -4,7 +4,6 @@ on:
   workflow_run:
     workflows:
       - Add to Task List
-      - CodeQL
       - Dependency Review
       - fix-fail-notify
       - format-json-yml
