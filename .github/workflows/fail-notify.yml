@@ -6,7 +6,7 @@ on:
       - Add to Task List
       - CodeQL
       - Dependency Review
-      - check-fail-notify
+      - fix-fail-notify
       - format-json-yml
       - gcr-cleaner
       - github-actions-cache-cleaner
