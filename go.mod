@@ -8,7 +8,7 @@ require (
 	cloud.google.com/go/datastore v1.15.0
 	github.com/cosmtrek/air v1.45.0
 	github.com/go-playground/validator/v10 v10.15.5
-	github.com/labstack/echo/v4 v4.11.1
+	github.com/labstack/echo/v4 v4.11.2
 	golang.org/x/tools v0.14.0
 )
 
@@ -47,7 +47,7 @@ require (
 	go.opencensus.io v0.24.0 // indirect
 	golang.org/x/crypto v0.14.0 // indirect
 	golang.org/x/mod v0.13.0 // indirect
-	golang.org/x/net v0.16.0 // indirect
+	golang.org/x/net v0.17.0 // indirect
 	golang.org/x/oauth2 v0.8.0 // indirect
 	golang.org/x/sync v0.4.0 // indirect
 	golang.org/x/sys v0.13.0 // indirect
