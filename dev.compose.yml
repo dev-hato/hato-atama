@@ -8,31 +8,20 @@ services:
         - action: rebuild
           path: ./compose.yml
         - action: rebuild
+          path: ./dev.build.compose.yml
+        - action: rebuild
           path: ./dev.compose.yml
         - action: rebuild
           path: ./gcp/datastore/start.sh
         - action: rebuild
           path: ./gcp/datastore/healthcheck.sh
   server:
-    build:
-      target: build
-      cache_from:
-        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server-dev:${TAG_NAME:-latest}
-        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server-dev
-        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server-base:${TAG_NAME:-latest}
-        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server-base
-    image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server-dev:${TAG_NAME:-latest}
-    volumes:
-      - type: bind
-        source: ./server
-        target: /go/app/server
-    depends_on:
-      gcloud_datastore:
-        condition: service_healthy
     develop:
       watch:
         - action: rebuild
           path: ./compose.yml
+        - action: rebuild
+          path: ./dev.build.compose.yml
         - action: rebuild
           path: ./dev.compose.yml
         - action: rebuild
@@ -42,27 +31,14 @@ services:
         - action: rebuild
           path: ./ping
   frontend:
-    build:
-      target: build
-      cache_from:
-        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend-dev:${TAG_NAME:-latest}
-        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend-dev
-        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend-base:${TAG_NAME:-latest}
-        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend-base
-    image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend-dev:${TAG_NAME:-latest}
-    volumes:
-      - type: bind
-        source: ./frontend/src
-        target: /usr/src/app/src
-    depends_on:
-      server:
-        condition: service_healthy
     develop:
       watch:
         - action: rebuild
           path: ./frontend/Dockerfile
         - action: rebuild
           path: ./compose.yml
+        - action: rebuild
+          path: ./dev.build.compose.yml
         - action: rebuild
           path: ./dev.compose.yml
         - action: rebuild
