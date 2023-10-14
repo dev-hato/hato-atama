@@ -126,7 +126,7 @@ jobs:
           DOCKER_CONTENT_TRUST: 1
         with:
           push: true
-          files: compose.yml,dev.build.compose.yml
+          files: compose.yml,dev.base.compose.yml
       - name: Build and push (staging)
         uses: docker/bake-action@v4.0.0
         env:
@@ -277,7 +277,7 @@ jobs:
       - update-dockle
     strategy:
       matrix:
-        docker_compose_file_name: ["dev.build.compose.yml", "staging.compose.yml"]
+        docker_compose_file_name: ["dev.base.compose.yml", "staging.compose.yml"]
         include:
           - docker_compose_file_name: "base.compose.yml"
             service_name: "server"

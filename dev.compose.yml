@@ -8,7 +8,7 @@ services:
         - action: rebuild
           path: ./compose.yml
         - action: rebuild
-          path: ./dev.build.compose.yml
+          path: ./dev.base.compose.yml
         - action: rebuild
           path: ./dev.compose.yml
         - action: rebuild
@@ -28,7 +28,7 @@ services:
         - action: rebuild
           path: ./compose.yml
         - action: rebuild
-          path: ./dev.build.compose.yml
+          path: ./dev.base.compose.yml
         - action: rebuild
           path: ./dev.compose.yml
         - action: rebuild
@@ -52,7 +52,7 @@ services:
         - action: rebuild
           path: ./compose.yml
         - action: rebuild
-          path: ./dev.build.compose.yml
+          path: ./dev.base.compose.yml
         - action: rebuild
           path: ./dev.compose.yml
         - action: rebuild
