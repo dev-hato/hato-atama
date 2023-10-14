@@ -19,7 +19,9 @@
 
 #### 編集するとhot reloadが走る、開発に適したバージョン
 ```sh
-TAG_NAME=`git symbolic-ref --short HEAD | sed -e "s:/:-:g" | sed -e "s/^master$/latest/g"` docker compose -f compose.yml -f dev.compose.yml up --build
+export TAG_NAME=`git symbolic-ref --short HEAD | sed -e "s:/:-:g" | sed -e "s/^master$/latest/g"`
+docker compose -f compose.yml -f dev.compose.yml build
+docker compose -f compose.yml -f dev.compose.yml watch
 ```
 
 #### 限りなく本番のapp engineに近い設定で動くバージョン
