@@ -603,6 +603,12 @@ jobs:
         run: exit 0
       - if: needs.release-complete-check.result != 'success' || (github.repository == github.event.pull_request.head.repo.full_name && github.repository == 'dev-hato/hato-atama' && needs.check-deploy-diff.outputs.deploy-files == 'true' && needs.create-pr-environment.result != 'success')
         run: exit 1
+  action-timeline-pr-test-complete:
+    needs: pr-test-complete
+    if: github.event_name == 'pull_request' && github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: Kesin11/actions-timeline@v1
   # pushをトリガーとした場合に完了しているべきjobが完了したか
   release-complete:
     runs-on: ubuntu-latest
@@ -616,6 +622,12 @@ jobs:
         run: exit 0
       - if: needs.release-complete-check.result != 'success' || (github.repository == 'dev-hato/hato-atama' && needs.check-deploy-diff.outputs.deploy-files == 'true' && needs.remove-app-engine-past-versions.result != 'success')
         run: exit 1
+  action-timeline-release-complete:
+    needs: release-complete
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: Kesin11/actions-timeline@v1
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: true
