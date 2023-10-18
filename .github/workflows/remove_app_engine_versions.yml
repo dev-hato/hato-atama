@@ -12,7 +12,7 @@ jobs:
       contents: read
     if: github.repository == github.event.pull_request.head.repo.full_name && github.repository == 'dev-hato/hato-atama'
     steps:
-      - uses: actions/checkout@v4.1.0
+      - uses: actions/checkout@v4.1.1
       - name: Get run numbers
         uses: actions/github-script@v6.4.1
         id: get_run_numbers
