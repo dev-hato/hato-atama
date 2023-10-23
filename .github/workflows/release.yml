@@ -45,7 +45,7 @@ jobs:
         working-directory: frontend
     steps:
       - uses: actions/checkout@v4.1.1
-      - uses: actions/setup-node@v3.8.1
+      - uses: actions/setup-node@v3.8.2
         with:
           node-version-file: frontend/.node-version
           cache: npm
@@ -214,7 +214,7 @@ jobs:
           NODE_VERSION: ${{steps.get_node_version.outputs.node_version}}
           NPM_VERSION: ${{steps.get_node_version.outputs.npm_version}}
         run: bash "${GITHUB_WORKSPACE}/scripts/release/update_package/update_versions.sh"
-      - uses: actions/setup-node@v3.8.1
+      - uses: actions/setup-node@v3.8.2
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         with:
           node-version-file: .node-version
@@ -222,7 +222,7 @@ jobs:
       - name: Update packages (.)
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         run: npm install
-      - uses: actions/setup-node@v3.8.1
+      - uses: actions/setup-node@v3.8.2
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         with:
           node-version-file: frontend/.node-version
@@ -232,7 +232,7 @@ jobs:
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         run: npm install
         working-directory: frontend
-      - uses: actions/setup-node@v3.8.1
+      - uses: actions/setup-node@v3.8.2
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         with:
           node-version-file: test/e2e/.node-version
@@ -306,7 +306,7 @@ jobs:
         working-directory: frontend
     steps:
       - uses: actions/checkout@v4.1.1
-      - uses: actions/setup-node@v3.8.1
+      - uses: actions/setup-node@v3.8.2
         with:
           node-version-file: frontend/.node-version
           cache: npm
@@ -334,7 +334,7 @@ jobs:
           HEAD_REF: ${{github.head_ref}}
         if: ${{ github.event_name == 'pull_request' }}
       - run: bash "${GITHUB_WORKSPACE}/scripts/release/run_docker_compose.sh"
-      - uses: actions/setup-node@v3.8.1
+      - uses: actions/setup-node@v3.8.2
         with:
           node-version-file: test/e2e/.node-version
           cache: npm
@@ -368,7 +368,7 @@ jobs:
           HEAD_REF: ${{github.head_ref}}
         if: ${{ github.event_name == 'pull_request' }}
       - run: bash "${GITHUB_WORKSPACE}/scripts/release/run_docker_compose.sh"
-      - uses: actions/setup-node@v3.8.1
+      - uses: actions/setup-node@v3.8.2
         with:
           node-version-file: test/e2e/.node-version
           cache: npm
@@ -469,7 +469,7 @@ jobs:
         include: ${{fromJson(needs.make-browserslist.outputs.browserslist)}}
     steps:
       - uses: actions/checkout@v4.1.1
-      - uses: actions/setup-node@v3.8.1
+      - uses: actions/setup-node@v3.8.2
         with:
           node-version-file: test/e2e/.node-version
           cache: npm
@@ -497,7 +497,7 @@ jobs:
     if: ${{ github.event_name == 'push' }}
     steps:
       - uses: actions/checkout@v4.1.1
-      - uses: actions/setup-node@v3.8.1
+      - uses: actions/setup-node@v3.8.2
         with:
           node-version-file: test/e2e/.node-version
           cache: npm
