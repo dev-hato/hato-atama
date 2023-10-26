@@ -10,6 +10,7 @@ on:
   push:
     branches:
       - master
+  merge_group:
 permissions:
   contents: write
   pull-requests: write
