@@ -594,7 +594,7 @@ jobs:
   # forkしたリポジトリからdev-hato/hato-atamaへPRを出した場合やforkしたリポジトリ上でPRを立てた場合はdeploy-app-engineがskipされていても完了したものと見なす
   pr-test-complete:
     runs-on: ubuntu-latest
-    if: always() && github.event_name == 'pull_request' && github.event.action != 'closed' || github.event_name == 'merge_group'
+    if: always() && ((github.event_name == 'pull_request' && github.event.action != 'closed') || github.event_name == 'merge_group')
     needs:
       - release-complete-check
       - create-pr-environment
