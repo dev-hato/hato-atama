@@ -10,6 +10,7 @@ on:
   push:
     branches:
       - master
+  merge_group:
 permissions:
   contents: write
   pull-requests: write
@@ -21,7 +22,7 @@ jobs:
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         with:
           fetch-depth: 0
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha }}
       - uses: actions/setup-node@v4.0.0
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         with:

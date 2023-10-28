@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - master
+  merge_group:
 jobs:
   fix-fail-notify:
     runs-on: ubuntu-latest
@@ -12,7 +13,7 @@ jobs:
       - uses: actions/checkout@v4.1.1
         with:
           fetch-depth: 0
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha }}
           token: ${{secrets.CREATE_WORKFLOW_CI_TOKEN}}
       - run: bash "${GITHUB_WORKSPACE}/scripts/fix_fail_notify/fix_fail_notify/fix_fail_notify.sh"
       - uses: dev-hato/actions-diff-pr-management@v1.1.6
