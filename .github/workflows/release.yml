@@ -84,7 +84,7 @@ jobs:
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
         env:
           HEAD_REF: ${{github.head_ref}}
-        if: ${{ github.event_name == 'pull_request' }}
+        if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
       - name: Build and push
         uses: docker/bake-action@v4.0.0
         env:
@@ -120,7 +120,7 @@ jobs:
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
         env:
           HEAD_REF: ${{github.head_ref}}
-        if: ${{ github.event_name == 'pull_request' }}
+        if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
       - name: Build and push (dev)
         uses: docker/bake-action@v4.0.0
         env:
@@ -292,7 +292,7 @@ jobs:
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
         env:
           HEAD_REF: ${{github.head_ref}}
-        if: ${{ github.event_name == 'pull_request' }}
+        if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
       - env:
           DOCKER_COMPOSE_FILE_NAME: ${{matrix.docker_compose_file_name}}
           SERVICE_NAME: ${{matrix.service_name}}
@@ -333,7 +333,7 @@ jobs:
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
         env:
           HEAD_REF: ${{github.head_ref}}
-        if: ${{ github.event_name == 'pull_request' }}
+        if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
       - run: bash "${GITHUB_WORKSPACE}/scripts/release/run_docker_compose.sh"
       - uses: actions/setup-node@v4.0.0
         with:
@@ -367,7 +367,7 @@ jobs:
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
         env:
           HEAD_REF: ${{github.head_ref}}
-        if: ${{ github.event_name == 'pull_request' }}
+        if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
       - run: bash "${GITHUB_WORKSPACE}/scripts/release/run_docker_compose.sh"
       - uses: actions/setup-node@v4.0.0
         with:
@@ -388,7 +388,7 @@ jobs:
     needs:
       - build-frontend
       - e2e-test-mini-docker-compose
-    if: github.event_name == 'push' || (github.repository == github.event.pull_request.head.repo.full_name && github.repository == 'dev-hato/hato-atama')
+    if: github.event_name == 'push' || github.event_name == 'merge_group' || (github.repository == github.event.pull_request.head.repo.full_name && github.repository == 'dev-hato/hato-atama')
     permissions:
       id-token: write
       contents: read
@@ -399,7 +399,7 @@ jobs:
           name: frontend
           path: frontend/dist
       - run: bash "${GITHUB_WORKSPACE}/scripts/release/deploy_app_engine/set_config.sh"
-        if: ${{ github.event_name == 'pull_request' }}
+        if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
       - run: 'echo -e "env_variables:\n  ENV_NAME: \"prd\"" >> app.yaml'
         if: ${{ github.event_name == 'push' }}
       - id: 'auth'
@@ -425,7 +425,7 @@ jobs:
     needs: deploy-app-engine
     permissions:
       pull-requests: write
-    if: ${{ github.event_name == 'pull_request' }}
+    if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
     steps:
       - uses: actions/checkout@v4.1.1
       - uses: actions/github-script@v6.4.1
