@@ -86,7 +86,7 @@ jobs:
           HEAD_REF: ${{github.head_ref || github.event.merge_group.head_ref}}
         if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
       - name: Build and push
-        uses: docker/bake-action@v4.0.0
+        uses: docker/bake-action@v4.1.0
         env:
           DOCKER_CONTENT_TRUST: 1
         with:
@@ -122,14 +122,14 @@ jobs:
           HEAD_REF: ${{github.head_ref || github.event.merge_group.head_ref}}
         if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
       - name: Build and push (dev)
-        uses: docker/bake-action@v4.0.0
+        uses: docker/bake-action@v4.1.0
         env:
           DOCKER_CONTENT_TRUST: 1
         with:
           push: true
           files: compose.yml,dev.base.compose.yml
       - name: Build and push (staging)
-        uses: docker/bake-action@v4.0.0
+        uses: docker/bake-action@v4.1.0
         env:
           DOCKER_CONTENT_TRUST: 1
         with:
@@ -256,7 +256,7 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha }}
-      - uses: dev-hato/actions-update-dockle@v0.0.70
+      - uses: dev-hato/actions-update-dockle@v0.0.71
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
   check-nginx-config:
