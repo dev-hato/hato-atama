@@ -15,6 +15,7 @@ on:
     branches: ["master"]
   pull_request:
     branches: ["master"]
+  merge_group:
   schedule:
     - cron: '38 8 * * 4'
 jobs:
