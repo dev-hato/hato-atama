@@ -14,5 +14,11 @@
   "ignoreDeps": [
     "go",
     "node-fetch"
+  ],
+  "packageRules": [
+    {
+      "matchManagers": ["gomod"],
+      "postUpdateOptions": ["gomodTidy"]
+    }
   ]
 }
