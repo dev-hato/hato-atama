@@ -23,6 +23,13 @@
       "postUpdateOptions": [
         "gomodTidy"
       ]
+    },
+    {
+      "groupName": "artifact",
+      "matchPackageNames": [
+        "actions/download-artifact",
+        "actions/upload-artifact"
+      ]
     }
   ]
 }
