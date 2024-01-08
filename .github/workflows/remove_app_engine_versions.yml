@@ -27,7 +27,7 @@ jobs:
       - id: 'auth'
         if: ${{ steps.get_run_numbers.outputs.result != '' }}
         name: 'Authenticate to GCP'
-        uses: google-github-actions/auth@v2.0.0
+        uses: google-github-actions/auth@v2.0.1
         with:
           workload_identity_provider: 'projects/765091727073/locations/global/workloadIdentityPools/hato-atama-workload-identity/providers/github'
           service_account: 'actions-deploy@hato-atama.iam.gserviceaccount.com'
