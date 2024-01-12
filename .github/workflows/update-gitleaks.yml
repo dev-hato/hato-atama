@@ -7,9 +7,6 @@ on:
       - synchronize
       - reopened
       - closed
-  push:
-    branches:
-      - master
   merge_group:
 permissions:
   contents: write
