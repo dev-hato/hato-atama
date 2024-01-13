@@ -302,9 +302,7 @@ jobs:
         run: bash "${GITHUB_WORKSPACE}/scripts/release/dockle/run_dockle.sh"
   make-browserslist:
     runs-on: ubuntu-latest
-    needs:
-      - update-package
-      - docker-compose-build-base
+    needs: update-package
     outputs:
       browserslist: ${{ steps.set_browserslist.outputs.browserslist }}
     defaults:
