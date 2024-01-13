@@ -398,7 +398,7 @@ jobs:
       - e2e-test-mini-docker-compose
       - docker-compose-build
       - make-browserslist
-    if: always && (github.event_name == 'push' || ((github.event_name == 'merge_group' || (github.repository == github.event.pull_request.head.repo.full_name && github.repository == 'dev-hato/hato-atama')) && needs.e2e-test-mini-docker-compose.result == 'success')) && needs.build-frontend.result == 'success' && needs.docker-compose-build.result == 'success' && needs.make-browserslist.result == 'success'
+    if: always() && (github.event_name == 'push' || ((github.event_name == 'merge_group' || (github.repository == github.event.pull_request.head.repo.full_name && github.repository == 'dev-hato/hato-atama')) && needs.e2e-test-mini-docker-compose.result == 'success')) && needs.build-frontend.result == 'success' && needs.docker-compose-build.result == 'success' && needs.make-browserslist.result == 'success'
     permissions:
       id-token: write
       contents: read
