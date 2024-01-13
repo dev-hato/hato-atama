@@ -307,7 +307,6 @@ jobs:
       - docker-compose-build-base
     outputs:
       browserslist: ${{ steps.set_browserslist.outputs.browserslist }}
-    if: always() && needs.docker-compose-build-base.result == 'success' && (github.event_name == 'push' || needs.update-package.result == 'success')
     defaults:
       run:
         working-directory: frontend
