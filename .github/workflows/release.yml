@@ -479,6 +479,7 @@ jobs:
       matrix:
         browser_name: ["chrome", "chromium", "electron", "edge"]
         include: ${{fromJson(needs.make-browserslist.outputs.browserslist)}}
+    if: always() && (github.event_name == 'push' || needs.e2e-test-mini-docker-compose.result == 'success') && needs.deploy-app-engine.result == 'success' && needs.make-browserslist.result == 'success'
     steps:
       - uses: actions/checkout@v4.1.1
       - uses: actions/setup-node@v4.0.1
