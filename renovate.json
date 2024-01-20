@@ -1,6 +1,6 @@
 {
   "extends": [
-                                  "github>dev-hato/renovate-config"
+    "github>dev-hato/renovate-config"
   ],
   "ignorePaths": [
     "**/node_modules/**",
