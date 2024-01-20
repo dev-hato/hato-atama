@@ -7,6 +7,10 @@ on:
       - CodeQL
       - Dependency Review
       - fix-fail-notify
+      - format-json-yml
+      - gcr-cleaner
+      - github-actions-cache-cleaner
+      - release
       - remove-app-engine-versions
       - resource-update
       - super-linter
