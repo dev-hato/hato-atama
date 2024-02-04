@@ -8,33 +8,33 @@ docker compose -f compose.yml -f "${DOCKER_COMPOSE_FILE_NAME}" pull "${SERVICE_N
 docker compose -f compose.yml -f "${DOCKER_COMPOSE_FILE_NAME}" up -d "${SERVICE_NAME}"
 
 for image_name in $(docker compose -f compose.yml -f "${DOCKER_COMPOSE_FILE_NAME}" images "${SERVICE_NAME}" | awk 'OFS=":" {print $2,$3}' | tail -n +2); do
-  cmd="dockle --exit-code 1 "
+	cmd="dockle --exit-code 1 "
 
-  if [[ "${image_name}" =~ "gcloud_datastore" ]] || [[ "${image_name}" =~ "server-dev" ]] || [[ "${image_name}" =~ "server-base" ]]; then
-    cmd+="-i DKL-LI-0003 "
+	if [[ "${image_name}" =~ "gcloud_datastore" ]] || [[ "${image_name}" =~ "server-dev" ]] || [[ "${image_name}" =~ "server-base" ]]; then
+		cmd+="-i DKL-LI-0003 "
 
-    if [[ "${image_name}" =~ "gcloud_datastore" ]] || [[ "${image_name}" =~ "server-base" ]]; then
-      cmd+="-i CIS-DI-0001 "
-      if [[ "${image_name}" =~ "gcloud_datastore" ]]; then
-        cmd+="-af settings.py "
-      fi
-    fi
+		if [[ "${image_name}" =~ "gcloud_datastore" ]] || [[ "${image_name}" =~ "server-base" ]]; then
+			cmd+="-i CIS-DI-0001 "
+			if [[ "${image_name}" =~ "gcloud_datastore" ]]; then
+				cmd+="-af settings.py "
+			fi
+		fi
 
-    if [[ "${image_name}" =~ "server-dev" ]] || [[ "${image_name}" =~ "server-base" ]]; then
-      cmd+="--timeout 600s "
-      if [[ "${image_name}" =~ "server-dev" ]]; then
-        cmd+="-af credentials "
-      fi
-    fi
-  elif [[ "${image_name}" =~ "frontend:" ]]; then
-    cmd+="-ak NGINX_GPGKEY "
-  fi
+		if [[ "${image_name}" =~ "server-dev" ]] || [[ "${image_name}" =~ "server-base" ]]; then
+			cmd+="--timeout 600s "
+			if [[ "${image_name}" =~ "server-dev" ]]; then
+				cmd+="-af credentials "
+			fi
+		fi
+	elif [[ "${image_name}" =~ "frontend:" ]]; then
+		cmd+="-ak NGINX_GPGKEY "
+	fi
 
-  if [[ "${image_name}" =~ "frontend-base" ]] || [[ "${image_name}" =~ "server-base" ]]; then
-    cmd+="-i CIS-DI-0006 "
-  fi
+	if [[ "${image_name}" =~ "frontend-base" ]] || [[ "${image_name}" =~ "server-base" ]]; then
+		cmd+="-i CIS-DI-0006 "
+	fi
 
-  cmd+="${image_name}"
-  echo "> ${cmd}"
-  eval "${cmd}"
+	cmd+="${image_name}"
+	echo "> ${cmd}"
+	eval "${cmd}"
 done
