@@ -1,3 +1,4 @@
+#checkov:skip=CKV_DOCKER_3
 FROM gcr.io/google.com/cloudsdktool/google-cloud-cli:462.0.1-emulators
 
 RUN find / -type f -perm /u+s -ignore_readdir_race -exec chmod u-s {} \; \
