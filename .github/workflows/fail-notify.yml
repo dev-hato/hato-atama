@@ -17,6 +17,7 @@ on:
       - update-gitleaks
     types:
       - completed
+permissions: read-all
 jobs:
   fail-notify:
     runs-on: ubuntu-latest

@@ -2,11 +2,7 @@
 name: resource-update
 on:
   workflow_dispatch:
-    inputs:
-      base-branch-name:
-        description: "base branch name"
-        required: false
-        default: "master"
+permissions: read-all
 jobs:
   update-frontend:
     runs-on: ubuntu-latest
@@ -31,7 +27,7 @@ jobs:
       - uses: dev-hato/actions-diff-pr-management@v1.1.9
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
-          branch-name-prefix: ${{ github.event.inputs.base-branch-name }}-update-frontend
+          branch-name-prefix: update-frontend
           pr-title-prefix: Update frontend
   update-test-e2e:
     runs-on: ubuntu-latest
@@ -56,7 +52,7 @@ jobs:
       - uses: dev-hato/actions-diff-pr-management@v1.1.9
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
-          branch-name-prefix: ${{ github.event.inputs.base-branch-name }}-update-test-e2e
+          branch-name-prefix: update-test-e2e
           pr-title-prefix: Update test/e2e
   update-go:
     runs-on: ubuntu-latest
@@ -83,5 +79,5 @@ jobs:
       - uses: dev-hato/actions-diff-pr-management@v1.1.9
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
-          branch-name-prefix: ${{ github.event.inputs.base-branch-name }}-update-go
+          branch-name-prefix: update-go
           pr-title-prefix: Update go
