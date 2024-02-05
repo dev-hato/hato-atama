@@ -4,12 +4,12 @@ on:
   pull_request:
     types:
       - closed
+permissions:
+  id-token: write
+  contents: read
 jobs:
   remove-app-engine-versions:
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
     if: github.repository == github.event.pull_request.head.repo.full_name && github.repository == 'dev-hato/hato-atama'
     steps:
       - uses: actions/checkout@v4.1.1

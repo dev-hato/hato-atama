@@ -7,12 +7,12 @@ on:
 env:
   GCP_WORKLOAD_IDENTITY_PROVIDER: 'projects/765091727073/locations/global/workloadIdentityPools/hato-atama-workload-identity/providers/github'
   GCP_SERVICE_ACCOUNT: 'gcr-cleaner@hato-atama.iam.gserviceaccount.com'
+permissions:
+  id-token: write
+  contents: read
 jobs:
   gcr-cleaner:
     runs-on: 'ubuntu-latest'
-    permissions:
-      id-token: write
-      contents: read
     steps:
       - uses: actions/checkout@v4.1.1
       - id: 'auth'

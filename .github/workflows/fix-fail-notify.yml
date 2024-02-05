@@ -3,6 +3,7 @@ name: fix-fail-notify
 on:
   pull_request:
   merge_group:
+permissions: read-all
 jobs:
   fix-fail-notify:
     runs-on: ubuntu-latest

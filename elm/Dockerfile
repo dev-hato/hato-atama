@@ -1,5 +1,6 @@
 # https://dev.to/csaltos/elm-for-linux-arm64-32bc
 # GitHub Actionsでビルドするとうまく行かないため、手元でビルドする前提
+#checkov:skip=CKV_DOCKER_2
 FROM debian:bullseye-slim
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -42,13 +43,18 @@ RUN apt-get update \
        && apt-get clean \
        && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /
+RUN mkdir /app  \
+    && useradd -m appuser \
+    && chown appuser:appuser /app
+
+WORKDIR /app
+USER appuser
 
 COPY frontend/elm.json ./
 RUN elm_version="$(yq -oy '."elm-version"' elm.json)" \
     && git clone -b "${elm_version}" https://github.com/elm/compiler.git
 
-WORKDIR /compiler
+WORKDIR /app/compiler
 
 RUN rm worker/elm.cabal \
     && cabal new-update \
