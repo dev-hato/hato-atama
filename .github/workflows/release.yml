@@ -169,7 +169,7 @@ jobs:
       - name: Install goimports
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         run: bash "${GITHUB_WORKSPACE}/scripts/release/format_go/run_goimports.sh"
-      - uses: dev-hato/actions-diff-pr-management@v1.1.11
+      - uses: dev-hato/actions-diff-pr-management@v1.1.12
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           branch-name-prefix: fix-format
@@ -243,7 +243,7 @@ jobs:
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         run: npm install
         working-directory: test/e2e
-      - uses: dev-hato/actions-diff-pr-management@v1.1.11
+      - uses: dev-hato/actions-diff-pr-management@v1.1.12
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           branch-name-prefix: fix-version
