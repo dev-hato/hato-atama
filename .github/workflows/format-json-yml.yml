@@ -8,7 +8,7 @@ on:
       - reopened
       - closed
   merge_group:
-permissions:
+permissions: []
 jobs:
   format-json-yml:
     runs-on: ubuntu-latest
