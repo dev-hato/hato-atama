@@ -14,7 +14,7 @@ jobs:
   format-json-yml:
     runs-on: ubuntu-latest
     steps:
-      - uses: catchpoint/workflow-telemetry-action@v1
+      - uses: catchpoint/workflow-telemetry-action@v2.0.0
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: true
