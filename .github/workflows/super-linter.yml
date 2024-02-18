@@ -9,12 +9,13 @@ permissions:
   contents: read
   packages: read
   statuses: write
+  pull-requests: write
 jobs:
   super-linter:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: catchpoint/workflow-telemetry-action@v1
+      - uses: catchpoint/workflow-telemetry-action@v2
       - uses: actions/checkout@v4.1.1
         with:
           fetch-depth: 0
