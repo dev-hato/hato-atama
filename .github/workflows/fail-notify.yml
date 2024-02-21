@@ -6,6 +6,7 @@ on:
       - Add to Task List
       - CodeQL
       - Dependency Review
+      - build-elm
       - fix-fail-notify
       - format-json-yml
       - gcr-cleaner
