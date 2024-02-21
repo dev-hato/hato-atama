@@ -13,6 +13,7 @@ jobs:
         with:
           fetch-depth: 0
       - run: |
+          brew install cabal-install
           elm_version="$(yq -oy '."elm-version"' frontend/elm.json)"
           git clone -b "${elm_version}" https://github.com/elm/compiler.git
           cd compiler
