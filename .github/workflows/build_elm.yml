@@ -14,7 +14,6 @@ jobs:
           fetch-depth: 0
       - run: |
           brew install elm
-          brew switch elm "$(yq -oy '."elm-version"' frontend/elm.json)"
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
       - uses: dev-hato/actions-diff-pr-management@v1.1.12
         with:
