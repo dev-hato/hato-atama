@@ -12,7 +12,9 @@ jobs:
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         with:
           fetch-depth: 0
-      - run: brew install docker
+      - run: |
+          brew install docker
+          colima start
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
       - run: ./make_compiler.sh
         working-directory: elm
