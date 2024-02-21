@@ -12,6 +12,7 @@ jobs:
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         with:
           fetch-depth: 0
+      - uses: docker-practice/actions-setup-docker@v1.0.12
       - run: ./make_compiler.sh
         working-directory: elm
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
