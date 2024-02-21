@@ -13,15 +13,7 @@ jobs:
         with:
           fetch-depth: 0
       - run: |
-          brew install cabal-install
-          elm_version="$(yq -oy '."elm-version"' frontend/elm.json)"
-          git clone -b "${elm_version}" https://github.com/elm/compiler.git
-          cd compiler
-          rm worker/elm.cabal
-          cabal new-update
-          cabal new-configure
-          cabal new-build
-          mv ./dist-newstyle/build/*-linux/ghc-*/elm-*/x/elm/build/elm/elm ../elm/elm_arm64
+          brew install elm
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
       - uses: dev-hato/actions-diff-pr-management@v1.1.12
         with:
