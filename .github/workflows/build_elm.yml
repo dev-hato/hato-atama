@@ -14,6 +14,7 @@ jobs:
           fetch-depth: 0
       - run: |
           brew install elm
+          cp $(which elm) elm/elm_arm64
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
       - uses: dev-hato/actions-diff-pr-management@v1.1.12
         with:
