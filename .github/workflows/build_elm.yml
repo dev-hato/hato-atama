@@ -1,0 +1,26 @@
+---
+name: build-elm
+on:
+  pull_request:
+  merge_group:
+jobs:
+  build-elm:
+    runs-on: macos-14
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4.1.1
+        if: github.event_name != 'pull_request' || github.event.action != 'closed'
+        with:
+          fetch-depth: 0
+      - run: |
+          brew install elm
+          cp $(which elm) elm/elm_arm64
+        if: github.event_name != 'pull_request' || github.event.action != 'closed'
+      - uses: dev-hato/actions-diff-pr-management@v1.1.12
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          branch-name-prefix: update-elm
+          pr-title-prefix: ElmのARM64向けバイナリをアップデートしたよ！
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
