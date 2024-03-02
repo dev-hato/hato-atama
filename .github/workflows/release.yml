@@ -341,7 +341,7 @@ jobs:
           cache: npm
           cache-dependency-path: test/e2e/package-lock.json
       - uses: browser-actions/setup-chrome@v1.5.0
-        if: matrix.browser_name == 'chrome'
+        if: matrix.browser_name == 'chromium'
       - uses: browser-actions/setup-firefox@v1.4.1
         if: matrix.browser_name == 'firefox'
         with:
@@ -377,7 +377,7 @@ jobs:
           cache: npm
           cache-dependency-path: test/e2e/package-lock.json
       - uses: browser-actions/setup-chrome@v1.5.0
-        if: matrix.browser_name == 'chrome'
+        if: matrix.browser_name == 'chromium'
       - uses: browser-actions/setup-firefox@v1.4.1
         if: matrix.browser_name == 'firefox'
         with:
@@ -480,7 +480,7 @@ jobs:
           cache: npm
           cache-dependency-path: test/e2e/package-lock.json
       - uses: browser-actions/setup-chrome@v1.5.0
-        if: matrix.browser_name == 'chrome'
+        if: matrix.browser_name == 'chromium'
       - uses: browser-actions/setup-firefox@v1.4.1
         if: matrix.browser_name == 'firefox'
         with:
@@ -510,7 +510,7 @@ jobs:
           cache: npm
           cache-dependency-path: test/e2e/package-lock.json
       - uses: browser-actions/setup-chrome@v1.5.0
-        if: matrix.browser_name == 'chrome'
+        if: matrix.browser_name == 'chromium'
       - uses: browser-actions/setup-firefox@v1.4.1
         if: matrix.browser_name == 'firefox'
         with:
