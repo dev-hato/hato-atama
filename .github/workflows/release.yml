@@ -340,6 +340,10 @@ jobs:
           node-version-file: test/e2e/.node-version
           cache: npm
           cache-dependency-path: test/e2e/package-lock.json
+      - uses: browser-actions/setup-chrome@v1.5.0
+        if: matrix.browser_name == 'chromium'
+        with:
+          chrome-version: 121.0.6166
       - uses: nanasess/setup-chromedriver@v2.2.2
         if: matrix.browser_name == 'chromium'
         with:
@@ -378,6 +382,10 @@ jobs:
           node-version-file: test/e2e/.node-version
           cache: npm
           cache-dependency-path: test/e2e/package-lock.json
+      - uses: browser-actions/setup-chrome@v1.5.0
+        if: matrix.browser_name == 'chromium'
+        with:
+          chrome-version: 121.0.6166
       - uses: nanasess/setup-chromedriver@v2.2.2
         if: matrix.browser_name == 'chromium'
         with:
@@ -483,6 +491,10 @@ jobs:
           node-version-file: test/e2e/.node-version
           cache: npm
           cache-dependency-path: test/e2e/package-lock.json
+      - uses: browser-actions/setup-chrome@v1.5.0
+        if: matrix.browser_name == 'chromium'
+        with:
+          chrome-version: 121.0.6166
       - uses: nanasess/setup-chromedriver@v2.2.2
         if: matrix.browser_name == 'chromium'
         with:
@@ -515,6 +527,10 @@ jobs:
           node-version-file: test/e2e/.node-version
           cache: npm
           cache-dependency-path: test/e2e/package-lock.json
+      - uses: browser-actions/setup-chrome@v1.5.0
+        if: matrix.browser_name == 'chromium'
+        with:
+          chrome-version: 121.0.6166
       - uses: nanasess/setup-chromedriver@v2.2.2
         if: matrix.browser_name == 'chromium'
         with:
