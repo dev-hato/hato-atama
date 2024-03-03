@@ -347,7 +347,10 @@ jobs:
       - run: bash "${GITHUB_WORKSPACE}/scripts/release/set_docker_compose_test_env.sh"
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
-        run: bash "${GITHUB_WORKSPACE}/scripts/release/run_mini_test.sh"
+        run: |
+          curl https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.17.0/selenium-server-4.17.0.jar
+          SELENIUM_JAR_PATH="$(pwd)/selenium-server-4.17.0.jar"
+          bash "${GITHUB_WORKSPACE}/scripts/release/run_mini_test.sh"
         working-directory: ./test/e2e
   e2e-test-all-docker-compose:
     runs-on: ubuntu-latest
@@ -381,7 +384,10 @@ jobs:
       - run: bash "${GITHUB_WORKSPACE}/scripts/release/set_docker_compose_test_env.sh"
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
-        run: bash "${GITHUB_WORKSPACE}/scripts/release/run_all_test.sh"
+        run:  |
+          curl https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.17.0/selenium-server-4.17.0.jar
+          SELENIUM_JAR_PATH="$(pwd)/selenium-server-4.17.0.jar"
+          bash "${GITHUB_WORKSPACE}/scripts/release/run_all_test.sh"
         working-directory: ./test/e2e
   deploy-app-engine:
     runs-on: ubuntu-latest
@@ -482,7 +488,10 @@ jobs:
       - run: bash "${GITHUB_WORKSPACE}/scripts/release/set_prod_test_env.sh"
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
-        run: bash "${GITHUB_WORKSPACE}/scripts/release/run_mini_test.sh"
+        run:  |
+          curl https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.17.0/selenium-server-4.17.0.jar
+          SELENIUM_JAR_PATH="$(pwd)/selenium-server-4.17.0.jar"
+          bash "${GITHUB_WORKSPACE}/scripts/release/run_mini_test.sh"
         working-directory: ./test/e2e
   e2e-test-all-prd:
     runs-on: ubuntu-latest
@@ -510,7 +519,10 @@ jobs:
       - run: bash "${GITHUB_WORKSPACE}/scripts/release/set_prod_test_env.sh"
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
-        run: bash "${GITHUB_WORKSPACE}/scripts/release/run_all_test.sh"
+        run: |
+          curl https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.17.0/selenium-server-4.17.0.jar
+          SELENIUM_JAR_PATH="$(pwd)/selenium-server-4.17.0.jar"
+          bash "${GITHUB_WORKSPACE}/scripts/release/run_all_test.sh"
         working-directory: ./test/e2e
   migrating-traffic:
     runs-on: ubuntu-latest
