@@ -348,7 +348,7 @@ jobs:
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
         run: |
-          curl https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.17.0/selenium-server-4.17.0.jar
+          wget https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.17.0/selenium-server-4.17.0.jar
           SELENIUM_JAR_PATH="$(pwd)/selenium-server-4.17.0.jar"
           bash "${GITHUB_WORKSPACE}/scripts/release/run_mini_test.sh"
         working-directory: ./test/e2e
@@ -384,8 +384,8 @@ jobs:
       - run: bash "${GITHUB_WORKSPACE}/scripts/release/set_docker_compose_test_env.sh"
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
-        run:  |
-          curl https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.17.0/selenium-server-4.17.0.jar
+        run: |
+          wget https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.17.0/selenium-server-4.17.0.jar
           SELENIUM_JAR_PATH="$(pwd)/selenium-server-4.17.0.jar"
           bash "${GITHUB_WORKSPACE}/scripts/release/run_all_test.sh"
         working-directory: ./test/e2e
@@ -488,8 +488,8 @@ jobs:
       - run: bash "${GITHUB_WORKSPACE}/scripts/release/set_prod_test_env.sh"
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
-        run:  |
-          curl https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.17.0/selenium-server-4.17.0.jar
+        run: |
+          wget https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.17.0/selenium-server-4.17.0.jar
           SELENIUM_JAR_PATH="$(pwd)/selenium-server-4.17.0.jar"
           bash "${GITHUB_WORKSPACE}/scripts/release/run_mini_test.sh"
         working-directory: ./test/e2e
@@ -520,7 +520,7 @@ jobs:
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
         run: |
-          curl https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.17.0/selenium-server-4.17.0.jar
+          wget https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.17.0/selenium-server-4.17.0.jar
           SELENIUM_JAR_PATH="$(pwd)/selenium-server-4.17.0.jar"
           bash "${GITHUB_WORKSPACE}/scripts/release/run_all_test.sh"
         working-directory: ./test/e2e
