@@ -344,6 +344,7 @@ jobs:
         if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
+      - run: chromium --version
       - run: bash "${GITHUB_WORKSPACE}/scripts/release/set_docker_compose_test_env.sh"
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
@@ -378,6 +379,7 @@ jobs:
         if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
+      - run: chromium --version
       - run: bash "${GITHUB_WORKSPACE}/scripts/release/set_docker_compose_test_env.sh"
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
@@ -479,6 +481,7 @@ jobs:
         if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
+      - run: chromium --version
       - run: bash "${GITHUB_WORKSPACE}/scripts/release/set_prod_test_env.sh"
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
@@ -507,6 +510,7 @@ jobs:
         if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
+      - run: chromium --version
       - run: bash "${GITHUB_WORKSPACE}/scripts/release/set_prod_test_env.sh"
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
