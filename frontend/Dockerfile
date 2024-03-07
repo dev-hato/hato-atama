@@ -1,4 +1,4 @@
-FROM node:21.6.2-bullseye-slim as base
+FROM node:21.7.0-bullseye-slim as base
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 ARG TARGETPLATFORM
