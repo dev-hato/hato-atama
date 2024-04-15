@@ -23,7 +23,7 @@ jobs:
           cache: npm
       - run: bash "${GITHUB_WORKSPACE}/scripts/super_linter/super_linter/set_path.sh"
       - name: Super-Linter
-        uses: super-linter/super-linter/slim@v6.3.0
+        uses: super-linter/super-linter/slim@v6.3.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LINTER_RULES_PATH: .
