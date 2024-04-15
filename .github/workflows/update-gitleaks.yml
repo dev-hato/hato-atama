@@ -15,7 +15,8 @@ jobs:
   update-gitleaks:
     runs-on: ubuntu-latest
     steps:
-      - run: |
+      - if: github.repository == github.event.pull_request.head.repo.full_name == 'dev-hato/hato-atama'
+        run: |
           echo ${{github.repository}}
           echo ${{github.event.pull_request.head.repo.full_name}}
       - uses: actions/checkout@v4.1.2
