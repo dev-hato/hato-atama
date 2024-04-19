@@ -33,7 +33,7 @@ jobs:
           script: |
             const script = require(`${process.env.GITHUB_WORKSPACE}/scripts/fail_notify/fail_notify/get_slack_payload.js`)
             return script({context})
-      - uses: slackapi/slack-github-action@v1.25.0
+      - uses: slackapi/slack-github-action@v1.26.0
         with:
           channel-id: ${{secrets.SLACK_CHANNEL_ID}}
           payload: ${{steps.get_slack_payload.outputs.result}}
