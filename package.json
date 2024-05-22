@@ -5,7 +5,7 @@
     "cheerio": "1.0.0-rc.12",
     "domhandler": "5.0.3",
     "node-fetch": "2.6.12",
-    "textlint": "14.0.2",
+    "textlint": "14.0.4",
     "textlint-filter-rule-comments": "1.2.2",
     "textlint-rule-abbr-within-parentheses": "1.0.2",
     "textlint-rule-footnote-order": "1.0.3",
@@ -16,12 +16,12 @@
     "textlint-rule-no-dead-link": "5.1.2",
     "textlint-rule-no-mixed-zenkaku-and-hankaku-alphabet": "1.0.1",
     "textlint-rule-prefer-tari-tari": "1.0.3",
-    "textlint-rule-preset-ja-spacing": "2.3.0",
+    "textlint-rule-preset-ja-spacing": "2.4.3",
     "textlint-rule-preset-ja-technical-writing": "10.0.1",
-    "textlint-rule-terminology": "4.0.1"
+    "textlint-rule-terminology": "5.0.1"
   },
   "engines": {
-    "node": "^16.19.0 || ^21.6.2",
-    "npm": "^8.19.2 || ^10.2.4"
+    "node": "^16.19.0 || ^22.2.0",
+    "npm": "^8.19.2 || ^10.7.0"
   }
 }

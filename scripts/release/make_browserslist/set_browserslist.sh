@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 npm ci
-browsers="$(npx browserslist | grep firefox | sed -e 's/$/.0/')"
+browsers="$(npx browserslist | grep firefox | sed -e 's/$/.0.1/')"
 # shellcheck disable=SC2001
 browserslist="[$(echo "${browsers}" | sed -e 's/^\([^ ]*\) \(.*\)/{browser_name: "\1", browser_version: "\2"}/' | tr '\n' ',' | sed -e 's/,$//')]"
 echo "${browserslist}"

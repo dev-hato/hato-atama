@@ -9,11 +9,11 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "cypress": "13.6.4",
-    "eslint-plugin-cypress": "2.15.1"
+    "cypress": "13.9.0",
+    "eslint-plugin-cypress": "3.2.0"
   },
   "engines": {
-    "node": "^16.19.0 || ^21.6.2",
-    "npm": "^8.19.2 || ^10.2.4"
+    "node": "^16.19.0 || ^22.2.0",
+    "npm": "^8.19.2 || ^10.7.0"
   }
 }

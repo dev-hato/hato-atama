@@ -7,8 +7,8 @@ jobs:
   dependency-review:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.1.1
-      - uses: actions/dependency-review-action@v4.1.0
+      - uses: actions/checkout@v4.1.6
+      - uses: actions/dependency-review-action@v4.3.2
         with:
           base-ref: ${{ github.base_ref || github.event.merge_group.base_ref }}
           head-ref: ${{ github.head_ref || github.event.merge_group.head_ref }}

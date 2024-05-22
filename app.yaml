@@ -1,5 +1,5 @@
 ---
-runtime: go121
+runtime: go122
 main: ./server
 handlers:
   - url: /api/.*

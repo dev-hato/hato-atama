@@ -16,7 +16,7 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: catchpoint/workflow-telemetry-action@v2
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4.1.6
         with:
           fetch-depth: 0
       - uses: actions/setup-node@v4.0.2
@@ -25,7 +25,7 @@ jobs:
           cache: npm
       - run: bash "${GITHUB_WORKSPACE}/scripts/super_linter/super_linter/set_path.sh"
       - name: Super-Linter
-        uses: super-linter/super-linter/slim@v6.1.1
+        uses: super-linter/super-linter/slim@v6.5.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LINTER_RULES_PATH: .

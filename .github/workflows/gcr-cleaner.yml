@@ -14,10 +14,10 @@ jobs:
   gcr-cleaner:
     runs-on: 'ubuntu-latest'
     steps:
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4.1.6
       - id: 'auth'
         name: 'Authenticate to GCP'
-        uses: google-github-actions/auth@v2.1.1
+        uses: google-github-actions/auth@v2.1.3
         with:
           workload_identity_provider: ${{env.GCP_WORKLOAD_IDENTITY_PROVIDER}}
           service_account: ${{env.GCP_SERVICE_ACCOUNT}}
