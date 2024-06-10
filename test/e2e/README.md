@@ -1,4 +1,8 @@
+<!-- textlint-disable terminology -->
+
 # e2e test folder
+
+<!-- textlint-enable terminology -->
 
 ここはe2eテストのフォルダです。
 
