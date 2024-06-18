@@ -11,6 +11,6 @@ do
   browsers+="{browser_name: \"firefox\", browser_version: \"$browser_version\"}"
 done
 
-browserslist="${browsers//\}\{/\},{}"
+browserslist="[${browsers//\}\{/\},{}]"
 echo "${browserslist}"
 echo "browserslist=${browserslist}" >>"${GITHUB_OUTPUT}"
