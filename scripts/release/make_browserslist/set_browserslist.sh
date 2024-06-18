@@ -11,7 +11,7 @@ for version in $(npx browserslist | grep firefox | awk '{print $2}'); do
 	category="$(echo "$version_data" | awk '{print $3}')"
 
 	if [ "$category" = 'esr' ]; then
-		browser_version+=$category
+		browser_version+="$category"
 	fi
 
 	browsers+="{browser_name: \"firefox\", browser_version: \"$browser_version\"}"
