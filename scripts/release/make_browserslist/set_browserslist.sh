@@ -7,7 +7,7 @@ browsers=""
 
 for version in $(npx browserslist | grep firefox | awk '{print $2}')
 do
-  version_data="$(echo "$versions" | grep " $version.*\$" | head -n 1)"
+  version_data="$(echo "$versions" | grep " $version.[^b]* " | head -n 1)"
   browser_version="$(echo "$version_data" | awk '{print $2}')"
   category="$(echo "$version_data" | awk '{print $3}')"
 
