@@ -129,7 +129,7 @@ jobs:
           push: true
           files: compose.yml,dev.base.compose.yml
       - name: Build and push (staging)
-        uses: docker/bake-action@v5.2.0
+        uses: docker/bake-action@v1.4.1
         env:
           DOCKER_CONTENT_TRUST: 1
         with:
