@@ -30,7 +30,11 @@ module.exports = async ({ github, context, core }) => {
           github.rest.actions.listWorkflowRuns,
           listWorkflowRunsParams,
         );
-        runs = runs.filter((r) => r.run_number < process.env.RUN_NUMBER);
+        runs = runs.filter(
+          (r) =>
+            process.env.RUN_NUMBER === undefined ||
+            r.run_number < process.env.RUN_NUMBER,
+        );
         return runs.map((r) => {
           if (r.status !== "completed") {
             return running;
@@ -41,7 +45,11 @@ module.exports = async ({ github, context, core }) => {
       }),
     );
     result = runNumbers.flat().filter(Boolean);
-    await result.shift();
+
+    if (process.env.RUN_NUMBER !== undefined) {
+      await result.shift();
+    }
+
     await sleep({ result, running, retry_count: retryCount, i });
   }
 

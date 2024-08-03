@@ -13,15 +13,11 @@ describe("短縮URLを生成できる", () => {
     cy.get("a")
       .should("have.attr", "href")
       .then(($url) => {
-        cy.request({ method: "GET", url: $url }).then((response) => {
-          expect(response.status).to.eq(200);
-        });
-        cy.request({ method: "GET", url: $url }).then((response) => {
-          expect(response.status).to.eq(200);
-        });
-        cy.request({ method: "GET", url: $url }).then((response) => {
-          expect(response.status).to.eq(200);
-        });
+        for (let i = 0; i < 3; i++) {
+          cy.request({ method: "GET", url: $url }).then((response) => {
+            expect(response.status).to.eq(200);
+          });
+        }
         cy.request({ method: "GET", url: $url, failOnStatusCode: false }).then(
           (response) => {
             expect(response.status).to.eq(404);
