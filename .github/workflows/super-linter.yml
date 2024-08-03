@@ -34,6 +34,8 @@ jobs:
           VALIDATE_GO: false
           ESLINT_USE_FLAT_CONFIG: false
           FILTER_REGEX_EXCLUDE: .*node_modules/.*
+          JAVASCRIPT_DEFAULT_STYLE: prettier
+          VALIDATE_JAVASCRIPT_STANDARD: false
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: true
