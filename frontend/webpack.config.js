@@ -1,7 +1,7 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const CopyPlugin = require('copy-webpack-plugin')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const path = require('path')
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const path = require("path");
 
 module.exports = {
   module: {
@@ -9,7 +9,7 @@ module.exports = {
       {
         test: /\.html$/i,
         exclude: [/elm-stuff/, /node_modules/],
-        loader: 'html-loader'
+        loader: "html-loader",
       },
       {
         test: /\.elm$/,
@@ -17,31 +17,31 @@ module.exports = {
 
         use: [
           {
-            loader: 'elm-webpack-loader',
+            loader: "elm-webpack-loader",
             options: {
-              cwd: __dirname
-            }
-          }
-        ]
-      }
-    ]
+              cwd: __dirname,
+            },
+          },
+        ],
+      },
+    ],
   },
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'index.[contenthash].js'
+    path: path.resolve(__dirname, "dist"),
+    filename: "index.[contenthash].js",
   },
   plugins: [
-    new CopyPlugin({ patterns: [{ from: 'public/', to: '.' }] }),
-    new HtmlWebpackPlugin({ template: './src/index.html' }),
-    new CleanWebpackPlugin()
+    new CopyPlugin({ patterns: [{ from: "public/", to: "." }] }),
+    new HtmlWebpackPlugin({ template: "./src/index.html" }),
+    new CleanWebpackPlugin(),
   ],
   devServer: {
     port: process.env.FRONTEND_PORT,
-    host: '0.0.0.0',
+    host: "0.0.0.0",
     hot: true,
     proxy: {
-      '/api/': 'http://server:' + process.env.PORT,
-      '/l/': 'http://server:' + process.env.PORT
-    }
-  }
-}
+      "/api/": "http://server:" + process.env.PORT,
+      "/l/": "http://server:" + process.env.PORT,
+    },
+  },
+};
