@@ -16,28 +16,30 @@ module.exports = async ({ github, context, core }) => {
       github.rest.actions.listRepoWorkflows,
       commonParams
     )
-    workflows = workflows.filter(w => w.name === 'release')
-    const runNumbers = await Promise.all(workflows.map(async w => {
-      const listWorkflowRunsParams = {
-        workflow_id: w.id,
-        branch: HEAD_REF,
-        ...commonParams
-      }
-      console.log('call actions.listWorkflowRuns:')
-      console.log(listWorkflowRunsParams)
-      let runs = await github.paginate(
-        github.rest.actions.listWorkflowRuns,
-        listWorkflowRunsParams
-      )
-      runs = runs.filter(r => r.run_number < process.env.RUN_NUMBER)
-      return runs.map(r => {
-        if (r.status !== 'completed') {
-          return running
+    workflows = workflows.filter((w) => w.name === 'release')
+    const runNumbers = await Promise.all(
+      workflows.map(async (w) => {
+        const listWorkflowRunsParams = {
+          workflow_id: w.id,
+          branch: HEAD_REF,
+          ...commonParams
         }
+        console.log('call actions.listWorkflowRuns:')
+        console.log(listWorkflowRunsParams)
+        let runs = await github.paginate(
+          github.rest.actions.listWorkflowRuns,
+          listWorkflowRunsParams
+        )
+        runs = runs.filter((r) => r.run_number < process.env.RUN_NUMBER)
+        return runs.map((r) => {
+          if (r.status !== 'completed') {
+            return running
+          }
 
-        return `v${r.run_number}`
+          return `v${r.run_number}`
+        })
       })
-    }))
+    )
     result = runNumbers.flat().filter(Boolean)
     await result.shift()
     await sleep({ result, running, retry_count: retryCount, i })

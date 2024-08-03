@@ -8,5 +8,5 @@ module.exports = async ({ result, running, retryCount, i }) => {
   // 参考: https://aws.typepad.com/sajp/2015/03/backoff.html
   const sleepSeconds = Math.random() * (Math.pow(2, i + 1) * 100)
   console.log(`sleep ${sleepSeconds}s`)
-  await new Promise(resolve => setTimeout(resolve, sleepSeconds * 1000))
+  await new Promise((resolve) => setTimeout(resolve, sleepSeconds * 1000))
 }
