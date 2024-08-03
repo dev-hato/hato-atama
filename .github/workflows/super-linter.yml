@@ -21,6 +21,9 @@ jobs:
         with:
           node-version-file: .node-version
           cache: npm
+      - run: npm ci
+      - run: npm ci
+        working-directory: test/e2e
       - run: bash "${GITHUB_WORKSPACE}/scripts/super_linter/super_linter/set_path.sh"
       - name: Super-Linter
         uses: super-linter/super-linter/slim@v6.8.0
