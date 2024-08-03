@@ -1,6 +1,5 @@
 {
   "min-lines": 15,
-  "threshold": 0,
   "reporters": [
     "consoleFull"
   ],
