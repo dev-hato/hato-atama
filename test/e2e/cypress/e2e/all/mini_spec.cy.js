@@ -1,1 +1,0 @@
-test/e2e/cypress/e2e/mini/mini_spec.cy.js
