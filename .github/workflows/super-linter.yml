@@ -32,6 +32,7 @@ jobs:
           LINTER_RULES_PATH: .
           # Go modulesを使っているため、こちらはfalseにする
           VALIDATE_GO: false
+          ESLINT_USE_FLAT_CONFIG: false
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: true
