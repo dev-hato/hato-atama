@@ -7,7 +7,7 @@ jobs:
   update-node:
     strategy:
       matrix:
-        path: [ frontend, test/e2e ]
+        path: [frontend, test/e2e]
     runs-on: ubuntu-latest
     defaults:
       run:
