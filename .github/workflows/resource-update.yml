@@ -4,11 +4,14 @@ on:
   workflow_dispatch:
 permissions: read-all
 jobs:
-  update-frontend:
+  update-node:
+    strategy:
+      matrix:
+        path: [frontend, test/e2e]
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: frontend
+        working-directory: ${{ matrix.path }}
     steps:
       - uses: actions/checkout@v4.1.7
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
@@ -18,42 +21,17 @@ jobs:
       - uses: actions/setup-node@v4.0.3
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         with:
-          node-version-file: frontend/.node-version
+          node-version-file: ${{ matrix.path }}/.node-version
           cache: npm
-          cache-dependency-path: frontend/package-lock.json
+          cache-dependency-path: ${{ matrix.path }}/package-lock.json
       - name: ncu install
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         run: bash "${GITHUB_WORKSPACE}/scripts/resource_update/update.sh"
       - uses: dev-hato/actions-diff-pr-management@v1.1.12
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
-          branch-name-prefix: update-frontend
-          pr-title-prefix: Update frontend
-  update-test-e2e:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: test/e2e
-    steps:
-      - uses: actions/checkout@v4.1.7
-        if: github.event_name != 'pull_request' || github.event.action != 'closed'
-        with:
-          fetch-depth: 0
-          ref: ${{ github.event.pull_request.head.sha }}
-      - uses: actions/setup-node@v4.0.3
-        if: github.event_name != 'pull_request' || github.event.action != 'closed'
-        with:
-          node-version-file: test/e2e/.node-version
-          cache: npm
-          cache-dependency-path: test/e2e/package-lock.json
-      - name: ncu install
-        if: github.event_name != 'pull_request' || github.event.action != 'closed'
-        run: bash "${GITHUB_WORKSPACE}/scripts/resource_update/update.sh"
-      - uses: dev-hato/actions-diff-pr-management@v1.1.12
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          branch-name-prefix: update-test-e2e
-          pr-title-prefix: Update test/e2e
+          branch-name-prefix: update-${{ matrix.path }}
+          pr-title-prefix: Update ${{ matrix.path }}
   update-go:
     runs-on: ubuntu-latest
     env:
