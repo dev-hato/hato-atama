@@ -1,3 +1,11 @@
 {
-  "min-lines": 15
+  "min-lines": 15,
+  "reporters": [
+    "consoleFull"
+  ],
+  "ignore": [
+    "**/__snapshots__/**",
+    "**/node_modules/**"
+  ],
+  "absolute": true
 }
