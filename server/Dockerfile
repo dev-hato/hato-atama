@@ -1,4 +1,4 @@
-FROM golang:1.23.1-bullseye as base
+FROM golang:1.23.1-bullseye AS base
 
 WORKDIR /go/app
 
@@ -9,7 +9,7 @@ COPY server server
 RUN find / -type f -perm /u+s -ignore_readdir_race -exec chmod u-s {} \; \
     && find / -type f -perm /g+s -ignore_readdir_race -exec chmod g-s {} \;
 
-FROM base as build
+FROM base AS build
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 ARG TARGETPLATFORM

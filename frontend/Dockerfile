@@ -1,9 +1,9 @@
-FROM node:22.8.0-bullseye-slim as base
+FROM node:22.8.0-bullseye-slim AS base
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 ARG TARGETPLATFORM
 
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates curl \
@@ -33,7 +33,7 @@ RUN find / -type f -perm /u+s -ignore_readdir_race -exec chmod u-s {} \; \
 
 USER node
 
-FROM base as build
+FROM base AS build
 
 COPY frontend/.npmrc .
 COPY frontend/package*.json ./
