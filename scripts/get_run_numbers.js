@@ -1,4 +1,4 @@
-const sleep = require("../../sleep.js");
+const sleep = require("./sleep.js");
 
 module.exports = async ({ github, context, core }) => {
   const HEAD_REF = process.env.HEAD_REF;
