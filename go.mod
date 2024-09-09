@@ -7,7 +7,7 @@ toolchain go1.22.0
 require (
 	cloud.google.com/go/datastore v1.19.0
 	github.com/air-verse/air v1.52.3
-	github.com/go-playground/validator/v10 v10.22.0
+	github.com/go-playground/validator/v10 v10.22.1
 	github.com/labstack/echo/v4 v4.12.0
 	golang.org/x/tools v0.24.0
 )
