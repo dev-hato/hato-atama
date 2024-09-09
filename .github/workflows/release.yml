@@ -12,8 +12,8 @@ on:
       - closed
   merge_group:
 env:
-  GCP_WORKLOAD_IDENTITY_PROVIDER: 'projects/765091727073/locations/global/workloadIdentityPools/hato-atama-workload-identity/providers/github'
-  GCP_SERVICE_ACCOUNT: 'actions-deploy@hato-atama.iam.gserviceaccount.com'
+  GCP_WORKLOAD_IDENTITY_PROVIDER: "projects/765091727073/locations/global/workloadIdentityPools/hato-atama-workload-identity/providers/github"
+  GCP_SERVICE_ACCOUNT: "actions-deploy@hato-atama.iam.gserviceaccount.com"
 jobs:
   # App Engineにデプロイされるファイルの差分の有無を判定する
   check-deploy-diff:
@@ -278,7 +278,8 @@ jobs:
       - update-dockle
     strategy:
       matrix:
-        docker_compose_file_name: ["dev.base.compose.yml", "staging.compose.yml"]
+        docker_compose_file_name:
+          ["dev.base.compose.yml", "staging.compose.yml"]
         include:
           - docker_compose_file_name: "base.compose.yml"
             service_name: "server"
@@ -402,8 +403,8 @@ jobs:
         if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
       - run: 'echo -e "env_variables:\n  ENV_NAME: \"prd\"" >> app.yaml'
         if: ${{ github.event_name == 'push' }}
-      - id: 'auth'
-        name: 'Authenticate to GCP'
+      - id: "auth"
+        name: "Authenticate to GCP"
         uses: google-github-actions/auth@v2.1.4
         with:
           workload_identity_provider: ${{env.GCP_WORKLOAD_IDENTITY_PROVIDER}}
@@ -521,8 +522,8 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4.1.7
-      - id: 'auth'
-        name: 'Authenticate to GCP'
+      - id: "auth"
+        name: "Authenticate to GCP"
         uses: google-github-actions/auth@v2.1.4
         with:
           workload_identity_provider: ${{env.GCP_WORKLOAD_IDENTITY_PROVIDER}}
@@ -551,9 +552,9 @@ jobs:
           script: |
             const script = require(`${process.env.GITHUB_WORKSPACE}/scripts/get_run_numbers.js`)
             return await script({github, context, core})
-      - id: 'auth'
+      - id: "auth"
         if: ${{ steps.get_run_numbers.outputs.result != '' }}
-        name: 'Authenticate to GCP'
+        name: "Authenticate to GCP"
         uses: google-github-actions/auth@v2.1.4
         with:
           workload_identity_provider: ${{env.GCP_WORKLOAD_IDENTITY_PROVIDER}}

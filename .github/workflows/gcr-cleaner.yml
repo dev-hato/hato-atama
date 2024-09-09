@@ -1,22 +1,22 @@
 # .github/workflows/gcr-cleaner.yml
-name: 'gcr-cleaner'
+name: "gcr-cleaner"
 on:
   schedule:
-    - cron: '0 0 */1 * *' # runs daily
+    - cron: "0 0 */1 * *" # runs daily
   workflow_dispatch: # allows for manual invocation
 env:
-  GCP_WORKLOAD_IDENTITY_PROVIDER: 'projects/765091727073/locations/global/workloadIdentityPools/hato-atama-workload-identity/providers/github'
-  GCP_SERVICE_ACCOUNT: 'gcr-cleaner@hato-atama.iam.gserviceaccount.com'
+  GCP_WORKLOAD_IDENTITY_PROVIDER: "projects/765091727073/locations/global/workloadIdentityPools/hato-atama-workload-identity/providers/github"
+  GCP_SERVICE_ACCOUNT: "gcr-cleaner@hato-atama.iam.gserviceaccount.com"
 permissions:
   id-token: write
   contents: read
 jobs:
   gcr-cleaner:
-    runs-on: 'ubuntu-latest'
+    runs-on: "ubuntu-latest"
     steps:
       - uses: actions/checkout@v4.1.7
-      - id: 'auth'
-        name: 'Authenticate to GCP'
+      - id: "auth"
+        name: "Authenticate to GCP"
         uses: google-github-actions/auth@v2.1.4
         with:
           workload_identity_provider: ${{env.GCP_WORKLOAD_IDENTITY_PROVIDER}}

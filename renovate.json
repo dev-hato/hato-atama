@@ -1,7 +1,5 @@
 {
-  "extends": [
-    "github>dev-hato/renovate-config"
-  ],
+  "extends": ["github>dev-hato/renovate-config"],
   "ignorePaths": [
     "**/node_modules/**",
     "**/bower_components/**",
@@ -11,10 +9,7 @@
     "**/tests/**",
     "**/__fixtures__/**"
   ],
-  "ignoreDeps": [
-    "go",
-    "node-fetch"
-  ],
+  "ignoreDeps": ["go", "node-fetch"],
   "packageRules": [
     {
       "groupName": "artifact",
