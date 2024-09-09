@@ -1,11 +1,6 @@
 {
   "min-lines": 15,
-  "reporters": [
-    "consoleFull"
-  ],
-  "ignore": [
-    "**/__snapshots__/**",
-    "**/node_modules/**"
-  ],
+  "reporters": ["consoleFull"],
+  "ignore": ["**/__snapshots__/**", "**/node_modules/**"],
   "absolute": true
 }

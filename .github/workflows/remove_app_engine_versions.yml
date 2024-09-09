@@ -24,13 +24,13 @@ jobs:
           script: |
             const script = require(`${process.env.GITHUB_WORKSPACE}/scripts/get_run_numbers.js`)
             return await script({github, context, core})
-      - id: 'auth'
+      - id: "auth"
         if: ${{ steps.get_run_numbers.outputs.result != '' }}
-        name: 'Authenticate to GCP'
+        name: "Authenticate to GCP"
         uses: google-github-actions/auth@v2.1.4
         with:
-          workload_identity_provider: 'projects/765091727073/locations/global/workloadIdentityPools/hato-atama-workload-identity/providers/github'
-          service_account: 'actions-deploy@hato-atama.iam.gserviceaccount.com'
+          workload_identity_provider: "projects/765091727073/locations/global/workloadIdentityPools/hato-atama-workload-identity/providers/github"
+          service_account: "actions-deploy@hato-atama.iam.gserviceaccount.com"
       - uses: google-github-actions/setup-gcloud@v2.1.1
         if: ${{ steps.get_run_numbers.outputs.result != '' }}
       - if: ${{ steps.get_run_numbers.outputs.result != '' }}
