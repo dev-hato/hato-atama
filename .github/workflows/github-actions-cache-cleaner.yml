@@ -7,7 +7,8 @@ on:
   schedule:
     - cron: "0 21 * * *" # 06:00 JST
   workflow_dispatch:
-permissions: read-all
+permissions:
+  actions: write
 jobs:
   github-actions-cache-cleaner:
     runs-on: ubuntu-latest
