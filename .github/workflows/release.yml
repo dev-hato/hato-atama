@@ -207,7 +207,7 @@ jobs:
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         env:
           DEPENDABOT_NODE_VERSION: "20.17.0"
-          DEPENDABOT_NPM_VERSION: "10.8.2"
+          DEPENDABOT_NPM_VERSION: "9.6.5"
           NODE_VERSION: ${{steps.get_node_version.outputs.node_version}}
           NPM_VERSION: ${{steps.get_node_version.outputs.npm_version}}
         run: bash "${GITHUB_WORKSPACE}/scripts/release/update_package/update_versions.sh"
