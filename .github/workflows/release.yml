@@ -192,10 +192,6 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha }}
       - if: github.event_name != 'pull_request' || github.event.action != 'closed'
         run: bash "${GITHUB_WORKSPACE}/scripts/release/change_file_and_env.sh"
-      - name: Get Dependabot Node.js version
-        if: github.event_name != 'pull_request' || github.event.action != 'closed'
-        id: get_dependabot_node_version
-        run: bash "${GITHUB_WORKSPACE}/scripts/release/update_package/get_dependabot_node_version.sh"
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
         env:
           HEAD_REF: ${{github.head_ref || github.event.merge_group.head_ref}}
@@ -210,8 +206,8 @@ jobs:
       - name: Update versions
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         env:
-          DEPENDABOT_NODE_VERSION: ${{steps.get_dependabot_node_version.outputs.node_version}}
-          DEPENDABOT_NPM_VERSION: ${{steps.get_dependabot_node_version.outputs.npm_version}}
+          DEPENDABOT_NODE_VERSION: "20.17.0"
+          DEPENDABOT_NPM_VERSION: "10.8.2"
           NODE_VERSION: ${{steps.get_node_version.outputs.node_version}}
           NPM_VERSION: ${{steps.get_node_version.outputs.npm_version}}
         run: bash "${GITHUB_WORKSPACE}/scripts/release/update_package/update_versions.sh"
