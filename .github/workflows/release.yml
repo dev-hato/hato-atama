@@ -252,7 +252,7 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha }}
-      - uses: dev-hato/actions-update-dockle@v0.0.99
+      - uses: dev-hato/actions-update-dockle@v0.0.100
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
   check-nginx-config:
