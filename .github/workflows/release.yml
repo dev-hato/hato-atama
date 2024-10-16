@@ -339,8 +339,8 @@ jobs:
           cache-dependency-path: test/e2e/package-lock.json
       - if: matrix.browser_name == 'firefox'
         run: |
-          apt-get update
-          apt-get install -y libdbus-glib-1-2
+          sudo apt-get update
+          sudo apt-get install -y libdbus-glib-1-2
       - uses: browser-actions/setup-firefox@v1.5.2
         if: matrix.browser_name == 'firefox'
         with:
@@ -377,8 +377,8 @@ jobs:
           cache-dependency-path: test/e2e/package-lock.json
       - if: matrix.browser_name == 'firefox'
         run: |
-          apt-get update
-          apt-get install -y libdbus-glib-1-2
+          sudo apt-get update
+          sudo apt-get install -y libdbus-glib-1-2
       - uses: browser-actions/setup-firefox@v1.5.2
         if: matrix.browser_name == 'firefox'
         with:
@@ -481,8 +481,8 @@ jobs:
           cache-dependency-path: test/e2e/package-lock.json
       - if: matrix.browser_name == 'firefox'
         run: |
-          apt-get update
-          apt-get install -y libdbus-glib-1-2
+          sudo apt-get update
+          sudo apt-get install -y libdbus-glib-1-2
       - uses: browser-actions/setup-firefox@v1.5.2
         if: matrix.browser_name == 'firefox'
         with:
@@ -513,8 +513,8 @@ jobs:
           cache-dependency-path: test/e2e/package-lock.json
       - if: matrix.browser_name == 'firefox'
         run: |
-          apt-get update
-          apt-get install -y libdbus-glib-1-2
+          sudo apt-get update
+          sudo apt-get install -y libdbus-glib-1-2
       - uses: browser-actions/setup-firefox@v1.5.2
         if: matrix.browser_name == 'firefox'
         with:
