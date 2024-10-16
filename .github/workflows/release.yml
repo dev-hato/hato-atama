@@ -338,9 +338,7 @@ jobs:
           cache: npm
           cache-dependency-path: test/e2e/package-lock.json
       - if: matrix.browser_name == 'firefox'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libdbus-glib-1-2
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/install_firefox_dependencies.sh"
       - uses: browser-actions/setup-firefox@v1.5.2
         if: matrix.browser_name == 'firefox'
         with:
@@ -376,9 +374,7 @@ jobs:
           cache: npm
           cache-dependency-path: test/e2e/package-lock.json
       - if: matrix.browser_name == 'firefox'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libdbus-glib-1-2
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/install_firefox_dependencies.sh"
       - uses: browser-actions/setup-firefox@v1.5.2
         if: matrix.browser_name == 'firefox'
         with:
@@ -480,9 +476,7 @@ jobs:
           cache: npm
           cache-dependency-path: test/e2e/package-lock.json
       - if: matrix.browser_name == 'firefox'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libdbus-glib-1-2
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/install_firefox_dependencies.sh"
       - uses: browser-actions/setup-firefox@v1.5.2
         if: matrix.browser_name == 'firefox'
         with:
@@ -512,9 +506,7 @@ jobs:
           cache: npm
           cache-dependency-path: test/e2e/package-lock.json
       - if: matrix.browser_name == 'firefox'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libdbus-glib-1-2
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/install_firefox_dependencies.sh"
       - uses: browser-actions/setup-firefox@v1.5.2
         if: matrix.browser_name == 'firefox'
         with:
