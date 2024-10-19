@@ -1,6 +1,13 @@
-const sleep = require("./sleep.js");
+import * as core from "@actions/core";
+import type { Context } from "@actions/github/lib/context";
+import type { GitHub } from "@actions/github/lib/utils";
+import type {PaginatingEndpoints} from '@octokit/plugin-paginate-rest';
+import { sleep } from "./sleep";
 
-module.exports = async ({ github, context, core }) => {
+export async function script(
+    github: InstanceType<typeof GitHub>,
+    context: Context
+) {
   const HEAD_REF = process.env.HEAD_REF;
   const commonParams = {
     owner: context.repo.owner,
@@ -8,11 +15,11 @@ module.exports = async ({ github, context, core }) => {
   };
   const running = "running";
   const retryCount = 10;
-  let result;
+  let result: string[];
 
   for (let i = 0; i < retryCount; i++) {
     console.log("call actions.listRepoWorkflows:", commonParams);
-    let workflows = await github.paginate(
+    let workflows: PaginatingEndpoints["GET /repos/{owner}/{repo}/actions/workflows"]["response"]["data"]["workflows"] = await github.paginate(
       github.rest.actions.listRepoWorkflows,
       commonParams,
     );
@@ -26,14 +33,14 @@ module.exports = async ({ github, context, core }) => {
         };
         console.log("call actions.listWorkflowRuns:");
         console.log(listWorkflowRunsParams);
-        let runs = await github.paginate(
+        let runs: PaginatingEndpoints["GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs"]["response"]["data"]["workflow_runs"] = await github.paginate(
           github.rest.actions.listWorkflowRuns,
           listWorkflowRunsParams,
         );
         runs = runs.filter(
           (r) =>
             process.env.RUN_NUMBER === undefined ||
-            r.run_number < process.env.RUN_NUMBER,
+            r.run_number < Number(process.env.RUN_NUMBER),
         );
         return runs.map((r) => {
           if (r.status !== "completed") {
@@ -47,10 +54,10 @@ module.exports = async ({ github, context, core }) => {
     result = runNumbers.flat().filter(Boolean);
 
     if (process.env.RUN_NUMBER !== undefined) {
-      await result.shift();
+      result.shift();
     }
 
-    await sleep({ result, running, retry_count: retryCount, i });
+    await sleep(result, running, retryCount, i);
   }
 
   if (result.includes(running)) {
@@ -58,4 +65,4 @@ module.exports = async ({ github, context, core }) => {
   }
 
   return result.join(" ");
-};
+}
