@@ -1,7 +1,10 @@
-import type {GitHub} from '@actions/github/lib/utils';
-import type {Context} from '@actions/github/lib/context';
+import type { GitHub } from "@actions/github/lib/utils";
+import type { Context } from "@actions/github/lib/context";
 
-module.exports = async (github: InstanceType<typeof GitHub>, context: Context) => {
+module.exports = async (
+  github: InstanceType<typeof GitHub>,
+  context: Context,
+) => {
   let body = process.env.SHA + " のPR用環境:";
   body += ' <a href="https://v' + process.env.GITHUB_RUN_NUMBER;
   body += '-dot-hato-atama.an.r.appspot.com">サイト</a>,';
