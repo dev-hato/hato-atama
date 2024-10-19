@@ -436,7 +436,10 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             const {tsImport} = require('tsx/esm/api')
-            const script = await tsImport('./scripts/release/create_pr_environment/create_pr_environment.ts', process.env.GITHUB_WORKSPACE + '/')
+            const {script} = await tsImport(
+              './scripts/release/create_pr_environment/create_pr_environment.ts',
+              process.env.GITHUB_WORKSPACE + '/'
+            )
             await script(github, context)
   lighthouse:
     runs-on: ubuntu-latest

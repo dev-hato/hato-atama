@@ -1,7 +1,7 @@
 import type { GitHub } from "@actions/github/lib/utils";
 import type { Context } from "@actions/github/lib/context";
 
-module.exports = async (
+export async function script(
   github: InstanceType<typeof GitHub>,
   context: Context,
 ) => {
@@ -20,4 +20,4 @@ module.exports = async (
     repo: context.repo.repo,
     body,
   });
-};
+}
