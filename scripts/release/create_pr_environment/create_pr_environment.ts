@@ -1,5 +1,5 @@
-import type { GitHub } from "@actions/github/lib/utils";
 import type { Context } from "@actions/github/lib/context";
+import type { GitHub } from "@actions/github/lib/utils";
 
 export async function script(
   github: InstanceType<typeof GitHub>,
