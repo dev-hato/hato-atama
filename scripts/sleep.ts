@@ -1,4 +1,9 @@
-export async function sleep(result: string[], running: string, retryCount: number, i: number) {
+export async function sleep(
+  result: string[],
+  running: string,
+  retryCount: number,
+  i: number,
+) {
   if (!result.includes(running) || i === retryCount - 1) {
     return;
   }
