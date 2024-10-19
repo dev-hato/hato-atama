@@ -1,12 +1,12 @@
-import * as core from '@actions/core';
-import type {Context} from "@actions/github/lib/context";
-import type {GitHub} from "@actions/github/lib/utils";
-import type {Endpoints} from "@octokit/types";
-import {sleep} from "./sleep";
+import * as core from "@actions/core";
+import type { Context } from "@actions/github/lib/context";
+import type { GitHub } from "@actions/github/lib/utils";
+import type { Endpoints } from "@octokit/types";
+import { sleep } from "./sleep";
 
 export async function script(
-    github: InstanceType<typeof GitHub>,
-    context: Context
+  github: InstanceType<typeof GitHub>,
+  context: Context,
 ) {
   const HEAD_REF = process.env.HEAD_REF;
   const commonParams = {
@@ -19,10 +19,11 @@ export async function script(
 
   for (let i = 0; i < retryCount; i++) {
     console.log("call actions.listRepoWorkflows:", commonParams);
-    let workflows: Endpoints["GET /repos/{owner}/{repo}/actions/workflows"]["response"]["data"]["workflows"] = await github.paginate(
-      github.rest.actions.listRepoWorkflows,
-      commonParams,
-    );
+    let workflows: Endpoints["GET /repos/{owner}/{repo}/actions/workflows"]["response"]["data"]["workflows"] =
+      await github.paginate(
+        github.rest.actions.listRepoWorkflows,
+        commonParams,
+      );
     workflows = workflows.filter((w) => w.name === "release");
     const runNumbers = await Promise.all(
       workflows.map(async (w) => {
@@ -33,10 +34,11 @@ export async function script(
         };
         console.log("call actions.listWorkflowRuns:");
         console.log(listWorkflowRunsParams);
-        let runs: Endpoints["GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs"]["response"]["data"]["workflow_runs"] = await github.paginate(
-          github.rest.actions.listWorkflowRuns,
-          listWorkflowRunsParams,
-        );
+        let runs: Endpoints["GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs"]["response"]["data"]["workflow_runs"] =
+          await github.paginate(
+            github.rest.actions.listWorkflowRuns,
+            listWorkflowRunsParams,
+          );
         runs = runs.filter(
           (r) =>
             process.env.RUN_NUMBER === undefined ||
