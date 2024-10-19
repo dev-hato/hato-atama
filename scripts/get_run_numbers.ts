@@ -1,7 +1,7 @@
 import * as core from '@actions/core';
-import type {GitHub} from "@actions/github/lib/utils";
 import type {Context} from "@actions/github/lib/context";
-import type {PaginatingEndpoints} from '@octokit/plugin-paginate-rest';
+import type {GitHub} from "@actions/github/lib/utils";
+import type {Endpoints} from "@octokit/types";
 import {sleep} from "./sleep";
 
 export async function script(
@@ -19,7 +19,7 @@ export async function script(
 
   for (let i = 0; i < retryCount; i++) {
     console.log("call actions.listRepoWorkflows:", commonParams);
-    let workflows: PaginatingEndpoints["GET /repos/{owner}/{repo}/actions/workflows"]["response"]["data"]["workflows"] = await github.paginate(
+    let workflows: Endpoints["GET /repos/{owner}/{repo}/actions/workflows"]["response"]["data"]["workflows"] = await github.paginate(
       github.rest.actions.listRepoWorkflows,
       commonParams,
     );
@@ -33,7 +33,7 @@ export async function script(
         };
         console.log("call actions.listWorkflowRuns:");
         console.log(listWorkflowRunsParams);
-        let runs: PaginatingEndpoints["GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs"]["response"]["data"]["workflow_runs"] = await github.paginate(
+        let runs: Endpoints["GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs"]["response"]["data"]["workflow_runs"] = await github.paginate(
           github.rest.actions.listWorkflowRuns,
           listWorkflowRunsParams,
         );
