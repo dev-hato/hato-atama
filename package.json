@@ -1,9 +1,9 @@
 {
   "devDependencies": {
-    "@actions/core": "^1.11.1",
-    "@actions/github": "^6.0.0",
-    "@octokit/plugin-paginate-rest": "^11.3.5",
-    "@octokit/plugin-rest-endpoint-methods": "^13.2.6",
+    "@actions/core": "1.11.1",
+    "@actions/github": "6.0.0",
+    "@octokit/plugin-paginate-rest": "11.3.5",
+    "@octokit/plugin-rest-endpoint-methods": "13.2.6",
     "@proofdict/textlint-rule-proofdict": "3.1.2",
     "@textlint-ja/textlint-rule-no-insert-dropping-sa": "2.0.1",
     "cheerio": "1.0.0",
@@ -23,7 +23,7 @@
     "textlint-rule-preset-ja-spacing": "2.4.3",
     "textlint-rule-preset-ja-technical-writing": "10.0.1",
     "textlint-rule-terminology": "5.2.12",
-    "tsx": "^4.19.1"
+    "tsx": "4.19.1"
   },
   "engines": {
     "node": "^20.17.0 || ^23.0.0",
