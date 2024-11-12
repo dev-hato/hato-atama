@@ -1,7 +1,7 @@
 # https://dev.to/csaltos/elm-for-linux-arm64-32bc
 # GitHub Actionsでビルドするとうまく行かないため、手元でビルドする前提
 #checkov:skip=CKV_DOCKER_2
-FROM debian:bullseye-slim@sha256:610b4c7ad241e66f6e2f9791e3abdf0cc107a69238ab21bf9b4695d51fd6366a
+FROM debian:bullseye-slim@sha256:60a596681410bd31a48e5975806a24cd78328f3fd6b9ee5bc64dca6d46a51f29
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
