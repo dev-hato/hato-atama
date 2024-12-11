@@ -8,7 +8,7 @@ require (
 	cloud.google.com/go/datastore v1.20.0
 	github.com/air-verse/air v1.61.1
 	github.com/go-playground/validator/v10 v10.23.0
-	github.com/labstack/echo/v4 v4.13.0
+	github.com/labstack/echo/v4 v4.13.1
 	golang.org/x/tools v0.28.0
 )
 
