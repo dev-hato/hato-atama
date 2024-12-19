@@ -1,4 +1,10 @@
-module.exports = async ({ github, context }) => {
+import type { Context } from "@actions/github/lib/context";
+import type { GitHub } from "@actions/github/lib/utils";
+
+export async function script(
+  github: InstanceType<typeof GitHub>,
+  context: Context,
+) {
   let body = process.env.SHA + " のPR用環境:";
   body += ' <a href="https://v' + process.env.GITHUB_RUN_NUMBER;
   body += '-dot-hato-atama.an.r.appspot.com">サイト</a>,';
@@ -14,4 +20,4 @@ module.exports = async ({ github, context }) => {
     repo: context.repo.repo,
     body,
   });
-};
+}

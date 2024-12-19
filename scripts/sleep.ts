@@ -1,4 +1,9 @@
-module.exports = async ({ result, running, retryCount, i }) => {
+export async function sleep(
+  result: string[],
+  running: string,
+  retryCount: number,
+  i: number,
+) {
   if (!result.includes(running) || i === retryCount - 1) {
     return;
   }
@@ -9,4 +14,4 @@ module.exports = async ({ result, running, retryCount, i }) => {
   const sleepSeconds = Math.random() * (Math.pow(2, i + 1) * 100);
   console.log(`sleep ${sleepSeconds}s`);
   await new Promise((resolve) => setTimeout(resolve, sleepSeconds * 1000));
-};
+}
