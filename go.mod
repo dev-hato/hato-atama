@@ -8,7 +8,7 @@ require (
 	cloud.google.com/go/datastore v1.20.0
 	github.com/air-verse/air v1.61.5
 	github.com/go-playground/validator/v10 v10.23.0
-	github.com/labstack/echo/v4 v4.13.2
+	github.com/labstack/echo/v4 v4.13.3
 	golang.org/x/tools v0.28.0
 )
 
@@ -57,7 +57,7 @@ require (
 	go.opentelemetry.io/otel/trace v1.29.0 // indirect
 	golang.org/x/crypto v0.31.0 // indirect
 	golang.org/x/mod v0.22.0 // indirect
-	golang.org/x/net v0.32.0 // indirect
+	golang.org/x/net v0.33.0 // indirect
 	golang.org/x/oauth2 v0.24.0 // indirect
 	golang.org/x/sync v0.10.0 // indirect
 	golang.org/x/sys v0.28.0 // indirect
