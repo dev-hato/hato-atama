@@ -337,6 +337,8 @@ jobs:
           node-version-file: test/e2e/.node-version
           cache: npm
           cache-dependency-path: test/e2e/package-lock.json
+      - if: matrix.browser_name == 'firefox'
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/install_firefox_dependencies.sh"
       - uses: browser-actions/setup-firefox@955a5d42b5f068a8917c6a4ff1656a2235c66dfb # v1.5.2
         if: matrix.browser_name == 'firefox'
         with:
@@ -371,6 +373,8 @@ jobs:
           node-version-file: test/e2e/.node-version
           cache: npm
           cache-dependency-path: test/e2e/package-lock.json
+      - if: matrix.browser_name == 'firefox'
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/install_firefox_dependencies.sh"
       - uses: browser-actions/setup-firefox@955a5d42b5f068a8917c6a4ff1656a2235c66dfb # v1.5.2
         if: matrix.browser_name == 'firefox'
         with:
@@ -480,6 +484,8 @@ jobs:
           node-version-file: test/e2e/.node-version
           cache: npm
           cache-dependency-path: test/e2e/package-lock.json
+      - if: matrix.browser_name == 'firefox'
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/install_firefox_dependencies.sh"
       - uses: browser-actions/setup-firefox@955a5d42b5f068a8917c6a4ff1656a2235c66dfb # v1.5.2
         if: matrix.browser_name == 'firefox'
         with:
@@ -508,6 +514,8 @@ jobs:
           node-version-file: test/e2e/.node-version
           cache: npm
           cache-dependency-path: test/e2e/package-lock.json
+      - if: matrix.browser_name == 'firefox'
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/install_firefox_dependencies.sh"
       - uses: browser-actions/setup-firefox@955a5d42b5f068a8917c6a4ff1656a2235c66dfb # v1.5.2
         if: matrix.browser_name == 'firefox'
         with:
