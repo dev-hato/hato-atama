@@ -53,7 +53,7 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
       - name: Build
         run: bash "${GITHUB_WORKSPACE}/scripts/release/build_frontend/build.sh"
-      - uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
+      - uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
         with:
           name: frontend
           path: frontend/dist
@@ -462,7 +462,7 @@ jobs:
           gitHubAccessToken: ${{ secrets.GITHUB_TOKEN }}
           urls: ${{ env.URLS }}
           outputDirectory: ${{ env.ARTIFACT_PATH }}
-      - uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
+      - uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
         with:
           name: Lighthouse reports
           path: ${{ env.ARTIFACT_PATH }}
