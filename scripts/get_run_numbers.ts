@@ -29,26 +29,44 @@ export async function script(
     workflows = workflows.filter((w): boolean => w.name === "release");
     const runNumbers: string[][] = await Promise.all(
       workflows.map(async (w): Promise<string[]> => {
-        const listWorkflowRunsParams: RestEndpointMethodTypes["actions"]["listWorkflowRuns"]["parameters"] =
-          {
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            workflow_id: w.id,
-            event:"merge_group",
-          };
-        console.log("call actions.listWorkflowRuns:");
-        console.log(listWorkflowRunsParams);
-        let runs: PaginatingEndpoints["GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs"]["response"]["data"]["workflow_runs"] =
-          await github.paginate(
-            github.rest.actions.listWorkflowRuns,
-            listWorkflowRunsParams,
-          );
-        console.log(runs.find(r=>r.event!=="push"));
-        runs = runs.filter(
-          (r): boolean =>
-            process.env.RUN_NUMBER === undefined ||
-            r.run_number < Number(process.env.RUN_NUMBER),
+        const listWorkflowRunsParamsList: RestEndpointMethodTypes["actions"]["listWorkflowRuns"]["parameters"][] =
+          [
+            {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: w.id,
+              branch: HEAD_REF,
+            },
+            {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: w.id,
+              event: "merge_group",
+            },
+          ];
+        const runsList = await Promise.all(
+          listWorkflowRunsParamsList.map(
+            async (
+              listWorkflowRunsParams,
+            ): Promise<
+              PaginatingEndpoints["GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs"]["response"]["data"]["workflow_runs"]
+            > => {
+              console.log("call actions.listWorkflowRuns:");
+              console.log(listWorkflowRunsParams);
+              return await github.paginate(
+                github.rest.actions.listWorkflowRuns,
+                listWorkflowRunsParams,
+              );
+            },
+          ),
         );
+        const runs = runsList
+          .flat()
+          .filter(
+            (r): boolean =>
+              process.env.RUN_NUMBER === undefined ||
+              r.run_number < Number(process.env.RUN_NUMBER),
+          );
         return runs.map((r): string => {
           if (r.status !== "completed") {
             return running;
