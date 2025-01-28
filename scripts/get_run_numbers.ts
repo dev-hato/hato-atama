@@ -43,6 +43,7 @@ export async function script(
             github.rest.actions.listWorkflowRuns,
             listWorkflowRunsParams,
           );
+        console.log(runs);
         runs = runs.filter(
           (r): boolean =>
             process.env.RUN_NUMBER === undefined ||
