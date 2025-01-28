@@ -42,23 +42,18 @@ export async function script(
               repo: context.repo.repo,
               workflow_id: w.id,
               event: "merge_group",
+              status: "completed",
             },
           ];
         const runsList = await Promise.all(
-          listWorkflowRunsParamsList.map(
-            async (
+          listWorkflowRunsParamsList.map(async (listWorkflowRunsParams) => {
+            console.log("call actions.listWorkflowRuns:");
+            console.log(listWorkflowRunsParams);
+            return await github.paginate(
+              github.rest.actions.listWorkflowRuns,
               listWorkflowRunsParams,
-            ): Promise<
-              PaginatingEndpoints["GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs"]["response"]["data"]["workflow_runs"]
-            > => {
-              console.log("call actions.listWorkflowRuns:");
-              console.log(listWorkflowRunsParams);
-              return await github.paginate(
-                github.rest.actions.listWorkflowRuns,
-                listWorkflowRunsParams,
-              );
-            },
-          ),
+            );
+          }),
         );
         const runs = runsList
           .flat()
@@ -67,15 +62,13 @@ export async function script(
               process.env.RUN_NUMBER === undefined ||
               r.run_number < Number(process.env.RUN_NUMBER),
           );
-        return runs
-          .filter((r) => r.event === "push" || r.status === "completed")
-          .map((r): string => {
-            if (r.status !== "completed") {
-              return running;
-            }
+        return runs.map((r): string => {
+          if (r.status !== "completed") {
+            return running;
+          }
 
-            return `v${r.run_number}`;
-          });
+          return `v${r.run_number}`;
+        });
       }),
     );
     result = runNumbers.flat().filter(Boolean);
