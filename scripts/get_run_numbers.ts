@@ -62,13 +62,15 @@ export async function script(
               process.env.RUN_NUMBER === undefined ||
               r.run_number < Number(process.env.RUN_NUMBER),
           );
-        return runs.map((r): string => {
-          if (r.status !== "completed") {
-            return running;
-          }
+        return runs
+          .filter((r) => r.event === "push" || r.status === "completed")
+          .map((r): string => {
+            if (r.status !== "completed") {
+              return running;
+            }
 
-          return `v${r.run_number}`;
-        });
+            return `v${r.run_number}`;
+          });
       }),
     );
     result = runNumbers.flat().filter(Boolean);
