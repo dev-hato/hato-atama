@@ -65,7 +65,6 @@ export async function script(
           .filter((r) => r.event === "push" || r.status === "completed")
           .map((r): string => {
             if (r.status !== "completed") {
-              console.log(r.event,r.status,r.run_number);
               return running;
             }
 
@@ -79,6 +78,7 @@ export async function script(
       result.shift();
     }
 
+    console.log(result.includes(running));
     await sleep(result, running, retryCount, i);
   }
 
