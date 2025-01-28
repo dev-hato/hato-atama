@@ -628,7 +628,7 @@ jobs:
     if: (github.event_name == 'pull_request' && github.event.action != 'closed') || github.event_name == 'merge_group'
     runs-on: ubuntu-latest
     steps:
-      - uses: Kesin11/actions-timeline@3046833d9aacfd7745c5264b7f3af851c3e2a619 # v2
+      - uses: Kesin11/actions-timeline@a677de8cb916a7f4c94cfd86023bcc73be52f2b6 # v2
   # pushをトリガーとした場合に完了しているべきjobが完了したか
   release-complete:
     runs-on: ubuntu-latest
@@ -647,7 +647,7 @@ jobs:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
-      - uses: Kesin11/actions-timeline@3046833d9aacfd7745c5264b7f3af851c3e2a619 # v2
+      - uses: Kesin11/actions-timeline@a677de8cb916a7f4c94cfd86023bcc73be52f2b6 # v2
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: true
