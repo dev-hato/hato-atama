@@ -80,7 +80,7 @@ export async function script(
     }
 
     if (!(await sleep(result, running, retryCount, i))) {
-      return;
+      break;
     }
   }
 
