@@ -29,18 +29,20 @@ export async function script(
     workflows = workflows.filter((w): boolean => w.name === "release");
     const runNumbers: string[][] = await Promise.all(
       workflows.map(async (w): Promise<string[]> => {
+        const listWorkflowRunsBaseParams: RestEndpointMethodTypes["actions"]["listWorkflowRuns"]["parameters"] =
+          {
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            workflow_id: w.id,
+          };
         const listWorkflowRunsParamsList: RestEndpointMethodTypes["actions"]["listWorkflowRuns"]["parameters"][] =
           [
             {
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: w.id,
+              ...listWorkflowRunsBaseParams,
               branch: HEAD_REF,
             },
             {
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: w.id,
+              ...listWorkflowRunsBaseParams,
               event: "merge_group",
               status: "completed",
             },
