@@ -42,6 +42,7 @@ export async function script(
               repo: context.repo.repo,
               workflow_id: w.id,
               event: "merge_group",
+              status: "completed",
             },
           ];
         const runsList = await Promise.all(
