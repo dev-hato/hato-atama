@@ -69,7 +69,11 @@ export async function script(
           );
         return runs.map((r): string => {
           if (r.status !== "completed") {
-            return running;
+            if (r.event === "push") {
+              return running;
+            } else {
+              return "";
+            }
           }
 
           return `v${r.run_number}`;
