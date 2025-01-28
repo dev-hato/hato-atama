@@ -34,7 +34,7 @@ export async function script(
             owner: context.repo.owner,
             repo: context.repo.repo,
             workflow_id: w.id,
-            event:"merge_group",
+            event: "merge_group",
           };
         console.log("call actions.listWorkflowRuns:");
         console.log(listWorkflowRunsParams);
@@ -43,7 +43,7 @@ export async function script(
             github.rest.actions.listWorkflowRuns,
             listWorkflowRunsParams,
           );
-        console.log(runs.find(r=>r.event!=="push"));
+        console.log(runs.find((r) => r.event !== "push"));
         runs = runs.filter(
           (r): boolean =>
             process.env.RUN_NUMBER === undefined ||
