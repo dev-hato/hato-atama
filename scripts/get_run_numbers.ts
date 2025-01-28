@@ -78,8 +78,9 @@ export async function script(
       result.shift();
     }
 
-    console.log(result.includes(running));
-    await sleep(result, running, retryCount, i);
+    if (!(await sleep(result, running, retryCount, i))) {
+      return;
+    }
   }
 
   if (result.includes(running)) {
