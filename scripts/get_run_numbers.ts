@@ -29,32 +29,50 @@ export async function script(
     workflows = workflows.filter((w): boolean => w.name === "release");
     const runNumbers: string[][] = await Promise.all(
       workflows.map(async (w): Promise<string[]> => {
-        const listWorkflowRunsParams: RestEndpointMethodTypes["actions"]["listWorkflowRuns"]["parameters"] =
+        const listWorkflowRunsBaseParams: RestEndpointMethodTypes["actions"]["listWorkflowRuns"]["parameters"] =
           {
             owner: context.repo.owner,
             repo: context.repo.repo,
             workflow_id: w.id,
-            branch: HEAD_REF,
           };
-        console.log("call actions.listWorkflowRuns:");
-        console.log(listWorkflowRunsParams);
-        let runs: PaginatingEndpoints["GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs"]["response"]["data"]["workflow_runs"] =
-          await github.paginate(
-            github.rest.actions.listWorkflowRuns,
-            listWorkflowRunsParams,
-          );
-        runs = runs.filter(
-          (r): boolean =>
-            process.env.RUN_NUMBER === undefined ||
-            r.run_number < Number(process.env.RUN_NUMBER),
+        const listWorkflowRunsParamsList: RestEndpointMethodTypes["actions"]["listWorkflowRuns"]["parameters"][] =
+          [
+            {
+              ...listWorkflowRunsBaseParams,
+              branch: HEAD_REF,
+            },
+            {
+              ...listWorkflowRunsBaseParams,
+              event: "merge_group",
+              status: "completed",
+            },
+          ];
+        const runsList = await Promise.all(
+          listWorkflowRunsParamsList.map(async (listWorkflowRunsParams) => {
+            console.log("call actions.listWorkflowRuns:");
+            console.log(listWorkflowRunsParams);
+            return await github.paginate(
+              github.rest.actions.listWorkflowRuns,
+              listWorkflowRunsParams,
+            );
+          }),
         );
-        return runs.map((r): string => {
-          if (r.status !== "completed") {
-            return running;
-          }
+        const runs = runsList
+          .flat()
+          .filter(
+            (r): boolean =>
+              process.env.RUN_NUMBER === undefined ||
+              r.run_number < Number(process.env.RUN_NUMBER),
+          );
+        return runs
+          .filter((r) => r.event === "push" || r.status === "completed")
+          .map((r): string => {
+            if (r.status !== "completed") {
+              return running;
+            }
 
-          return `v${r.run_number}`;
-        });
+            return `v${r.run_number}`;
+          });
       }),
     );
     result = runNumbers.flat().filter(Boolean);
@@ -63,7 +81,9 @@ export async function script(
       result.shift();
     }
 
-    await sleep(result, running, retryCount, i);
+    if (!(await sleep(result, running, retryCount, i))) {
+      break;
+    }
   }
 
   if (result.includes(running)) {
