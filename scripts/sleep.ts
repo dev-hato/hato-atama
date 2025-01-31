@@ -3,9 +3,9 @@ export async function sleep(
   running: string,
   retryCount: number,
   i: number,
-) {
+): Promise<boolean> {
   if (!result.includes(running) || i === retryCount - 1) {
-    return;
+    return false;
   }
 
   // 完了していないrunがあった場合はリトライ
@@ -14,4 +14,5 @@ export async function sleep(
   const sleepSeconds = Math.random() * (Math.pow(2, i + 1) * 100);
   console.log(`sleep ${sleepSeconds}s`);
   await new Promise((resolve) => setTimeout(resolve, sleepSeconds * 1000));
+  return true;
 }
