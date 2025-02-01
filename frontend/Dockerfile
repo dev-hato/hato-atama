@@ -1,4 +1,4 @@
-FROM node:23.6.1-bullseye-slim@sha256:112613ee13b7e94ebe72f1733964003520d619ef803f403f82954534da34aea3 AS base
+FROM node:23.7.0-bullseye-slim@sha256:ddde50802a76b8ac61995c7d44d469c39e483e391cad03327065ac2e1f28abfd AS base
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 ARG TARGETPLATFORM
