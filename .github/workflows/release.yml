@@ -85,6 +85,7 @@ jobs:
         env:
           HEAD_REF: ${{github.head_ref || github.event.merge_group.head_ref}}
         if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
+      - run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes -c yes
       - name: Build and push
         uses: docker/bake-action@7bff531c65a5cda33e52e43950a795b91d450f63 # v6.3.0
         env:
