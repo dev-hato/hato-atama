@@ -58,7 +58,7 @@ jobs:
           name: frontend
           path: frontend/dist
   docker-compose-build-base:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     env:
       DOCKER_BUILDKIT: 1
       COMPOSE_DOCKER_CLI_BUILD: 1
