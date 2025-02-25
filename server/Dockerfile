@@ -1,4 +1,4 @@
-FROM golang:1.24.0-bullseye@sha256:1f65e1176d093a62216bf1147a4a750bf81ced7c5e05c204e55f1f4fed2f5eea AS base
+FROM golang:1.24.0-bullseye@sha256:f44db136b8d4822a059d9b6256be67bd233a19d39a88c46b1023efe3d848931b AS base
 
 WORKDIR /go/app
 
