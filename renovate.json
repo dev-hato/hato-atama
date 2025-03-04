@@ -9,7 +9,7 @@
     "**/tests/**",
     "**/__fixtures__/**"
   ],
-  "ignoreDeps": ["go", "node-fetch"],
+  "ignoreDeps": ["go", "node-fetch", "eslint"],
   "packageRules": [
     {
       "groupName": "artifact",
