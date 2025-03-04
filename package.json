@@ -1,9 +1,11 @@
 {
-  "devDependencies": {
+  "dependencies": {
     "@actions/core": "1.11.1",
     "@actions/github": "6.0.0",
     "@octokit/plugin-paginate-rest": "11.4.3",
-    "@octokit/plugin-rest-endpoint-methods": "13.3.1",
+    "@octokit/plugin-rest-endpoint-methods": "13.3.1"
+  },
+  "devDependencies": {
     "@proofdict/textlint-rule-proofdict": "3.1.2",
     "@textlint-ja/textlint-rule-no-insert-dropping-sa": "2.0.1",
     "cheerio": "1.0.0",
