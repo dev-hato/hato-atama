@@ -28,7 +28,7 @@ jobs:
       - name: ncu install
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         run: bash "${GITHUB_WORKSPACE}/scripts/resource_update/update.sh"
-      - uses: dev-hato/actions-diff-pr-management@cea263ca46759ebc8c812b8595be4df129761037 # v2.1.0
+      - uses: dev-hato/actions-diff-pr-management@b3530e809a1948d0187f47a67d4164a47e03d7ec # v2.1.1
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           branch-name-prefix: update-${{ matrix.path }}
@@ -56,7 +56,7 @@ jobs:
       - name: go mod update
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         run: bash "${GITHUB_WORKSPACE}/scripts/resource_update/update_go/run_go_mod_tidy.sh"
-      - uses: dev-hato/actions-diff-pr-management@cea263ca46759ebc8c812b8595be4df129761037 # v2.1.0
+      - uses: dev-hato/actions-diff-pr-management@b3530e809a1948d0187f47a67d4164a47e03d7ec # v2.1.1
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           branch-name-prefix: update-go
