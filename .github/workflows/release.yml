@@ -94,7 +94,7 @@ jobs:
           HEAD_REF: ${{github.head_ref || github.event.merge_group.head_ref}}
         if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
       - name: Build and push
-        uses: docker/bake-action@212c36739681a6271d58dcfe0d001d2ad13f8e75 # v6.7.0
+        uses: docker/bake-action@37816e747588cb137173af99ab33873600c46ea8 # v6.8.0
         env:
           DOCKER_CONTENT_TRUST: 1
         with:
@@ -132,14 +132,14 @@ jobs:
           HEAD_REF: ${{github.head_ref || github.event.merge_group.head_ref}}
         if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
       - name: Build and push (dev)
-        uses: docker/bake-action@212c36739681a6271d58dcfe0d001d2ad13f8e75 # v6.7.0
+        uses: docker/bake-action@37816e747588cb137173af99ab33873600c46ea8 # v6.8.0
         env:
           DOCKER_CONTENT_TRUST: 1
         with:
           push: true
           files: compose.yml,dev.base.compose.yml
       - name: Build and push (staging)
-        uses: docker/bake-action@212c36739681a6271d58dcfe0d001d2ad13f8e75 # v6.7.0
+        uses: docker/bake-action@37816e747588cb137173af99ab33873600c46ea8 # v6.8.0
         env:
           DOCKER_CONTENT_TRUST: 1
         with:
