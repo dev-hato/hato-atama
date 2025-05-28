@@ -1,5 +1,5 @@
 #checkov:skip=CKV_DOCKER_3
-FROM gcr.io/google.com/cloudsdktool/google-cloud-cli:523.0.1-emulators@sha256:ec93657c43309e0dadecb10b2c5361ce92aba6a78c9e81a8cb3b9a3237fbe355
+FROM gcr.io/google.com/cloudsdktool/google-cloud-cli:524.0.0-emulators@sha256:11e9b10b6d61177b0046fcb5f1e9479f567a5dacbf66d194baf5a8872653c857
 
 RUN find / -type f -perm /u+s -ignore_readdir_race -exec chmod u-s {} \; \
     && find / -type f -perm /g+s -ignore_readdir_race -exec chmod g-s {} \;
