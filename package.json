@@ -11,7 +11,7 @@
     "cheerio": "1.1.0",
     "domhandler": "5.0.3",
     "node-fetch": "2.6.12",
-    "textlint": "14.8.0",
+    "textlint": "14.8.1",
     "textlint-filter-rule-comments": "1.2.2",
     "textlint-rule-abbr-within-parentheses": "1.0.2",
     "textlint-rule-footnote-order": "1.0.3",
