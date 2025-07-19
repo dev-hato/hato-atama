@@ -27,13 +27,12 @@ jobs:
         working-directory: test/e2e
       - run: bash "${GITHUB_WORKSPACE}/scripts/super_linter/super_linter/set_path.sh"
       - name: Super-Linter
-        uses: super-linter/super-linter/slim@12150456a73e248bdc94d0794898f94e23127c88 # v7.4.0
+        uses: super-linter/super-linter/slim@5119dcd8011e92182ce8219d9e9efc82f16fddb6 # v8.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LINTER_RULES_PATH: .
           # Go modulesを使っているため、こちらはfalseにする
           VALIDATE_GO: false
-          ESLINT_USE_FLAT_CONFIG: false
           VALIDATE_JAVASCRIPT_STANDARD: false
           VALIDATE_TYPESCRIPT_STANDARD: false
           VALIDATE_GIT_COMMITLINT: false

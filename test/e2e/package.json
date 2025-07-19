@@ -10,7 +10,7 @@
   "license": "ISC",
   "devDependencies": {
     "cypress": "14.5.2",
-    "eslint": "8.57.1",
+    "eslint": "9.31.0",
     "eslint-plugin-cypress": "3.6.0"
   },
   "engines": {
