@@ -360,7 +360,7 @@ jobs:
           cache-dependency-path: test/e2e/package-lock.json
       - if: matrix.browser_name == 'firefox'
         run: bash "${GITHUB_WORKSPACE}/scripts/release/install_firefox_dependencies.sh"
-      - uses: browser-actions/setup-firefox@c04e669ab1d810acd2530e553388c1d183d765cf # v1.6.0
+      - uses: browser-actions/setup-firefox@5914774dda97099441f02628f8d46411fcfbd208 # v1.7.0
         if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
@@ -398,7 +398,7 @@ jobs:
           cache-dependency-path: test/e2e/package-lock.json
       - if: matrix.browser_name == 'firefox'
         run: bash "${GITHUB_WORKSPACE}/scripts/release/install_firefox_dependencies.sh"
-      - uses: browser-actions/setup-firefox@c04e669ab1d810acd2530e553388c1d183d765cf # v1.6.0
+      - uses: browser-actions/setup-firefox@5914774dda97099441f02628f8d46411fcfbd208 # v1.7.0
         if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
@@ -517,7 +517,7 @@ jobs:
           cache-dependency-path: test/e2e/package-lock.json
       - if: matrix.browser_name == 'firefox'
         run: bash "${GITHUB_WORKSPACE}/scripts/release/install_firefox_dependencies.sh"
-      - uses: browser-actions/setup-firefox@c04e669ab1d810acd2530e553388c1d183d765cf # v1.6.0
+      - uses: browser-actions/setup-firefox@5914774dda97099441f02628f8d46411fcfbd208 # v1.7.0
         if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
@@ -549,7 +549,7 @@ jobs:
           cache-dependency-path: test/e2e/package-lock.json
       - if: matrix.browser_name == 'firefox'
         run: bash "${GITHUB_WORKSPACE}/scripts/release/install_firefox_dependencies.sh"
-      - uses: browser-actions/setup-firefox@c04e669ab1d810acd2530e553388c1d183d765cf # v1.6.0
+      - uses: browser-actions/setup-firefox@5914774dda97099441f02628f8d46411fcfbd208 # v1.7.0
         if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
