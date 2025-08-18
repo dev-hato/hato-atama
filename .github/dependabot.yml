@@ -59,3 +59,5 @@ updates:
     schedule:
       interval: "daily"
     open-pull-requests-limit: 1
+    ignore:
+      - dependency-name: "eslint"
