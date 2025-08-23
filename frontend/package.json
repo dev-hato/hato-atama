@@ -15,7 +15,7 @@
     "Firefox ESR",
     "not dead",
     "not ie<=11",
-    "not Firefox <= 128"
+    "not Firefox < 135"
   ],
   "author": "",
   "license": "ISC",
