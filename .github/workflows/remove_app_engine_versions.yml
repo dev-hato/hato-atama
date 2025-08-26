@@ -39,7 +39,7 @@ jobs:
         with:
           workload_identity_provider: "projects/765091727073/locations/global/workloadIdentityPools/hato-atama-workload-identity/providers/github"
           service_account: "actions-deploy@hato-atama.iam.gserviceaccount.com"
-      - uses: google-github-actions/setup-gcloud@e427ad8a34f8676edf47cf7d7925499adf3eb74f # v2.2.1
+      - uses: google-github-actions/setup-gcloud@26f734c2779b00b7dda794207734c511110a4368 # v3.0.0
         if: ${{ steps.get_run_numbers.outputs.result != '' }}
       - if: ${{ steps.get_run_numbers.outputs.result != '' }}
         run: gcloud app versions delete --service=default ${{steps.get_run_numbers.outputs.result}}
