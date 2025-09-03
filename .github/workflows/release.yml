@@ -435,7 +435,7 @@ jobs:
           workload_identity_provider: ${{env.GCP_WORKLOAD_IDENTITY_PROVIDER}}
           service_account: ${{env.GCP_SERVICE_ACCOUNT}}
       - name: Deploy to App Engine
-        uses: google-github-actions/deploy-appengine@a343979004148afb93c94c712b467e8e9f01b06b # v2.1.8
+        uses: google-github-actions/deploy-appengine@54d5fc7167ec790eb0233905e3cef384221b4619 # v3.0.1
         with:
           deliverables: app.yaml
           project_id: hato-atama
