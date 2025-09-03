@@ -576,7 +576,7 @@ jobs:
         with:
           workload_identity_provider: ${{env.GCP_WORKLOAD_IDENTITY_PROVIDER}}
           service_account: ${{env.GCP_SERVICE_ACCOUNT}}
-      - uses: google-github-actions/setup-gcloud@26f734c2779b00b7dda794207734c511110a4368 # v3.0.0
+      - uses: google-github-actions/setup-gcloud@aa5489c8933f4cc7a4f7d45035b3b1440c9c10db # v3.0.1
       - run: bash "${GITHUB_WORKSPACE}/scripts/release/migrating_traffic/set_traffic.sh"
   remove-app-engine-past-versions:
     runs-on: ubuntu-latest
@@ -615,7 +615,7 @@ jobs:
         with:
           workload_identity_provider: ${{env.GCP_WORKLOAD_IDENTITY_PROVIDER}}
           service_account: ${{env.GCP_SERVICE_ACCOUNT}}
-      - uses: google-github-actions/setup-gcloud@26f734c2779b00b7dda794207734c511110a4368 # v3.0.0
+      - uses: google-github-actions/setup-gcloud@aa5489c8933f4cc7a4f7d45035b3b1440c9c10db # v3.0.1
         if: ${{ steps.get_run_numbers.outputs.result != '' }}
       - name: Remove app engine versions
         if: ${{ steps.get_run_numbers.outputs.result != '' }}
