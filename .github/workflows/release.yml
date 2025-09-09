@@ -40,7 +40,7 @@ jobs:
               './scripts/release/create_pr_environment/create_pr_environment.ts',
               process.env.GITHUB_WORKSPACE + '/'
             )
-            console.log(script.script);
+            console.log(script.default);
   # App Engineにデプロイされるファイルの差分の有無を判定する
   check-deploy-diff:
     runs-on: ubuntu-latest
