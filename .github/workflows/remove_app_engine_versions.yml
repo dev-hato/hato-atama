@@ -30,7 +30,7 @@ jobs:
           result-encoding: string
           script: |
             const {tsImport} = require('tsx/esm/api')
-            const {default: {script}} = await tsImport( './scripts/get_run_numbers.ts', process.env.GITHUB_WORKSPACE + '/')
+            const {script} = await tsImport( './scripts/get_run_numbers.ts', process.env.GITHUB_WORKSPACE + '/')
             return await script(github, context)
       - id: "auth"
         if: ${{ steps.get_run_numbers.outputs.result != '' }}
