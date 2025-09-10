@@ -3,7 +3,7 @@ import type { Context } from "@actions/github/lib/context";
 import type { GitHub } from "@actions/github/lib/utils";
 import type { PaginatingEndpoints } from "@octokit/plugin-paginate-rest";
 import type { RestEndpointMethodTypes } from "@octokit/plugin-rest-endpoint-methods";
-import { sleep } from "./sleep";
+import { sleep } from "./sleep.ts";
 
 export async function script(
   github: InstanceType<typeof GitHub>,
