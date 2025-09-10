@@ -14,12 +14,13 @@
     "last 2 versions",
     "Firefox ESR",
     "not dead",
-    "not ie<=11"
+    "not ie<=11",
+    "not Firefox < 135"
   ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "browserslist": "4.25.3",
+    "browserslist": "4.25.4",
     "clean-webpack-plugin": "4.0.0",
     "copy-webpack-plugin": "13.0.1",
     "elm-webpack-loader": "8.0.0",
@@ -30,7 +31,7 @@
     "webpack-dev-server": "5.2.2"
   },
   "engines": {
-    "node": "^20.17.0 || ^24.6.0",
+    "node": "^20.17.0 || ^24.7.0",
     "npm": "^9.6.5 || ^11.5.1"
   }
 }
