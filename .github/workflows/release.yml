@@ -251,7 +251,7 @@ jobs:
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         run: npm install
         working-directory: test/e2e
-      - uses: dev-hato/actions-diff-pr-management@ac4f08dda423d2793a7acdd58c831ed5a0f19136 # v2.2.0
+      - uses: dev-hato/actions-diff-pr-management@fix_empty_label
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           branch-name-prefix: fix-version
