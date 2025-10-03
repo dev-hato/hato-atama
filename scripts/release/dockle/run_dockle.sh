@@ -23,8 +23,12 @@ for image_name in $(docker compose -f compose.yml -f "${DOCKER_COMPOSE_FILE_NAME
 		if [[ "${image_name}" =~ "server-dev" ]] || [[ "${image_name}" =~ "server-base" ]]; then
 			cmd+="--timeout 600s "
 			if [[ "${image_name}" =~ "server-dev" ]]; then
-				cmd+="-i DKL-DI-0005 -af credentials "
+				cmd+="-af credentials "
 			fi
+		fi
+
+		if [[ "${image_name}" =~ "server-base" ]]; then
+			cmd+="-i DKL-DI-0005 "
 		fi
 	elif [[ "${image_name}" =~ "frontend:" ]]; then
 		cmd+="-ak NGINX_GPGKEY "
