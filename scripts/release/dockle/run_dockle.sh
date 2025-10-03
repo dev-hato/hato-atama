@@ -23,7 +23,7 @@ for image_name in $(docker compose -f compose.yml -f "${DOCKER_COMPOSE_FILE_NAME
 		if [[ "${image_name}" =~ "server-dev" ]] || [[ "${image_name}" =~ "server-base" ]]; then
 			cmd+="--timeout 600s "
 			if [[ "${image_name}" =~ "server-dev" ]]; then
-				cmd+="-af credentials "
+				cmd+="-i DKL-DI-0005 -af credentials "
 			fi
 		fi
 	elif [[ "${image_name}" =~ "frontend:" ]]; then
