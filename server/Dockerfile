@@ -1,4 +1,4 @@
-FROM golang:1.24.6-bullseye@sha256:2cdc80dc25edcb96ada1654f73092f2928045d037581fa4aa7c40d18af7dd85a AS base
+FROM golang:1.24.6-trixie@sha256:00118997097abd33e580b60a077dfafd18368d6f50240015ea3da68319ddb357 AS base
 
 WORKDIR /go/app
 
@@ -19,6 +19,7 @@ RUN mapfile -t PLATFORM < <(echo "${TARGETPLATFORM}" | tr '/' ' ') \
     && CGO_ENABLED=0 GOOS=linux GOARCH=${PLATFORM[2]} go build -o ping
 
 WORKDIR /go/app/server
+# hadolint ignore=DL3062
 RUN mapfile -t PLATFORM < <(echo "${TARGETPLATFORM}" | tr '/' ' ') \
     && CGO_ENABLED=0 GOOS=linux GOARCH=${PLATFORM[2]} go build -o app \
     && go install github.com/air-verse/air \
