@@ -6,7 +6,7 @@ toolchain go1.24.1
 
 require (
 	cloud.google.com/go/datastore v1.20.0
-	github.com/air-verse/air v1.62.0
+	github.com/air-verse/air v1.63.0
 	github.com/go-playground/validator/v10 v10.28.0
 	github.com/labstack/echo/v4 v4.13.4
 	golang.org/x/tools v0.37.0
