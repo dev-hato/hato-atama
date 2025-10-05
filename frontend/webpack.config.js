@@ -1,7 +1,7 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-const path = require("path");
+const path = require("node:path");
 
 module.exports = {
   module: {
@@ -40,8 +40,8 @@ module.exports = {
     host: "0.0.0.0",
     hot: true,
     proxy: {
-      "/api/": "http://server:" + process.env.PORT,
-      "/l/": "http://server:" + process.env.PORT,
+      "/api/": `http://server:${process.env.PORT}`,
+      "/l/": `http://server:${process.env.PORT}`,
     },
   },
 };
