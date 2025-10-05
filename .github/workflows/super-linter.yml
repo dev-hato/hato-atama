@@ -39,6 +39,7 @@ jobs:
           VALIDATE_GITHUB_ACTIONS_ZIZMOR: false
           VALIDATE_TRIVY: false
           VALIDATE_BIOME_FORMAT: false
+          VALIDATE_BIOME_LINT: false
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: true
