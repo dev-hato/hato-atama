@@ -4,7 +4,7 @@ go 1.25
 
 require (
 	cloud.google.com/go/datastore v1.21.0
-	github.com/air-verse/air v1.63.0
+	github.com/air-verse/air v1.63.1
 	github.com/go-playground/validator/v10 v10.28.0
 	github.com/labstack/echo/v4 v4.13.4
 	golang.org/x/tools v0.39.0
@@ -18,7 +18,6 @@ require (
 	dario.cat/mergo v1.0.2 // indirect
 	github.com/bep/godartsass/v2 v2.5.0 // indirect
 	github.com/bep/golibsass v1.2.0 // indirect
-	github.com/creack/pty v1.1.24 // indirect
 	github.com/fatih/color v1.18.0 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/fsnotify/fsnotify v1.9.0 // indirect
