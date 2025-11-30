@@ -265,7 +265,7 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha }}
           persist-credentials: false
-      - uses: dev-hato/actions-update-dockle@72308bd71d513732a23d7e40caa096fbccbf4cea # v0.0.123
+      - uses: dev-hato/actions-update-dockle@9c3cd2fec75d1daef378bf4918b63c4b364d058e # v0.0.125
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
   check-nginx-config:
