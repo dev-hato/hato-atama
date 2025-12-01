@@ -10,31 +10,43 @@ updates:
     schedule:
       interval: "daily"
     open-pull-requests-limit: 1
+    cooldown:
+      default-days: 7
   - package-ecosystem: "docker"
     directory: "/frontend"
     schedule:
       interval: "daily"
     open-pull-requests-limit: 1
+    cooldown:
+      default-days: 7
   - package-ecosystem: "docker"
     directory: "/gcp/datastore"
     schedule:
       interval: "daily"
     open-pull-requests-limit: 1
+    cooldown:
+      default-days: 7
   - package-ecosystem: "docker"
     directory: "/server"
     schedule:
       interval: "daily"
     open-pull-requests-limit: 1
+    cooldown:
+      default-days: 7
   - package-ecosystem: "elm"
     directory: "/frontend"
     schedule:
       interval: "daily"
     open-pull-requests-limit: 1
+    cooldown:
+      default-days: 7
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "daily"
     open-pull-requests-limit: 1
+    cooldown:
+      default-days: 7
   - package-ecosystem: "gomod"
     directory: "/"
     schedule:
@@ -44,6 +56,8 @@ updates:
         versions:
           - ">=0.2.0"
     open-pull-requests-limit: 1
+    cooldown:
+      default-days: 7
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
@@ -52,14 +66,14 @@ updates:
     ignore:
       - dependency-name: "node-fetch"
     cooldown:
-      default-days: 3
+      default-days: 7
   - package-ecosystem: "npm"
     directory: "/frontend"
     schedule:
       interval: "daily"
     open-pull-requests-limit: 1
     cooldown:
-      default-days: 3
+      default-days: 7
   - package-ecosystem: "npm"
     directory: "/test/e2e"
     schedule:
@@ -68,4 +82,4 @@ updates:
     ignore:
       - dependency-name: "eslint"
     cooldown:
-      default-days: 3
+      default-days: 7
