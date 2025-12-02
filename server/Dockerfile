@@ -6,7 +6,8 @@ COPY go.mod go.sum ./
 COPY ping ping
 COPY server server
 
-RUN find / -type f -perm /u+s -ignore_readdir_race -exec chmod u-s {} \; \
+RUN rm -rf /var/lib/apt/lists \
+    && find / -type f -perm /u+s -ignore_readdir_race -exec chmod u-s {} \; \
     && find / -type f -perm /g+s -ignore_readdir_race -exec chmod g-s {} \;
 
 FROM base AS build
