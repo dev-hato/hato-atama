@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 # https://github.com/elm/compiler/blob/24d3a89469e75cf7aa579442ecaf5ddfdd192ab2/installers/linux/README.md
 elm_version="$(yq -oy '."elm-version"' elm.json)"

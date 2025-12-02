@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 bash "${GITHUB_WORKSPACE}/scripts/release/change_file_and_env.sh"
 dockle_version="$(cat .dockle-version)"

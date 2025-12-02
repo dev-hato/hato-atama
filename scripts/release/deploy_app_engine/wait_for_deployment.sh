@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 # 最大10分待つ
 for i in $(seq 600); do
