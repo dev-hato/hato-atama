@@ -292,8 +292,7 @@ jobs:
       matrix:
         docker_compose_file_name:
           ["dev.base.compose.yml", "staging.compose.yml", "base.compose.yml"]
-        service_name:
-          ["server", "frontend"]
+        service_name: ["server", "frontend"]
     env:
       DOCKER_CONTENT_TRUST: 1
       REPOSITORY: ${{github.repository}}
