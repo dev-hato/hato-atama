@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 bash "${GITHUB_WORKSPACE}/scripts/release/change_file_and_env.sh"
 dockle_version="$(cat .dockle-version)"
@@ -23,7 +24,7 @@ for image_name in $(docker compose -f compose.yml -f "${DOCKER_COMPOSE_FILE_NAME
 		if [[ "${image_name}" =~ "server-dev" ]] || [[ "${image_name}" =~ "server-base" ]]; then
 			cmd+="--timeout 600s "
 			if [[ "${image_name}" =~ "server-dev" ]]; then
-				cmd+="-af credentials "
+				cmd+="-af credentials -i DKL-DI-0005 "
 			fi
 		fi
 
@@ -31,7 +32,7 @@ for image_name in $(docker compose -f compose.yml -f "${DOCKER_COMPOSE_FILE_NAME
 			cmd+="-i DKL-DI-0005 "
 		fi
 	elif [[ "${image_name}" =~ "frontend:" ]]; then
-		cmd+="-ak NGINX_GPGKEY "
+		cmd+="-ak NGINX_GPGKEY -ak NGINX_GPGKEYS -ak NGINX_GPGKEY_PATH "
 	fi
 
 	if [[ "${image_name}" =~ "frontend-base" ]] || [[ "${image_name}" =~ "server-base" ]]; then

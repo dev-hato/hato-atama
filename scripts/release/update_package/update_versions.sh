@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 for path in "frontend" "test/e2e" "."; do
 	echo "${NODE_VERSION}" >${path}/.node-version

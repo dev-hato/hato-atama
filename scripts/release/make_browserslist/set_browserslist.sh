@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 npm ci
 raw_versions="$(curl https://product-details.mozilla.org/1.0/firefox.json)"
