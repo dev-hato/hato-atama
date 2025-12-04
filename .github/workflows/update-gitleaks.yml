@@ -26,6 +26,7 @@ jobs:
         with:
           node-version-file: .node-version
           cache: npm
+      - run: curl -fsSL https://raw.githubusercontent.com/AikidoSec/safe-chain/main/install-scripts/install-safe-chain.sh | sh -s -- --ci
       - name: Install packages
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         run: npm ci
