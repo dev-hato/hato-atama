@@ -10,6 +10,8 @@ permissions:
 jobs:
   remove-app-engine-versions:
     runs-on: ubuntu-latest
+    env:
+      SAFE_CHAIN_MINIMUM_PACKAGE_AGE_HOURS: 168 # 7日
     if: github.repository == github.event.pull_request.head.repo.full_name && github.repository == 'dev-hato/hato-atama'
     steps:
       - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0

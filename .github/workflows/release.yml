@@ -47,6 +47,8 @@ jobs:
     defaults:
       run:
         working-directory: frontend
+    env:
+      SAFE_CHAIN_MINIMUM_PACKAGE_AGE_HOURS: 168 # 7日
     steps:
       - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
         with:
@@ -196,6 +198,7 @@ jobs:
       pull-requests: write
     env:
       DOCKER_CMD: "node --version && npm --version"
+      SAFE_CHAIN_MINIMUM_PACKAGE_AGE_HOURS: 168 # 7日
     steps:
       - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
@@ -317,6 +320,8 @@ jobs:
     defaults:
       run:
         working-directory: frontend
+    env:
+      SAFE_CHAIN_MINIMUM_PACKAGE_AGE_HOURS: 168 # 7日
     steps:
       - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
         with:
@@ -341,6 +346,7 @@ jobs:
     env:
       DOCKER_CONTENT_TRUST: 1
       REPOSITORY: ${{github.repository}}
+      SAFE_CHAIN_MINIMUM_PACKAGE_AGE_HOURS: 168 # 7日
     steps:
       - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
         with:
@@ -379,6 +385,7 @@ jobs:
     env:
       DOCKER_CONTENT_TRUST: 1
       REPOSITORY: ${{github.repository}}
+      SAFE_CHAIN_MINIMUM_PACKAGE_AGE_HOURS: 168 # 7日
     steps:
       - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
         with:
@@ -448,6 +455,8 @@ jobs:
     needs: deploy-app-engine
     permissions:
       pull-requests: write
+    env:
+      SAFE_CHAIN_MINIMUM_PACKAGE_AGE_HOURS: 168 # 7日
     if: github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
@@ -505,6 +514,8 @@ jobs:
       matrix:
         browser_name: ["chrome", "electron", "edge"]
         include: ${{fromJson(needs.make-browserslist.outputs.browserslist)}}
+    env:
+      SAFE_CHAIN_MINIMUM_PACKAGE_AGE_HOURS: 168 # 7日
     steps:
       - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
         with:
@@ -585,6 +596,8 @@ jobs:
     permissions:
       id-token: write
       contents: read
+    env:
+      SAFE_CHAIN_MINIMUM_PACKAGE_AGE_HOURS: 168 # 7日
     steps:
       - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
         with:

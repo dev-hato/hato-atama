@@ -14,6 +14,8 @@ permissions:
 jobs:
   update-gitleaks:
     runs-on: ubuntu-latest
+    env:
+      SAFE_CHAIN_MINIMUM_PACKAGE_AGE_HOURS: 168 # 7日
     steps:
       - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
