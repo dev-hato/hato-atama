@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
+curl -fsSL https://raw.githubusercontent.com/AikidoSec/safe-chain/main/install-scripts/install-safe-chain.sh | sh -s -- --ci
 npm ci
 raw_versions="$(curl https://product-details.mozilla.org/1.0/firefox.json)"
 versions="$(echo "$raw_versions" | yq -r '.releases.[] | .date + " " + key' | sort -r)"

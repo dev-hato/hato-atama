@@ -10,6 +10,8 @@ permissions:
 jobs:
   remove-app-engine-versions:
     runs-on: ubuntu-latest
+    env:
+      SAFE_CHAIN_MINIMUM_PACKAGE_AGE_HOURS: 168 # 7日
     if: github.repository == github.event.pull_request.head.repo.full_name && github.repository == 'dev-hato/hato-atama'
     steps:
       - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
@@ -19,6 +21,7 @@ jobs:
         with:
           node-version-file: .node-version
           cache: npm
+      - run: curl -fsSL https://raw.githubusercontent.com/AikidoSec/safe-chain/main/install-scripts/install-safe-chain.sh | sh -s -- --ci
       - run: npm ci
       - name: Get run numbers
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
