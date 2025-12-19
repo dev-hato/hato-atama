@@ -6,7 +6,7 @@ require (
 	cloud.google.com/go/datastore v1.21.0
 	github.com/air-verse/air v1.63.4
 	github.com/go-playground/validator/v10 v10.29.0
-	github.com/labstack/echo/v4 v4.13.4
+	github.com/labstack/echo/v4 v4.14.0
 	golang.org/x/tools v0.40.0
 )
 
@@ -56,7 +56,7 @@ require (
 	golang.org/x/sys v0.39.0 // indirect
 	golang.org/x/telemetry v0.0.0-20251203150158-8fff8a5912fc // indirect
 	golang.org/x/text v0.32.0 // indirect
-	golang.org/x/time v0.12.0 // indirect
+	golang.org/x/time v0.14.0 // indirect
 	google.golang.org/api v0.248.0 // indirect
 	google.golang.org/genproto v0.0.0-20250715232539-7130f93afb79 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20250818200422-3122310a409c // indirect
