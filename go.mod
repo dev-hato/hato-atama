@@ -5,7 +5,7 @@ go 1.25
 require (
 	cloud.google.com/go/datastore v1.21.0
 	github.com/air-verse/air v1.63.4
-	github.com/go-playground/validator/v10 v10.30.0
+	github.com/go-playground/validator/v10 v10.30.1
 	github.com/labstack/echo/v4 v4.14.0
 	golang.org/x/tools v0.40.0
 )
