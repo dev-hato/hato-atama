@@ -4,7 +4,7 @@ go 1.25
 
 require (
 	cloud.google.com/go/datastore v1.21.0
-	github.com/air-verse/air v1.64.0
+	github.com/air-verse/air v1.64.1
 	github.com/go-playground/validator/v10 v10.30.1
 	github.com/labstack/echo/v4 v4.15.0
 	golang.org/x/tools v0.41.0
@@ -31,6 +31,7 @@ require (
 	github.com/google/s2a-go v0.1.9 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.3.6 // indirect
 	github.com/googleapis/gax-go/v2 v2.15.0 // indirect
+	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/labstack/gommon v0.4.2 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/mattn/go-colorable v0.1.14 // indirect
