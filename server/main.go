@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"time"
@@ -13,8 +14,8 @@ import (
 	"cloud.google.com/go/datastore"
 	"github.com/dev-hato/hato-atama/server/settings"
 	"github.com/go-playground/validator/v10"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
+	"github.com/labstack/echo/v5"
+	"github.com/labstack/echo/v5/middleware"
 )
 
 var (
@@ -118,16 +119,16 @@ func getDataStoreKey(hash string) *datastore.Key {
 	return hashKeyKey
 }
 
-func createShortURL(c echo.Context) (err error) {
+func createShortURL(c *echo.Context) (err error) {
 	// 入力データの取り出し
 	inputData := new(CreateShortURLPostDataType)
 	if err = c.Bind(&inputData); err != nil {
-		c.Logger().Error(err)
+		c.Logger().Error(err.Error())
 		return c.JSON(http.StatusNotAcceptable, RetJSONType{Message: "invalid parameter"})
 	}
 	// 入力データの正規化
 	if err = inputData.Normalize(); err != nil {
-		c.Logger().Error(err)
+		c.Logger().Error(err.Error())
 		return c.JSON(http.StatusInternalServerError, RetJSONType{Message: err.Error()})
 	}
 
@@ -136,7 +137,7 @@ func createShortURL(c echo.Context) (err error) {
 
 	tx, err := dsClient.NewTransaction(c.Request().Context())
 	if err != nil {
-		c.Logger().Error(err)
+		c.Logger().Error(err.Error())
 		return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
 	}
 
@@ -148,7 +149,7 @@ func createShortURL(c echo.Context) (err error) {
 		for i := inputData.ShortURLLength; hashKey == "" && i < 64; i++ {
 			key, hashKey, err = getKey(hashedURL[:i], tx)
 			if err != nil {
-				c.Logger().Error(err)
+				c.Logger().Error(err.Error())
 				return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
 			}
 		}
@@ -162,7 +163,7 @@ func createShortURL(c echo.Context) (err error) {
 	} else {
 		key, hashKey, err = getKey(*inputData.WantedShortURL, tx)
 		if err != nil {
-			c.Logger().Error(err)
+			c.Logger().Error(err.Error())
 			return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
 		} else if hashKey == "" { // 希望するURLが存在してしまったので、登録できなかった
 			message := "No usable key: " + *inputData.WantedShortURL
@@ -176,13 +177,13 @@ func createShortURL(c echo.Context) (err error) {
 		URLData: inputData.URL,
 		Count:   *inputData.Count,
 	}); err != nil {
-		c.Logger().Error(err)
+		c.Logger().Error(err.Error())
 		return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
 	}
 
 	// トランザクションを確定させる
 	if _, err = tx.Commit(); err != nil {
-		c.Logger().Error(err)
+		c.Logger().Error(err.Error())
 		return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
 	}
 
@@ -195,10 +196,10 @@ func createHash(url string, now time.Time) string {
 	return hex.EncodeToString(hash[:])
 }
 
-func getLink(c echo.Context) (err error) {
+func getLink(c *echo.Context) (err error) {
 	tx, err := dsClient.NewTransaction(c.Request().Context())
 	if err != nil {
-		c.Logger().Error(err)
+		c.Logger().Error(err.Error())
 		return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
 	}
 
@@ -215,7 +216,7 @@ func getLink(c echo.Context) (err error) {
 		}
 
 		// その他のエラー
-		c.Logger().Error(err)
+		c.Logger().Error(err.Error())
 		return c.JSON(http.StatusInternalServerError, RetJSONType{Status: false, Message: "database error"})
 	}
 
@@ -229,13 +230,13 @@ func getLink(c echo.Context) (err error) {
 
 	// 一回引いた値を保存する
 	if _, err = tx.Put(key, data); err != nil {
-		c.Logger().Error(err)
+		c.Logger().Error(err.Error())
 		return c.JSON(http.StatusInternalServerError, RetJSONType{Status: false, Message: "database error"})
 	}
 
 	// トランザクションを確定させる
 	if _, err = tx.Commit(); err != nil {
-		c.Logger().Error(err)
+		c.Logger().Error(err.Error())
 		return c.JSON(http.StatusInternalServerError, RetJSONType{Status: false, Message: "database error"})
 	}
 
@@ -244,7 +245,7 @@ func getLink(c echo.Context) (err error) {
 	return c.Redirect(http.StatusFound, data.URLData)
 }
 
-func ping(c echo.Context) (err error) {
+func ping(c *echo.Context) (err error) {
 	return c.NoContent(http.StatusNoContent)
 }
 
@@ -273,5 +274,7 @@ func main() {
 	if port == "" {
 		port = "8080"
 	}
-	e.Logger.Fatal(e.Start(":" + port))
+	if err := e.Start(":" + port); err != nil {
+		log.Fatal(err)
+	}
 }

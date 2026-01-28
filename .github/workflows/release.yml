@@ -170,7 +170,7 @@ jobs:
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
         env:
           HEAD_REF: ${{github.head_ref || github.event.merge_group.head_ref}}
-        if: github.event_name == 'pull_request' && github.event.action != 'closed'
+        if: github.event_name != 'pull_request' || github.event.action != 'closed'
       - name: Get Go version
         id: get_go_version
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
@@ -183,6 +183,8 @@ jobs:
       - name: Install goimports
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         run: bash "${GITHUB_WORKSPACE}/scripts/release/format_go/run_goimports.sh"
+        env:
+          GO_VERSION: ${{steps.get_go_version.outputs.go_version}}
       - uses: dev-hato/actions-diff-pr-management@9de3de40217217a73ac95f3751d7bfe1c9f23ead # v2.2.3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
