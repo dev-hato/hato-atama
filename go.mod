@@ -4,7 +4,7 @@ go 1.25.6
 
 require (
 	cloud.google.com/go/datastore v1.21.0
-	github.com/air-verse/air v1.64.3
+	github.com/air-verse/air v1.64.4
 	github.com/go-playground/validator/v10 v10.30.1
 	github.com/labstack/echo/v5 v5.0.0
 	golang.org/x/tools v0.41.0
@@ -16,6 +16,7 @@ require (
 	cloud.google.com/go/auth/oauth2adapt v0.2.8 // indirect
 	cloud.google.com/go/compute/metadata v0.8.0 // indirect
 	dario.cat/mergo v1.0.2 // indirect
+	github.com/andybalholm/brotli v1.2.0 // indirect
 	github.com/bep/godartsass/v2 v2.5.0 // indirect
 	github.com/bep/golibsass v1.2.0 // indirect
 	github.com/fatih/color v1.18.0 // indirect
