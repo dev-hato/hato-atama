@@ -28,6 +28,7 @@
     "textlint-rule-terminology": "5.2.16",
     "tsx": "4.21.0"
   },
+  "packageManager": "npm@11.7.0",
   "engines": {
     "node": "^20.17.0 || ^25.4.0",
     "npm": "^9.6.5 || ^11.7.0"
