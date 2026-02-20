@@ -199,7 +199,7 @@ jobs:
       contents: write
       pull-requests: write
     env:
-      DOCKER_CMD: "node --version && npm --version"
+      DOCKER_CMD: "node --version"
       SAFE_CHAIN_MINIMUM_PACKAGE_AGE_HOURS: 168 # 7日
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -224,10 +224,8 @@ jobs:
       - name: Update versions
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         env:
-          DEPENDABOT_NODE_VERSION: "20.17.0"
-          DEPENDABOT_NPM_VERSION: "9.6.5"
+          DEPENDABOT_NODE_VERSION: "24.13.1"
           NODE_VERSION: ${{steps.get_node_version.outputs.node_version}}
-          NPM_VERSION: ${{steps.get_node_version.outputs.npm_version}}
         run: bash "${GITHUB_WORKSPACE}/scripts/release/update_package/update_versions.sh"
       - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
