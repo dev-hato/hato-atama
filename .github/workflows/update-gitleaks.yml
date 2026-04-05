@@ -14,8 +14,6 @@ permissions:
 jobs:
   update-gitleaks:
     runs-on: ubuntu-latest
-    env:
-      SAFE_CHAIN_MINIMUM_PACKAGE_AGE_HOURS: 168 # 7日
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
@@ -28,7 +26,6 @@ jobs:
         with:
           node-version-file: .node-version
           cache: npm
-      - run: curl -fsSL https://raw.githubusercontent.com/AikidoSec/safe-chain/main/install-scripts/install-safe-chain.sh | sh -s -- --ci
       - name: Install packages
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         run: npm ci

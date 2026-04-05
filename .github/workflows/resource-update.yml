@@ -12,8 +12,6 @@ jobs:
     defaults:
       run:
         working-directory: ${{ matrix.path }}
-    env:
-      SAFE_CHAIN_MINIMUM_PACKAGE_AGE_HOURS: 168 # 7日
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         if: github.event_name != 'pull_request' || github.event.action != 'closed'

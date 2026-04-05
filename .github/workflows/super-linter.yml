@@ -13,8 +13,6 @@ jobs:
   super-linter:
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    env:
-      SAFE_CHAIN_MINIMUM_PACKAGE_AGE_HOURS: 168 # 7日
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
@@ -24,7 +22,6 @@ jobs:
         with:
           node-version-file: .node-version
           cache: npm
-      - run: curl -fsSL https://raw.githubusercontent.com/AikidoSec/safe-chain/main/install-scripts/install-safe-chain.sh | sh -s -- --ci
       - run: npm ci
       - run: npm ci
         working-directory: test/e2e
