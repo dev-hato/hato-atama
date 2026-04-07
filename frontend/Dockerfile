@@ -50,7 +50,7 @@ COPY frontend/healthcheck.sh .
 HEALTHCHECK --interval=5s --retries=20 CMD ["./healthcheck.sh"]
 CMD ["npm", "run", "dev"]
 
-FROM nginx:1.29.7@sha256:7150b3a39203cb5bee612ff4a9d18774f8c7caf6399d6e8985e97e28eb751c18
+FROM nginx:1.29.7@sha256:1854da86e82d5dfb49a8f3d78b099adcc7e36608b207146ed95cd47937938a40
 
 RUN find / -type f -perm /u+s -ignore_readdir_race -exec chmod u-s {} \; \
     && find / -type f -perm /g+s -ignore_readdir_race -exec chmod g-s {} \; \
