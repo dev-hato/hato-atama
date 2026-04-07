@@ -21,7 +21,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	res, err := http.Get(fmt.Sprintf("http://localhost:%d/ping", port))
+	res, err := http.Get(fmt.Sprintf("http://localhost:%d/ping", port)) // #nosec G704 -- port is validated as integer in range 1-65535
 	if err != nil || res.StatusCode != http.StatusNoContent {
 		os.Exit(1)
 	}
