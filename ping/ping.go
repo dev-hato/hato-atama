@@ -1,8 +1,9 @@
 package main
 
 import (
-	"fmt"
+	"net"
 	"net/http"
+	"net/url"
 	"os"
 	"strconv"
 )
@@ -21,15 +22,13 @@ func main() {
 		os.Exit(1)
 	}
 
-	res, err := http.Get(
-	new(
-		url.URL{
-			Scheme: "http",
-			Host:   net.JoinHostPort("localhost", strconv.Itoa(port)),
-			Path:   "/ping",
-		},
-	).String()
-	)
+	u := url.URL{
+		Scheme: "http",
+		Host:   net.JoinHostPort("localhost", strconv.Itoa(port)),
+		Path:   "/ping",
+	}
+
+	res, err := http.Get(u.String())
 	if err != nil || res.StatusCode != http.StatusNoContent {
 		os.Exit(1)
 	}
