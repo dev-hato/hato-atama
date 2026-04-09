@@ -11,7 +11,7 @@
   "devDependencies": {
     "cypress": "15.13.0",
     "eslint": "9.39.2",
-    "eslint-plugin-cypress": "6.2.1"
+    "eslint-plugin-cypress": "6.2.2"
   },
   "packageManager": "npm@11.7.0",
   "engines": {
