@@ -1,18 +1,34 @@
 package main
 
 import (
-	"fmt"
+	"net"
 	"net/http"
+	"net/url"
 	"os"
+	"strconv"
 )
 
 func main() {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
+	portStr := os.Getenv("PORT")
+	if portStr == "" {
+		portStr = "8080"
 	}
 
-	res, err := http.Get(fmt.Sprintf("http://localhost:%s/ping", port))
+	port, err := strconv.Atoi(portStr)
+	if err != nil {
+		panic(err)
+	}
+	if port < 1 || 65535 < port {
+		os.Exit(1)
+	}
+
+	u := url.URL{
+		Scheme: "http",
+		Host:   net.JoinHostPort("localhost", strconv.Itoa(port)),
+		Path:   "/ping",
+	}
+
+	res, err := http.Get(u.String())
 	if err != nil || res.StatusCode != http.StatusNoContent {
 		os.Exit(1)
 	}
