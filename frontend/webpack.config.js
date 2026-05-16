@@ -40,8 +40,10 @@ module.exports = {
     host: "0.0.0.0",
     hot: true,
     proxy: [
-      { context: ["/api/"], target: `http://server:${process.env.PORT}` },
-      { context: ["/l/"], target: `http://server:${process.env.PORT}` },
+      {
+        context: ["/api/", "/l/"],
+        target: `http://server:${process.env.PORT}`,
+      },
     ],
   },
 };
