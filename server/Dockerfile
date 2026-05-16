@@ -25,8 +25,7 @@ RUN mapfile -t PLATFORM < <(echo "${TARGETPLATFORM}" | tr '/' ' ') \
     && CGO_ENABLED=0 GOOS=linux GOARCH=${PLATFORM[2]} go build -o app \
     && go install github.com/air-verse/air \
     && useradd -l -m -s /bin/bash -N -u "1000" "nonroot" \
-    && mkdir /go/app/server/tmp \
-    && chown nonroot /go/app/server/tmp
+    && chown nonroot /go/app/server
 USER nonroot
 
 HEALTHCHECK --interval=5s --retries=20 CMD ["/go/app/ping/ping"]
