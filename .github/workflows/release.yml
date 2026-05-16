@@ -336,7 +336,7 @@ jobs:
     strategy:
       matrix:
         browser_name: ["chrome", "electron", "edge"]
-        environment: [ "staging", "dev" ]
+        environment: ["staging", "dev"]
         include: ${{fromJson(needs.make-browserslist.outputs.browserslist)}}
     env:
       DOCKER_CONTENT_TRUST: 1
@@ -375,7 +375,7 @@ jobs:
     strategy:
       matrix:
         browser_name: ["chrome", "electron", "edge"]
-        environment: [ "staging", "dev" ]
+        environment: ["staging", "dev"]
         include: ${{fromJson(needs.make-browserslist.outputs.browserslist)}}
     env:
       DOCKER_CONTENT_TRUST: 1
