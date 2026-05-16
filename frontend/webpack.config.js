@@ -39,11 +39,9 @@ module.exports = {
     port: process.env.FRONTEND_PORT,
     host: "0.0.0.0",
     hot: true,
-    proxy: [
-      {
-        context: ["/api/", "/l/"],
-        target: `http://server:${process.env.PORT}`,
-      },
-    ],
+    proxy: {
+      "/api/": `http://server:${process.env.PORT}`,
+      "/l/": `http://server:${process.env.PORT}`,
+    },
   },
 };
