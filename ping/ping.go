@@ -29,7 +29,11 @@ func main() {
 	}
 
 	res, err := http.Get(u.String())
-	if err != nil || res.StatusCode != http.StatusNoContent {
+	if err != nil {
+		os.Exit(1)
+	}
+	defer res.Body.Close()
+	if res.StatusCode != http.StatusNoContent {
 		os.Exit(1)
 	}
 }
