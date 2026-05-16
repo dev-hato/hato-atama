@@ -29,10 +29,10 @@ type ShortURLDataType struct {
 }
 
 type CreateShortURLPostDataType struct {
-	URL             string  `json:"url"`
+	URL             string  `json:"url" validate:"required,url"`
 	WantedShortURL  *string `json:"wanted_short_url" validate:"omitempty,alphanum"`
 	Count           *int64  `json:"count"`
-	URLLengthOption *string `json:"length_option"`
+	URLLengthOption *string `json:"length_option" validate:"omitempty,oneof=long short"`
 	ShortURLLength  int     `json:"-"`
 }
 
@@ -129,7 +129,7 @@ func createShortURL(c *echo.Context) (err error) {
 	// 入力データの正規化
 	if err = inputData.Normalize(); err != nil {
 		c.Logger().Error(err.Error())
-		return c.JSON(http.StatusInternalServerError, RetJSONType{Message: err.Error()})
+		return c.JSON(http.StatusNotAcceptable, RetJSONType{Message: "invalid parameter"})
 	}
 
 	var key *datastore.Key
@@ -146,7 +146,7 @@ func createShortURL(c *echo.Context) (err error) {
 		hashedURL := createHash(inputData.URL, time.Now())
 
 		// 短い順に、すでにキーが存在しないか確認して行き、存在していないキーを探す
-		for i := inputData.ShortURLLength; hashKey == "" && i < 64; i++ {
+		for i := inputData.ShortURLLength; hashKey == "" && i <= settings.ShortURLLength.Max && i <= len(hashedURL); i++ {
 			key, hashKey, err = getKey(hashedURL[:i], tx)
 			if err != nil {
 				c.Logger().Error(err.Error())
