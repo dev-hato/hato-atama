@@ -367,6 +367,10 @@ jobs:
           BROWSER_NAME: ${{ matrix.browser_name }}
         run: bash "${GITHUB_WORKSPACE}/scripts/release/run_mini_test.sh"
         working-directory: ./test/e2e
+      - if: failure() && matrix.environment == 'dev'
+        run: docker compose -f compose.yml -f dev.base.compose.yml logs
+      - if: failure() && matrix.environment == 'staging'
+        run: docker compose -f compose.yml -f staging.compose.yml logs
   e2e-test-all-docker-compose:
     runs-on: ubuntu-latest
     needs:
@@ -406,6 +410,10 @@ jobs:
           BROWSER_NAME: ${{ matrix.browser_name }}
         run: bash "${GITHUB_WORKSPACE}/scripts/release/run_all_test.sh"
         working-directory: ./test/e2e
+      - if: failure() && matrix.environment == 'dev'
+        run: docker compose -f compose.yml -f dev.base.compose.yml logs
+      - if: failure() && matrix.environment == 'staging'
+        run: docker compose -f compose.yml -f staging.compose.yml logs
   deploy-app-engine:
     runs-on: ubuntu-latest
     needs:
