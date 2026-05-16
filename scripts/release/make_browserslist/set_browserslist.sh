@@ -8,7 +8,9 @@ browsers=""
 
 for version in $(npx browserslist | grep firefox | awk '{print $2}'); do
 	browser_version="$(echo "$versions" | grep "$version.[^b]*" | head -n 1 | awk '{print $2}' | sed -e 's/firefox-//g')"
-	browsers+="{browser_name: \"firefox\", browser_version: \"$browser_version\"}"
+	for environment in staging dev; do
+		browsers+="{browser_name: \"firefox\", browser_version: \"$browser_version\", environment: \"$environment\"}"
+	done
 done
 
 browserslist="[${browsers//\}\{/\},{}]"
