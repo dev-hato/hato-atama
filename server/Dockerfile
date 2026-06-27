@@ -1,4 +1,4 @@
-FROM golang:1.26.2-trixie@sha256:4a7137ea573f79c86ae451ff05817ed762ef5597fcf732259e97abeb3108d873 AS base
+FROM golang:1.26.4-trixie@sha256:76a29248dedcd75870e95cbd90cc8cb356db082404ac7d3a5803f276c3ba79c9 AS base
 
 WORKDIR /go/app
 
@@ -24,7 +24,8 @@ WORKDIR /go/app/server
 RUN mapfile -t PLATFORM < <(echo "${TARGETPLATFORM}" | tr '/' ' ') \
     && CGO_ENABLED=0 GOOS=linux GOARCH=${PLATFORM[2]} go build -o app \
     && go install github.com/air-verse/air \
-    && useradd -l -m -s /bin/bash -N -u "1000" "nonroot"
+    && useradd -l -m -s /bin/bash -N -u "1000" "nonroot" \
+    && chown nonroot /go/app/server
 USER nonroot
 
 HEALTHCHECK --interval=5s --retries=20 CMD ["/go/app/ping/ping"]

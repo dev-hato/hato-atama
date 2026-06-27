@@ -17,7 +17,7 @@
 
 ### 設定
 
-<https://pre-commit.com/> の手順に従って `pre-commit` をインストールする。  
+<https://pre-commit.com/>の手順に従って`pre-commit`をインストールする。  
 これにより、[.pre-commit-config.yaml](.pre-commit-config.yaml)の設定に基づいて、コミット時にクレデンシャルが含まれていないかの検査が行われるようになる。
 
 リポジトリ直下の `.env` に Docker Compose で使うポートを定義している。既定値ではフロントエンドが `http://localhost:8080/`、サーバーが `http://localhost:8082/` で起動する。
@@ -55,7 +55,7 @@ npm --prefix frontend run build
 
 ## ARM64環境に対応したElmコンパイラに関して
 
-ARM64環境に対応したElmコンパイラを `elm/elm_arm64` として配置しています。  
+ARM64環境に対応したElmコンパイラを`elm/elm_arm64`として配置しています。  
 ARM64環境で開発環境を立ち上げると、こちらのコンパイラを使ってフロントエンドのビルドが行われます。  
 ARM64環境に対応したElmコンパイラのビルドを行いたい場合はARM64環境で次のコマンドを実行します。
 
