@@ -20,7 +20,7 @@
 <https://pre-commit.com/>の手順に従って`pre-commit`をインストールする。  
 これにより、[.pre-commit-config.yaml](.pre-commit-config.yaml)の設定に基づいて、コミット時にクレデンシャルが含まれていないかの検査が行われるようになる。
 
-リポジトリ直下の `.env` に Docker Compose で使うポートを定義している。既定値ではフロントエンドが `http://localhost:8080/`、サーバーが `http://localhost:8082/` で起動する。
+リポジトリ直下の`.env`にDocker Composeで使うポートを定義している。既定値ではフロントエンドが`http://localhost:8080/`、サーバーが`http://localhost:8082/`で起動する。
 
 ### 立ち上げ
 
@@ -40,7 +40,7 @@ TAG_NAME=`git symbolic-ref --short HEAD | sed -e "s:/:-:g" | sed -e "s/^master$/
 
 ### ローカル検証
 
-Go のテストは次のコマンドで実行する。
+Goのテストは次のコマンドで実行する。
 
 ```sh
 go test ./...
