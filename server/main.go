@@ -23,6 +23,8 @@ var (
 	envName  string
 )
 
+const databaseErrMessage = "database error"
+
 type ShortURLDataType struct {
 	Count   int64
 	URLData string
@@ -138,7 +140,7 @@ func createShortURL(c *echo.Context) (err error) {
 	tx, err := dsClient.NewTransaction(c.Request().Context())
 	if err != nil {
 		c.Logger().Error(err.Error())
-		return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
+		return c.JSON(http.StatusInternalServerError, RetJSONType{Message: databaseErrMessage})
 	}
 
 	if inputData.WantedShortURL == nil {
@@ -150,7 +152,7 @@ func createShortURL(c *echo.Context) (err error) {
 			key, hashKey, err = getKey(hashedURL[:i], tx)
 			if err != nil {
 				c.Logger().Error(err.Error())
-				return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
+				return c.JSON(http.StatusInternalServerError, RetJSONType{Message: databaseErrMessage})
 			}
 		}
 
@@ -164,7 +166,7 @@ func createShortURL(c *echo.Context) (err error) {
 		key, hashKey, err = getKey(*inputData.WantedShortURL, tx)
 		if err != nil {
 			c.Logger().Error(err.Error())
-			return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
+			return c.JSON(http.StatusInternalServerError, RetJSONType{Message: databaseErrMessage})
 		} else if hashKey == "" { // 希望するURLが存在してしまったので、登録できなかった
 			message := "No usable key: " + *inputData.WantedShortURL
 			c.Logger().Error(message)
@@ -178,13 +180,13 @@ func createShortURL(c *echo.Context) (err error) {
 		Count:   *inputData.Count,
 	}); err != nil {
 		c.Logger().Error(err.Error())
-		return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
+		return c.JSON(http.StatusInternalServerError, RetJSONType{Message: databaseErrMessage})
 	}
 
 	// トランザクションを確定させる
 	if _, err = tx.Commit(); err != nil {
 		c.Logger().Error(err.Error())
-		return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
+		return c.JSON(http.StatusInternalServerError, RetJSONType{Message: databaseErrMessage})
 	}
 
 	return c.JSON(http.StatusCreated, RetJSONType{Status: true, Message: "ok", HashKey: &hashKey})
@@ -200,7 +202,7 @@ func getLink(c *echo.Context) (err error) {
 	tx, err := dsClient.NewTransaction(c.Request().Context())
 	if err != nil {
 		c.Logger().Error(err.Error())
-		return c.JSON(http.StatusInternalServerError, RetJSONType{Message: "database error"})
+		return c.JSON(http.StatusInternalServerError, RetJSONType{Message: databaseErrMessage})
 	}
 
 	// 取り出す入れ物の作成
@@ -217,7 +219,7 @@ func getLink(c *echo.Context) (err error) {
 
 		// その他のエラー
 		c.Logger().Error(err.Error())
-		return c.JSON(http.StatusInternalServerError, RetJSONType{Status: false, Message: "database error"})
+		return c.JSON(http.StatusInternalServerError, RetJSONType{Status: false, Message: databaseErrMessage})
 	}
 
 	// データは存在するけど忘れてしまった
@@ -231,13 +233,13 @@ func getLink(c *echo.Context) (err error) {
 	// 一回引いた値を保存する
 	if _, err = tx.Put(key, data); err != nil {
 		c.Logger().Error(err.Error())
-		return c.JSON(http.StatusInternalServerError, RetJSONType{Status: false, Message: "database error"})
+		return c.JSON(http.StatusInternalServerError, RetJSONType{Status: false, Message: databaseErrMessage})
 	}
 
 	// トランザクションを確定させる
 	if _, err = tx.Commit(); err != nil {
 		c.Logger().Error(err.Error())
-		return c.JSON(http.StatusInternalServerError, RetJSONType{Status: false, Message: "database error"})
+		return c.JSON(http.StatusInternalServerError, RetJSONType{Status: false, Message: databaseErrMessage})
 	}
 
 	c.Response().Header().Set("Cache-Control", "no-store")
