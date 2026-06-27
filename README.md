@@ -20,6 +20,8 @@
 <https://pre-commit.com/>の手順に従って`pre-commit`をインストールする。  
 これにより、[.pre-commit-config.yaml](.pre-commit-config.yaml)の設定に基づいて、コミット時にクレデンシャルが含まれていないかの検査が行われるようになる。
 
+リポジトリ直下の`.env`にDocker Composeで使うポートを定義している。既定値ではフロントエンドが`http://localhost:8080/`、サーバーが`http://localhost:8082/`で起動する。
+
 ### 立ち上げ
 
 #### 編集するとhot reloadが走る、開発に適したバージョン
@@ -34,6 +36,21 @@ docker compose -f compose.yml -f dev.base.compose.yml -f dev.compose.yml watch
 
 ```sh
 TAG_NAME=`git symbolic-ref --short HEAD | sed -e "s:/:-:g" | sed -e "s/^master$/latest/g"` docker compose -f compose.yml -f staging.compose.yml up --build
+```
+
+### ローカル検証
+
+Goのテストは次のコマンドで実行する。
+
+```sh
+go test ./...
+```
+
+フロントエンドの本番ビルドは次のコマンドで確認する。
+
+```sh
+npm --prefix frontend ci
+npm --prefix frontend run build
 ```
 
 ## ARM64環境に対応したElmコンパイラに関して
