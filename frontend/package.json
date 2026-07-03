@@ -27,7 +27,7 @@
     "html-loader": "5.1.0",
     "html-webpack-plugin": "5.6.7",
     "webpack": "5.108.1",
-    "webpack-cli": "7.0.3",
+    "webpack-cli": "7.1.0",
     "webpack-dev-server": "5.2.5"
   },
   "packageManager": "npm@11.7.0",
