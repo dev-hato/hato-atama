@@ -245,7 +245,8 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
       - if: github.event_name != 'pull_request' || github.event.action != 'closed'
         uses: massongit/setup-takumi-guard-npm@add_working_directory
-        working-directory: frontend
+        with:
+          working-directory: frontend
       - name: Update packages (frontend)
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         run: npm install
@@ -258,7 +259,8 @@ jobs:
           cache-dependency-path: test/e2e/package-lock.json
       - if: github.event_name != 'pull_request' || github.event.action != 'closed'
         uses: massongit/setup-takumi-guard-npm@add_working_directory
-        working-directory: test/e2e
+        with:
+          working-directory: test/e2e
       - name: Update packages (test/e2e)
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         run: npm install
@@ -376,7 +378,8 @@ jobs:
           firefox-version: ${{ matrix.browser_version }}
       - run: bash "${GITHUB_WORKSPACE}/scripts/release/set_docker_compose_test_env.sh"
       - uses: massongit/setup-takumi-guard-npm@add_working_directory
-        working-directory: ./test/e2e
+        with:
+          working-directory: ./test/e2e
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
         run: bash "${GITHUB_WORKSPACE}/scripts/release/run_mini_test.sh"
@@ -421,7 +424,8 @@ jobs:
           firefox-version: ${{ matrix.browser_version }}
       - run: bash "${GITHUB_WORKSPACE}/scripts/release/set_docker_compose_test_env.sh"
       - uses: massongit/setup-takumi-guard-npm@add_working_directory
-        working-directory: ./test/e2e
+        with:
+          working-directory: ./test/e2e
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
         run: bash "${GITHUB_WORKSPACE}/scripts/release/run_all_test.sh"
@@ -547,7 +551,8 @@ jobs:
           firefox-version: ${{ matrix.browser_version }}
       - run: bash "${GITHUB_WORKSPACE}/scripts/release/set_prod_test_env.sh"
       - uses: massongit/setup-takumi-guard-npm@add_working_directory
-        working-directory: ./test/e2e
+        with:
+          working-directory: ./test/e2e
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
         run: bash "${GITHUB_WORKSPACE}/scripts/release/run_mini_test.sh"
@@ -581,7 +586,8 @@ jobs:
           firefox-version: ${{ matrix.browser_version }}
       - run: bash "${GITHUB_WORKSPACE}/scripts/release/set_prod_test_env.sh"
       - uses: massongit/setup-takumi-guard-npm@add_working_directory
-        working-directory: ./test/e2e
+        with:
+          working-directory: ./test/e2e
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
         run: bash "${GITHUB_WORKSPACE}/scripts/release/run_all_test.sh"
