@@ -178,6 +178,8 @@ jobs:
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         with:
           go-version: ${{steps.get_go_version.outputs.go_version}}
+      - if: github.event_name != 'pull_request' || github.event.action != 'closed'
+        uses: flatt-security/setup-takumi-guard-golang@2e3c7c40b538cd68b2ac483def12982ebc8bc02e # v1
       - name: Install goimports
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         run: bash "${GITHUB_WORKSPACE}/scripts/release/format_go/run_goimports.sh"
@@ -229,6 +231,8 @@ jobs:
         with:
           node-version-file: .node-version
           cache: npm
+      - if: github.event_name != 'pull_request' || github.event.action != 'closed'
+        uses: flatt-security/setup-takumi-guard-npm@9a5d797c2085b6326d3a2985c08e3a114b9b88c1 # v1.1.1
       - name: Update packages (.)
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         run: npm install
@@ -466,6 +470,7 @@ jobs:
         with:
           node-version-file: .node-version
           cache: npm
+      - uses: flatt-security/setup-takumi-guard-npm@9a5d797c2085b6326d3a2985c08e3a114b9b88c1 # v1.1.1
       - run: npm ci
       - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
@@ -601,6 +606,7 @@ jobs:
         with:
           node-version-file: .node-version
           cache: npm
+      - uses: flatt-security/setup-takumi-guard-npm@9a5d797c2085b6326d3a2985c08e3a114b9b88c1 # v1.1.1
       - run: npm ci
       - name: Get run numbers
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
