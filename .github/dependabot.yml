@@ -31,10 +31,6 @@ updates:
     schedule:
       interval: "daily"
     open-pull-requests-limit: 1
-    ignore:
-      - dependency-name: "golang"
-        versions:
-          - "*rc*"
     cooldown:
       default-days: 7
   - package-ecosystem: "elm"
