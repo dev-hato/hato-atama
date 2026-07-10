@@ -366,6 +366,8 @@ jobs:
         if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
+      - if: matrix.browser_name == 'edge'
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/install_edge.sh"
       - run: bash "${GITHUB_WORKSPACE}/scripts/release/set_docker_compose_test_env.sh"
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
@@ -409,6 +411,8 @@ jobs:
         if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
+      - if: matrix.browser_name == 'edge'
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/install_edge.sh"
       - run: bash "${GITHUB_WORKSPACE}/scripts/release/set_docker_compose_test_env.sh"
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
@@ -509,7 +513,7 @@ jobs:
           path: ${{ env.ARTIFACT_PATH }}
   e2e-test-mini-prd:
     runs-on: ubuntu-latest
-    timeout-minutes: 2
+    timeout-minutes: 4
     needs:
       - deploy-app-engine
       - e2e-test-mini-docker-compose
@@ -533,6 +537,8 @@ jobs:
         if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
+      - if: matrix.browser_name == 'edge'
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/install_edge.sh"
       - run: bash "${GITHUB_WORKSPACE}/scripts/release/set_prod_test_env.sh"
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
@@ -540,7 +546,7 @@ jobs:
         working-directory: ./test/e2e
   e2e-test-all-prd:
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 5
     needs:
       - e2e-test-all-docker-compose
       - e2e-test-mini-prd
@@ -565,6 +571,8 @@ jobs:
         if: matrix.browser_name == 'firefox'
         with:
           firefox-version: ${{ matrix.browser_version }}
+      - if: matrix.browser_name == 'edge'
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/install_edge.sh"
       - run: bash "${GITHUB_WORKSPACE}/scripts/release/set_prod_test_env.sh"
       - env:
           BROWSER_NAME: ${{ matrix.browser_name }}
