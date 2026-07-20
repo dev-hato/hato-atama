@@ -5,7 +5,7 @@ go 1.26.4
 require (
 	cloud.google.com/go/datastore v1.24.0
 	github.com/go-playground/validator/v10 v10.30.3
-	github.com/labstack/echo/v5 v5.2.1
+	github.com/labstack/echo/v5 v5.3.0
 )
 
 require (
