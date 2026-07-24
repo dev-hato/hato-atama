@@ -9,23 +9,24 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates curl \
     && rm -rf /var/lib/apt/lists
 
-COPY elm/elm_arm64 /usr/local/bin/elm
-
 WORKDIR /usr/src/app
 
 COPY frontend/elm.json ./
 
-# https://github.com/elm/compiler/blob/24d3a89469e75cf7aa579442ecaf5ddfdd192ab2/installers/linux/README.md
-RUN if [ "${TARGETPLATFORM}" != "linux/arm64" ]; then \
-        curl -L https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o /usr/bin/yq; \
-        chmod +x /usr/bin/yq; \
-        elm_version="$(yq -oy '."elm-version"' elm.json)"; \
-        curl -L -o elm.gz "https://github.com/elm/compiler/releases/download/${elm_version}/binary-for-linux-64-bit.gz"; \
-        gunzip elm.gz; \
-        chmod +x elm; \
-        mv elm /usr/local/bin/; \
-        rm /usr/bin/yq; \
-    fi
+# https://github.com/elm/compiler/blob/c51bdd69efb4b426539229aebf96be5fcb20fce3/installers/linux/README.md
+RUN curl -L "https://github.com/mikefarah/yq/releases/latest/download/yq_${TARGETPLATFORM//\//_}" -o /usr/bin/yq \
+    && chmod +x /usr/bin/yq \
+    && elm_version="$(yq -oy '."elm-version"' elm.json)" \
+    && if [ "${TARGETPLATFORM}" = "linux/arm64" ]; then \
+      arch=linux-arm; \
+    else \
+      arch=linux-x64; \
+    fi \
+    && curl -L -o elm.gz "https://github.com/elm/compiler/releases/download/${elm_version}/elm-${elm_version}-${arch}.gz" \
+    && gunzip elm.gz \
+    && chmod +x elm \
+    && mv elm /usr/local/bin/ \
+    && rm /usr/bin/yq
 
 RUN find / -type f -perm /u+s -ignore_readdir_race -exec chmod u-s {} \; \
     && find / -type f -perm /g+s -ignore_readdir_race -exec chmod g-s {} \; \

@@ -6,13 +6,6 @@
 version: 2
 updates:
   - package-ecosystem: "docker"
-    directory: "/elm"
-    schedule:
-      interval: "daily"
-    open-pull-requests-limit: 1
-    cooldown:
-      default-days: 7
-  - package-ecosystem: "docker"
     directory: "/frontend"
     schedule:
       interval: "daily"

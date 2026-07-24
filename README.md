@@ -52,14 +52,3 @@ go test ./...
 npm --prefix frontend ci
 npm --prefix frontend run build
 ```
-
-## ARM64環境に対応したElmコンパイラに関して
-
-ARM64環境に対応したElmコンパイラを`elm/elm_arm64`として配置しています。  
-ARM64環境で開発環境を立ち上げると、こちらのコンパイラを使ってフロントエンドのビルドが行われます。  
-ARM64環境に対応したElmコンパイラのビルドを行いたい場合はARM64環境で次のコマンドを実行します。
-
-```sh
-cd elm
-./make_compiler.sh
-```

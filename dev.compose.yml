@@ -56,8 +56,6 @@ services:
         - action: rebuild
           path: ./dev.compose.yml
         - action: rebuild
-          path: ./elm/elm_arm64
-        - action: rebuild
           path: ./frontend/elm.json
         - action: rebuild
           path: ./frontend/.npmrc
