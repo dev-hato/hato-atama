@@ -1,6 +1,5 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const path = require("node:path");
 
 module.exports = {
@@ -24,11 +23,11 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "index.[contenthash].js",
+    clean: true,
   },
   plugins: [
     new CopyPlugin({ patterns: [{ from: "public/", to: "." }] }),
     new HtmlWebpackPlugin({ template: "./src/index.html" }),
-    new CleanWebpackPlugin(),
   ],
   devServer: {
     port: process.env.FRONTEND_PORT,
