@@ -7,11 +7,6 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.html$/i,
-        exclude: [/elm-stuff/, /node_modules/],
-        loader: "html-loader",
-      },
-      {
         test: /\.elm$/,
         exclude: [/elm-stuff/, /node_modules/],
 
