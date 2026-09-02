@@ -39,6 +39,7 @@ COPY frontend/.npmrc .
 COPY frontend/package*.json ./
 RUN npm ci
 
+COPY frontend/elm-watch.json ./
 COPY frontend/webpack.config.js ./
 COPY frontend/src ./src
 COPY frontend/public ./public
