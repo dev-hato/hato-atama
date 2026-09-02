@@ -10,4 +10,12 @@ elmScript.addEventListener("load", () => {
     node: document.getElementById("main"),
   });
 });
+elmScript.addEventListener("error", () => {
+  console.error("Failed to load /elm.js");
+  const main = document.getElementById("main");
+  if (main !== null) {
+    main.textContent =
+      "アプリの読み込みに失敗しました。ページを再読み込みしてください。";
+  }
+});
 document.head.appendChild(elmScript);
