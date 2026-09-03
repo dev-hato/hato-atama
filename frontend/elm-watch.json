@@ -1,0 +1,9 @@
+{
+  "port": 9988,
+  "targets": {
+    "main": {
+      "inputs": ["src/Main.elm"],
+      "output": "build/elm.js"
+    }
+  }
+}

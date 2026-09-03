@@ -50,6 +50,8 @@ services:
         - action: rebuild
           path: ./frontend/Dockerfile
         - action: rebuild
+          path: ./frontend/elm-watch.json
+        - action: rebuild
           path: ./compose.yml
         - action: rebuild
           path: ./dev.base.compose.yml

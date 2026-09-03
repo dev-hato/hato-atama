@@ -18,3 +18,10 @@ import "./commands";
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
+
+/* global Cypress */
+
+// dev 環境のフロントエンドは elm-watch hot で動いており、実 JS を生成するまでの間 window.Elm のスタブ（Proxy）を配信する。
+// この Proxy はプロパティアクセスで例外を投げ、直後に elm-watch がページを自動リロードして実 Elm に差し替える想定の挙動。
+// elm-watch は識別用に error.elmWatchProxy = true を付けているので、この例外だけ無視する。
+Cypress.on("uncaught:exception", (err) => err?.elmWatchProxy !== true);
