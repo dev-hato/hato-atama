@@ -445,13 +445,9 @@ jobs:
         with:
           workload_identity_provider: ${{env.GCP_WORKLOAD_IDENTITY_PROVIDER}}
           service_account: ${{env.GCP_SERVICE_ACCOUNT}}
+      - uses: google-github-actions/setup-gcloud@aa5489c8933f4cc7a4f7d45035b3b1440c9c10db # v3.0.1
       - name: Deploy to App Engine
-        uses: google-github-actions/deploy-appengine@54d5fc7167ec790eb0233905e3cef384221b4619 # v3.0.1
-        with:
-          deliverables: app.yaml
-          project_id: hato-atama
-          promote: false
-          version: "v${{github.run_number}}"
+        run: gcloud app deploy app.yaml --project hato-atama --version "v${GITHUB_RUN_NUMBER}" --no-promote --quiet
       - name: Wait for the deployment to complete
         env:
           RUN_NUMBER: ${{github.run_number}}
