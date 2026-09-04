@@ -435,9 +435,9 @@ jobs:
         with:
           name: frontend
           path: frontend/dist
-      - run: bash "${GITHUB_WORKSPACE}/scripts/release/deploy_app_engine/set_config.sh"
+      - run: 'echo -e "env_variables:\n  ENV_NAME: \"v${GITHUB_RUN_NUMBER}\"\nautomatic_scaling:\n  max_instances: 1" >>app.yaml'
         if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
-      - run: 'echo -e "env_variables:\n  ENV_NAME: \"prd\"" >> app.yaml'
+      - run: 'echo -e "env_variables:\n  ENV_NAME: \"prd\"\nautomatic_scaling:\n  max_instances: 20" >> app.yaml'
         if: ${{ github.event_name == 'push' }}
       - id: "auth"
         name: "Authenticate to GCP"
