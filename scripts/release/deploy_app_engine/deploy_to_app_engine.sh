@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 set -e
 
+version="v${RUN_NUMBER}"
+gcloud app deploy app.yaml --version "$version" --no-promote --quiet
+
 # 最大10分待つ
 for i in $(seq 600); do
 	serving_status=$(gcloud app versions describe \
-		"v${RUN_NUMBER}" \
+		"$version" \
 		--service "default" \
 		--format \
 		"value(servingStatus)")

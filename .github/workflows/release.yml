@@ -435,9 +435,9 @@ jobs:
         with:
           name: frontend
           path: frontend/dist
-      - run: bash "${GITHUB_WORKSPACE}/scripts/release/deploy_app_engine/set_config.sh"
+      - run: 'echo -e "env_variables:\n  ENV_NAME: \"v${GITHUB_RUN_NUMBER}\"\nautomatic_scaling:\n  max_instances: 1" >>app.yaml'
         if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
-      - run: 'echo -e "env_variables:\n  ENV_NAME: \"prd\"" >> app.yaml'
+      - run: 'echo -e "env_variables:\n  ENV_NAME: \"prd\"\nautomatic_scaling:\n  max_instances: 20" >> app.yaml'
         if: ${{ github.event_name == 'push' }}
       - id: "auth"
         name: "Authenticate to GCP"
@@ -445,17 +445,13 @@ jobs:
         with:
           workload_identity_provider: ${{env.GCP_WORKLOAD_IDENTITY_PROVIDER}}
           service_account: ${{env.GCP_SERVICE_ACCOUNT}}
-      - name: Deploy to App Engine
-        uses: google-github-actions/deploy-appengine@54d5fc7167ec790eb0233905e3cef384221b4619 # v3.0.1
+      - uses: google-github-actions/setup-gcloud@aa5489c8933f4cc7a4f7d45035b3b1440c9c10db # v3.0.1
         with:
-          deliverables: app.yaml
           project_id: hato-atama
-          promote: false
-          version: "v${{github.run_number}}"
-      - name: Wait for the deployment to complete
+      - name: Deploy to App Engine
         env:
           RUN_NUMBER: ${{github.run_number}}
-        run: bash "${GITHUB_WORKSPACE}/scripts/release/deploy_app_engine/wait_for_deployment.sh"
+        run: bash "${GITHUB_WORKSPACE}/scripts/release/deploy_app_engine/deploy_to_app_engine.sh"
   create-pr-environment:
     runs-on: ubuntu-latest
     needs: deploy-app-engine
