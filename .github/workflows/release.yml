@@ -180,7 +180,7 @@ jobs:
           go-version: ${{steps.get_go_version.outputs.go_version}}
       - if: github.event_name != 'pull_request' || github.event.action != 'closed'
         uses: flatt-security/setup-takumi-guard-golang@37631ecffa6faf06754444a4807451b7a55c64b5 # v1
-      - name: Install goimports
+      - name: Fix and format Go
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         run: bash "${GITHUB_WORKSPACE}/scripts/release/format_go/run_goimports.sh"
         env:
