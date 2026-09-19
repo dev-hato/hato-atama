@@ -1,14 +1,24 @@
 # Ref https://github.com/golangci/golangci-lint/blob/master/.golangci.reference.yml
 version: "2"
 linters:
-  enable:
-    - goconst
-    - gocritic
-    - gocyclo
-    - gosec
-    - govet
-    - revive
-    - unconvert
+  default: all
+  disable:
+    - cyclop # 循環的複雑度は既存のgocycloで検査する
+    - depguard # importの許可・禁止リストは設けない
+    - exhaustruct # ゼロ値を使うフィールドの明示的な初期化は強制しない
+    - forbidigo # CLIの標準出力を含め、識別子の一律禁止は行わない
+    - gochecknoglobals # 共有クライアントや設定値のパッケージ変数を許可する
+    - godot # 日本語コメントに英文のピリオドを強制しない
+    - gomodguard # 非推奨の旧版。gomodguard_v2を使う
+    - mnd # 名前付き設定フィールドへの数値リテラルを許可する
+    - nestif # ネストの深さの制限は設けず、複雑度はgocycloで検査する
+    - nlreturn # return前の空行は強制しない
+    - noinlineerr # if内でのエラー処理を許可する
+    - nonamedreturns # 名前付き戻り値を許可する
+    - varnamelen # cやtxなど、文脈から分かる短い変数名を許可する
+    - wrapcheck # Echoなどのエラーをそのまま呼び出し元に返すことを許可する
+    - wsl # 非推奨の旧版。空行の配置は強制しない
+    - wsl_v5 # 空行の配置は強制しない
   settings:
     errcheck:
       check-blank: true
@@ -17,6 +27,10 @@ linters:
     govet:
       enable:
         - shadow
+    tagliatelle:
+      case:
+        rules:
+          json: snake
   exclusions:
     generated: lax
     presets:

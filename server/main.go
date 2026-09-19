@@ -5,6 +5,7 @@ import (
 	"crypto/sha512"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -103,7 +104,7 @@ func getKey(url string, tx *datastore.Transaction) (key *datastore.Key, hashKey 
 	v := &ShortURLDataType{}
 
 	if err = tx.Get(keyCandidate, v); err != nil {
-		if err == datastore.ErrNoSuchEntity {
+		if errors.Is(err, datastore.ErrNoSuchEntity) {
 			// 存在していないキーが見つかったらそれを返す
 			return keyCandidate, url, nil
 		}
@@ -211,9 +212,8 @@ func getLink(c *echo.Context) (err error) {
 
 	// 取り出す処理
 	if err = tx.Get(key, data); err != nil {
-
 		// データが存在しなかった
-		if err == datastore.ErrNoSuchEntity {
+		if errors.Is(err, datastore.ErrNoSuchEntity) {
 			return c.JSON(http.StatusNotFound, RetJSONType{Status: false, Message: "not found"})
 		}
 

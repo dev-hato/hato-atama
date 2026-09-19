@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"net"
 	"net/http"
 	"net/url"
@@ -28,8 +29,17 @@ func main() {
 		Path:   "/ping",
 	}
 
-	res, err := http.Get(u.String())
-	if err != nil || res.StatusCode != http.StatusNoContent {
+	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet, u.String(), nil)
+	if err != nil {
+		os.Exit(1)
+	}
+
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		os.Exit(1)
+	}
+
+	if err := res.Body.Close(); err != nil || res.StatusCode != http.StatusNoContent {
 		os.Exit(1)
 	}
 }
