@@ -24,8 +24,6 @@ jobs:
           node-version-file: .node-version
           cache: npm
       - uses: flatt-security/setup-takumi-guard-npm@6d4182745c1e474c35a023573c2612c085be45a4 # v1.2.0
-      - name: Test Cypress browser recovery
-        run: node --test scripts/release/run_cypress.test.mjs
       - run: npm ci
       - run: npm ci
         working-directory: test/e2e

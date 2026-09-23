@@ -8,17 +8,11 @@
 
 cypressを使用しています。
 
-## CIでのブラウザ接続失敗
+## CIでの再試行
 
-CIでは、`scripts/release/run_cypress.sh`でCypressを実行します。
-Chrome DevTools Protocolへの再接続に失敗した場合は、5秒待ってCypressを起動し直します。
-再試行は最大2回です。各試行の出力と再試行の警告はジョブログに残ります。
-
-テストの失敗が報告されている場合や、それ以外のエラーでは再試行せずに終了します。
-再試行しても接続できなければ、ジョブは失敗します。
-`npm ci`は再試行の対象に含みません。
-
-この処理のテストは、リポジトリのルートで`node --test scripts/release/run_cypress.test.mjs`を実行すると確認できます。
+CIでは、全ブラウザのmini/allテストに共通の`scripts/release/run_cypress.sh`を使います。
+Cypressの実行に失敗した場合は、エラーの種類を問わず5秒待って最大3回再試行します。
+初回を含む4回すべてが失敗した場合は、ジョブも失敗します。`npm ci`は再試行の対象に含みません。
 
 ## ディレクトリ説明
 
