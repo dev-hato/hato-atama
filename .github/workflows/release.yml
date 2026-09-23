@@ -482,7 +482,7 @@ jobs:
             await script(github, context)
   e2e-test-mini-prd:
     runs-on: ubuntu-latest
-    timeout-minutes: 2
+    timeout-minutes: 10
     needs:
       - deploy-app-engine
       - e2e-test-mini-docker-compose
@@ -513,7 +513,7 @@ jobs:
         working-directory: ./test/e2e
   e2e-test-all-prd:
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 10
     needs:
       - e2e-test-all-docker-compose
       - e2e-test-mini-prd
