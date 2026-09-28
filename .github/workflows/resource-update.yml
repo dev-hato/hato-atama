@@ -25,6 +25,8 @@ jobs:
           node-version-file: ${{ matrix.path }}/.node-version
           cache: npm
           cache-dependency-path: ${{ matrix.path }}/package-lock.json
+      - uses: flatt-security/setup-takumi-guard-npm@3d2e7e64161c6fb76c74abd6600e4248d4859153 # v1.3.0
+        if: github.event_name != 'pull_request' || github.event.action != 'closed'
       - name: ncu install
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         run: bash "${GITHUB_WORKSPACE}/scripts/resource_update/update.sh"
