@@ -1,0 +1,3 @@
+[[IgnoredVulns]]
+id = "GO-2026-5932"
+reason = "golang.org/x/crypto/openpgpの非推奨勧告で修正版が存在しない。本リポジトリおよび依存パッケージはopenpgpをimportしておらず影響を受けない。"
