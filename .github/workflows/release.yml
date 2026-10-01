@@ -56,6 +56,7 @@ jobs:
           node-version-file: frontend/.node-version
           cache: npm
           cache-dependency-path: frontend/package-lock.json
+      - uses: flatt-security/setup-takumi-guard-npm@3d2e7e64161c6fb76c74abd6600e4248d4859153 # v1.3.0
       - name: Build
         run: bash "${GITHUB_WORKSPACE}/scripts/release/build_frontend/build.sh"
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -83,19 +84,19 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@1f40c72289eff860ee54a304f1438e3cff362e0a # v4.3.0
+        uses: docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1 # v4.4.0
       - name: Set up QEMU (multiarch/qemu-user-static)
         run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes -c yes
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e # v4.3.0
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
       - run: cat .env >>"$GITHUB_ENV"
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
         env:
           HEAD_REF: ${{github.head_ref || github.event.merge_group.head_ref}}
         if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
       - name: Build and push
-        uses: docker/bake-action@d3418bd7d0e9324001bca92fa8ba175ea7e6dc9b # v7.3.0
+        uses: docker/bake-action@018cb6412ab401ebaa809aa5f85966b74628600f # v7.4.0
         env:
           DOCKER_CONTENT_TRUST: 1
         with:
@@ -123,24 +124,24 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@1f40c72289eff860ee54a304f1438e3cff362e0a # v4.3.0
+        uses: docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1 # v4.4.0
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e # v4.3.0
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
       - run: cat .env >>"$GITHUB_ENV"
       - run: echo "TAG_NAME=${HEAD_REF//\//-}" >> "$GITHUB_ENV"
         env:
           HEAD_REF: ${{github.head_ref || github.event.merge_group.head_ref}}
         if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
       - name: Build and push (dev)
-        uses: docker/bake-action@d3418bd7d0e9324001bca92fa8ba175ea7e6dc9b # v7.3.0
+        uses: docker/bake-action@018cb6412ab401ebaa809aa5f85966b74628600f # v7.4.0
         env:
           DOCKER_CONTENT_TRUST: 1
         with:
           push: true
           files: compose.yml,dev.base.compose.yml
       - name: Build and push (staging)
-        uses: docker/bake-action@d3418bd7d0e9324001bca92fa8ba175ea7e6dc9b # v7.3.0
+        uses: docker/bake-action@018cb6412ab401ebaa809aa5f85966b74628600f # v7.4.0
         env:
           DOCKER_CONTENT_TRUST: 1
         with:
@@ -180,7 +181,7 @@ jobs:
           go-version: ${{steps.get_go_version.outputs.go_version}}
       - if: github.event_name != 'pull_request' || github.event.action != 'closed'
         uses: flatt-security/setup-takumi-guard-golang@37631ecffa6faf06754444a4807451b7a55c64b5 # v1
-      - name: Install goimports
+      - name: Fix and format Go
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         run: bash "${GITHUB_WORKSPACE}/scripts/release/format_go/run_goimports.sh"
         env:
@@ -232,7 +233,7 @@ jobs:
           node-version-file: .node-version
           cache: npm
       - if: github.event_name != 'pull_request' || github.event.action != 'closed'
-        uses: flatt-security/setup-takumi-guard-npm@6d4182745c1e474c35a023573c2612c085be45a4 # v1.2.0
+        uses: flatt-security/setup-takumi-guard-npm@3d2e7e64161c6fb76c74abd6600e4248d4859153 # v1.3.0
       - name: Update packages (.)
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         run: npm install
@@ -329,6 +330,7 @@ jobs:
           node-version-file: frontend/.node-version
           cache: npm
           cache-dependency-path: frontend/package-lock.json
+      - uses: flatt-security/setup-takumi-guard-npm@3d2e7e64161c6fb76c74abd6600e4248d4859153 # v1.3.0
       - name: Set Browserslist
         id: set_browserslist
         run: bash "${GITHUB_WORKSPACE}/scripts/release/make_browserslist/set_browserslist.sh"
@@ -360,6 +362,7 @@ jobs:
           node-version-file: test/e2e/.node-version
           cache: npm
           cache-dependency-path: test/e2e/package-lock.json
+      - uses: flatt-security/setup-takumi-guard-npm@3d2e7e64161c6fb76c74abd6600e4248d4859153 # v1.3.0
       - if: matrix.browser_name == 'firefox'
         run: bash "${GITHUB_WORKSPACE}/scripts/release/install_firefox_dependencies.sh"
       - uses: browser-actions/setup-firefox@0bc507ddf224827e3b1af68e014d5e42ab93e795 # v1.7.2
@@ -403,6 +406,7 @@ jobs:
           node-version-file: test/e2e/.node-version
           cache: npm
           cache-dependency-path: test/e2e/package-lock.json
+      - uses: flatt-security/setup-takumi-guard-npm@3d2e7e64161c6fb76c74abd6600e4248d4859153 # v1.3.0
       - if: matrix.browser_name == 'firefox'
         run: bash "${GITHUB_WORKSPACE}/scripts/release/install_firefox_dependencies.sh"
       - uses: browser-actions/setup-firefox@0bc507ddf224827e3b1af68e014d5e42ab93e795 # v1.7.2
@@ -466,7 +470,7 @@ jobs:
         with:
           node-version-file: .node-version
           cache: npm
-      - uses: flatt-security/setup-takumi-guard-npm@6d4182745c1e474c35a023573c2612c085be45a4 # v1.2.0
+      - uses: flatt-security/setup-takumi-guard-npm@3d2e7e64161c6fb76c74abd6600e4248d4859153 # v1.3.0
       - run: npm ci
       - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
@@ -482,7 +486,7 @@ jobs:
             await script(github, context)
   e2e-test-mini-prd:
     runs-on: ubuntu-latest
-    timeout-minutes: 2
+    timeout-minutes: 10
     needs:
       - deploy-app-engine
       - e2e-test-mini-docker-compose
@@ -500,6 +504,7 @@ jobs:
           node-version-file: test/e2e/.node-version
           cache: npm
           cache-dependency-path: test/e2e/package-lock.json
+      - uses: flatt-security/setup-takumi-guard-npm@3d2e7e64161c6fb76c74abd6600e4248d4859153 # v1.3.0
       - if: matrix.browser_name == 'firefox'
         run: bash "${GITHUB_WORKSPACE}/scripts/release/install_firefox_dependencies.sh"
       - uses: browser-actions/setup-firefox@0bc507ddf224827e3b1af68e014d5e42ab93e795 # v1.7.2
@@ -513,7 +518,7 @@ jobs:
         working-directory: ./test/e2e
   e2e-test-all-prd:
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 10
     needs:
       - e2e-test-all-docker-compose
       - e2e-test-mini-prd
@@ -532,6 +537,7 @@ jobs:
           node-version-file: test/e2e/.node-version
           cache: npm
           cache-dependency-path: test/e2e/package-lock.json
+      - uses: flatt-security/setup-takumi-guard-npm@3d2e7e64161c6fb76c74abd6600e4248d4859153 # v1.3.0
       - if: matrix.browser_name == 'firefox'
         run: bash "${GITHUB_WORKSPACE}/scripts/release/install_firefox_dependencies.sh"
       - uses: browser-actions/setup-firefox@0bc507ddf224827e3b1af68e014d5e42ab93e795 # v1.7.2
@@ -579,7 +585,7 @@ jobs:
         with:
           node-version-file: .node-version
           cache: npm
-      - uses: flatt-security/setup-takumi-guard-npm@6d4182745c1e474c35a023573c2612c085be45a4 # v1.2.0
+      - uses: flatt-security/setup-takumi-guard-npm@3d2e7e64161c6fb76c74abd6600e4248d4859153 # v1.3.0
       - run: npm ci
       - name: Get run numbers
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
