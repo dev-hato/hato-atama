@@ -1,6 +1,7 @@
 {
   "min-lines": 15,
   "reporters": ["consoleFull"],
+  "noGitignore": true,
   "ignore": ["**/__snapshots__/**", "**/node_modules/**"],
   "absolute": true
 }
