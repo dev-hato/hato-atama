@@ -44,11 +44,11 @@ RUN apt-get update \
        && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir /app  \
-    && useradd -m appuser \
+    && useradd -m -u 1000 appuser \
     && chown appuser:appuser /app
 
 WORKDIR /app
-USER appuser
+USER 1000
 
 COPY frontend/elm.json ./
 RUN elm_version="$(yq -oy '."elm-version"' elm.json)" \

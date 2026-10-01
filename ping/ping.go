@@ -24,9 +24,17 @@ func main() {
 	}
 
 	u := url.URL{
-		Scheme: "http",
-		Host:   net.JoinHostPort("localhost", strconv.Itoa(port)),
-		Path:   "/ping",
+		Scheme:      "http",
+		Opaque:      "",
+		User:        nil,
+		Host:        net.JoinHostPort("localhost", strconv.Itoa(port)),
+		Path:        "/ping",
+		RawPath:     "",
+		OmitHost:    false,
+		ForceQuery:  false,
+		RawQuery:    "",
+		Fragment:    "",
+		RawFragment: "",
 	}
 
 	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet, u.String(), nil)
