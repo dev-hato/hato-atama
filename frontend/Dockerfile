@@ -31,7 +31,7 @@ RUN find / -type f -perm /u+s -ignore_readdir_race -exec chmod u-s {} \; \
     && find / -type f -perm /g+s -ignore_readdir_race -exec chmod g-s {} \; \
     && chown -R node:node /usr/src/app
 
-USER node
+USER 1000
 
 FROM base AS build
 
@@ -57,7 +57,7 @@ RUN find / -type f -perm /u+s -ignore_readdir_race -exec chmod u-s {} \; \
     && find / -type f -perm /g+s -ignore_readdir_race -exec chmod g-s {} \; \
     && touch /var/run/nginx.pid \
     && chown -R nginx:nginx /var/run/nginx.pid /var/cache/nginx /etc/nginx/conf.d
-USER nginx
+USER 101
 
 COPY frontend/nginx/ /etc/nginx/
 
