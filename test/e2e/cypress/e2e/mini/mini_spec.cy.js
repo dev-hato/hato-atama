@@ -2,7 +2,7 @@
 
 describe("短縮URLを生成できる", () => {
   it("三回までは200だが、4回目以降は404が返る", () => {
-    const apiHost = Cypress.env("API_HOST");
+    const apiHost = Cypress.expose("API_HOST");
 
     cy.visit(apiHost);
 
