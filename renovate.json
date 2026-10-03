@@ -12,6 +12,31 @@
   "ignoreDeps": ["go", "node-fetch", "eslint"],
   "packageRules": [
     {
+      "description": "Updated together with Super-Linter by update-package",
+      "matchFileNames": ["package.json"],
+      "matchPackageNames": [
+        "textlint",
+        "textlint-rule-*",
+        "textlint-filter-rule-*",
+        "@*/textlint-rule-*",
+        "@*/textlint-filter-rule-*"
+      ],
+      "enabled": false
+    },
+    {
+      "description": "Updated together with Super-Linter by update-package",
+      "matchFileNames": ["test/e2e/package.json"],
+      "matchPackageNames": ["eslint", "eslint-plugin*"],
+      "enabled": false
+    },
+    {
+      "description": "Updated together with Super-Linter by update-gitleaks",
+      "matchManagers": ["pre-commit"],
+      "matchFileNames": [".pre-commit-config.yaml"],
+      "matchPackageNames": ["zricethezav/gitleaks", "gitleaks/gitleaks"],
+      "enabled": false
+    },
+    {
       "groupName": "artifact",
       "matchPackageNames": [
         "actions/download-artifact",
