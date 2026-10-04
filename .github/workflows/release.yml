@@ -240,7 +240,7 @@ jobs:
       - name: Synchronize Super-Linter dependencies
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         run: |
-          node --test scripts/release/update_package/sync_super_linter.test.mjs
+          node --test scripts/release/update_package/*.test.mjs
           node scripts/release/update_package/sync_super_linter.mjs
       - name: Update packages (.)
         if: github.event_name != 'pull_request' || github.event.action != 'closed'

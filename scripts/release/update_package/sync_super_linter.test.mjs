@@ -1,7 +1,9 @@
 import assert from "node:assert/strict";
+import { fileURLToPath } from "node:url";
 import test from "node:test";
 import {
   isCompatible,
+  loadImageVersions,
   loadRegistryMetadata,
   planUpdates,
   selectCompatibleVersion,
@@ -26,6 +28,33 @@ const registryData = {
     times: { "6.4.4": old, "7.0.2": old },
   },
 };
+
+test("the Docker reader mounts the linted module read-only and passes package names", () => {
+  const image = "ghcr.io/super-linter/super-linter:slim-v9.0.0";
+  const names = ["eslint", "@scope/custom-rule"];
+  const versions = { eslint: "9.39.4", "@scope/custom-rule": null };
+  const readerPath = fileURLToPath(
+    new URL("./read_super_linter_versions.mjs", import.meta.url),
+  );
+  assert.deepEqual(
+    loadImageVersions(image, names, (command, args) => {
+      assert.equal(command, "docker");
+      assert.deepEqual(args, [
+        "run",
+        "--rm",
+        "--entrypoint",
+        "node",
+        "--mount",
+        `type=bind,source=${readerPath},target=/tmp/read_super_linter_versions.mjs,readonly`,
+        image,
+        "/tmp/read_super_linter_versions.mjs",
+        JSON.stringify(names),
+      ]);
+      return JSON.stringify(versions);
+    }),
+    versions,
+  );
+});
 
 function eslintPlan(overrides = {}) {
   return planUpdates({
