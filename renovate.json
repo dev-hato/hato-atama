@@ -9,13 +9,19 @@
     "**/tests/**",
     "**/__fixtures__/**"
   ],
-  "ignoreDeps": ["go", "node-fetch", "eslint"],
+  "ignoreDeps": [
+    "go",
+    "node-fetch",
+    "eslint",
+    "textlint",
+    "zricethezav/gitleaks",
+    "gitleaks/gitleaks"
+  ],
   "packageRules": [
     {
       "description": "Updated together with Super-Linter by update-package",
       "matchFileNames": ["package.json"],
       "matchPackageNames": [
-        "textlint",
         "textlint-rule-*",
         "textlint-filter-rule-*",
         "@*/textlint-rule-*",
@@ -26,14 +32,7 @@
     {
       "description": "Updated together with Super-Linter by update-package",
       "matchFileNames": ["test/e2e/package.json"],
-      "matchPackageNames": ["eslint", "eslint-plugin*"],
-      "enabled": false
-    },
-    {
-      "description": "Updated together with Super-Linter by update-gitleaks",
-      "matchManagers": ["pre-commit"],
-      "matchFileNames": [".pre-commit-config.yaml"],
-      "matchPackageNames": ["zricethezav/gitleaks", "gitleaks/gitleaks"],
+      "matchPackageNames": ["eslint-plugin*"],
       "enabled": false
     },
     {
