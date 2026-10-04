@@ -53,6 +53,14 @@ npm --prefix frontend ci
 npm --prefix frontend run build
 ```
 
+### Node.jsの更新
+
+Node.jsは、[frontend/Dockerfile](frontend/Dockerfile)の`base`ステージで使うDockerイメージを基準にする。Dockerイメージを更新すると、`release`の`update-package`が実コンテナからNode.jsの版を取得する。取得した版をルート・`frontend`・`test/e2e`の`.node-version`と`engines.node`へ反映する。`engines.node`には、Dependabotの実行環境用に許容している版も含める。
+
+同期後に`npm install`でlockfileを更新し、差分があれば`actions-diff-pr-management`で元のPR向けの修正PRを作成する。修正PRを元のブランチへマージしてから、Dockerイメージの更新PRを取り込む。
+
+Node.jsの設定だけを先に更新することを防ぐため、RenovateとDependabotの個別更新から除外している。基準となるDockerイメージの更新は、RenovateとDependabotで継続する。
+
 ### lint依存の更新
 
 ESLint、textlintとそのプラグイン・ルールは、RenovateとDependabotの個別更新から除外している。Super-Linterに同梱されるパッケージは同梱版に揃え、追加のプラグイン・ルールは同梱ツールに対応する安定版を選ぶ。追加パッケージの更新は、同梱ツールのバージョンが変わったとき、または現在の依存関係が対応範囲を外れたときに行う。Git参照で指定したルールは、その参照を維持する。
