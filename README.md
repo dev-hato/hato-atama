@@ -53,6 +53,14 @@ npm --prefix frontend ci
 npm --prefix frontend run build
 ```
 
+### lint依存の更新
+
+ESLint、textlintとそのプラグイン・ルールは、RenovateとDependabotの個別更新から除外している。Super-Linterに同梱されるパッケージは同梱版に揃え、追加のプラグイン・ルールは同梱ツールに対応する安定版を選ぶ。追加パッケージの更新は、同梱ツールのバージョンが変わったとき、または現在の依存関係が対応範囲を外れたときに行う。Git参照で指定したルールは、その参照を維持する。
+
+`release`の`update-package`がバージョンとlockfileを更新し、`actions-diff-pr-management`で修正PRを作成する。修正PRを元のPRのブランチへマージすると、元のPRでも同期済みの状態でCIが実行される。Gitleaksは既存の`update-gitleaks`が同じ流れでSuper-Linterの同梱版に同期する。
+
+Go本体はサーバーのDockerイメージとApp Engineを基準に管理する。
+
 ## ARM64環境に対応したElmコンパイラに関して
 
 ARM64環境に対応したElmコンパイラを`elm/elm_arm64`として配置しています。  

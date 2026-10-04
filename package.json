@@ -7,11 +7,13 @@
     "@octokit/plugin-rest-endpoint-methods": "18.0.0"
   },
   "devDependencies": {
+    "@npmcli/config": "10.13.0",
     "@proofdict/textlint-rule-proofdict": "3.1.2",
     "@textlint-ja/textlint-rule-no-insert-dropping-sa": "2.0.1",
     "cheerio": "1.2.0",
     "domhandler": "6.0.1",
     "node-fetch": "2.6.12",
+    "semver": "7.8.5",
     "textlint": "15.8.0",
     "textlint-filter-rule-comments": "1.3.0",
     "textlint-rule-abbr-within-parentheses": "1.0.2",
@@ -26,7 +28,8 @@
     "textlint-rule-preset-ja-spacing": "3.0.3",
     "textlint-rule-preset-ja-technical-writing": "12.0.2",
     "textlint-rule-terminology": "5.2.16",
-    "tsx": "4.23.15"
+    "tsx": "4.23.15",
+    "yaml": "2.9.1"
   },
   "packageManager": "npm@11.7.0",
   "engines": {
