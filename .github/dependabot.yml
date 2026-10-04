@@ -65,6 +65,12 @@ updates:
     open-pull-requests-limit: 1
     ignore:
       - dependency-name: "node-fetch"
+      # Updated together with Super-Linter by update-package.
+      - dependency-name: "textlint"
+      - dependency-name: "textlint-rule-*"
+      - dependency-name: "textlint-filter-rule-*"
+      - dependency-name: "@*/textlint-rule-*"
+      - dependency-name: "@*/textlint-filter-rule-*"
     cooldown:
       default-days: 7
   - package-ecosystem: "npm"
@@ -80,6 +86,8 @@ updates:
       interval: "daily"
     open-pull-requests-limit: 1
     ignore:
+      # Updated together with Super-Linter by update-package.
       - dependency-name: "eslint"
+      - dependency-name: "eslint-plugin*"
     cooldown:
       default-days: 7

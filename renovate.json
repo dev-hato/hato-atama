@@ -9,8 +9,32 @@
     "**/tests/**",
     "**/__fixtures__/**"
   ],
-  "ignoreDeps": ["go", "node-fetch", "eslint"],
+  "ignoreDeps": [
+    "go",
+    "node-fetch",
+    "eslint",
+    "textlint",
+    "zricethezav/gitleaks",
+    "gitleaks/gitleaks"
+  ],
   "packageRules": [
+    {
+      "description": "Updated together with Super-Linter by update-package",
+      "matchFileNames": ["package.json"],
+      "matchPackageNames": [
+        "textlint-rule-*",
+        "textlint-filter-rule-*",
+        "@*/textlint-rule-*",
+        "@*/textlint-filter-rule-*"
+      ],
+      "enabled": false
+    },
+    {
+      "description": "Updated together with Super-Linter by update-package",
+      "matchFileNames": ["test/e2e/package.json"],
+      "matchPackageNames": ["eslint-plugin*"],
+      "enabled": false
+    },
     {
       "groupName": "artifact",
       "matchPackageNames": [
