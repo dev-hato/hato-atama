@@ -19,6 +19,12 @@
   ],
   "packageRules": [
     {
+      "description": "Node.js versions follow the frontend Docker image via update-package",
+      "matchDatasources": ["node-version"],
+      "matchPackageNames": ["node"],
+      "enabled": false
+    },
+    {
       "description": "Updated together with Super-Linter by update-package",
       "matchFileNames": ["package.json"],
       "matchPackageNames": [
