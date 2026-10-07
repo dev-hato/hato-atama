@@ -7,7 +7,7 @@
     "@octokit/plugin-rest-endpoint-methods": "18.0.0"
   },
   "devDependencies": {
-    "@npmcli/config": "11.1.0",
+    "@npmcli/config": "11.2.0",
     "@proofdict/textlint-rule-proofdict": "3.1.2",
     "@textlint-ja/textlint-rule-no-insert-dropping-sa": "2.0.1",
     "cheerio": "1.2.0",
