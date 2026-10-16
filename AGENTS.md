@@ -2,9 +2,12 @@
 
 このルールはリポジトリ全体に適用する。
 
+`CLAUDE.md`、`AGENTS.md`、`.github/copilot-instructions.md`はrulesyncで生成しています。
+直接編集せず、`.rulesync/rules/`を編集してから`npx --no-install rulesync generate`を実行してください。
+
 ## Super-Linterの維持
 
-- [Super-Linterのワークフロー](.github/workflows/super-linter.yml)と、そこで有効になっている各言語の検査を維持する。既存の検査対象と、違反時にCIが失敗する動作を維持すること。
+- Super-Linterのワークフロー（`.github/workflows/super-linter.yml`）と、そこで有効になっている各言語の検査を維持する。既存の検査対象と、違反時にCIが失敗する動作を維持すること。
 - `GO_MODULES`などの検査を無効化し、別のAction・ジョブ・コマンドへ移すこともSuper-Linterからの離脱として扱う。検査の削除・無効化・移管を独断で行わない。
 - 条件分岐、除外フィルタ、`continue-on-error`などで検査を省略したり、失敗を無視したりしない。
 - 例外は、ユーザーが対象の削除・無効化・移管を明示的に指示した場合に限る。バージョン更新やCI修正の依頼を、これらの変更の許可と解釈しない。
