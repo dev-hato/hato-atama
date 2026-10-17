@@ -242,9 +242,13 @@ jobs:
         run: |
           node --test scripts/release/update_package/*.test.mjs
           node scripts/release/update_package/sync_super_linter.mjs
+      # 書き込み権限のあるジョブで動くため、依存パッケージのスクリプトは実行しない
       - name: Update packages (.)
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
-        run: npm install
+        run: npm install --ignore-scripts
+      # .rulesync/ のルールから、各AIエージェント向けのファイルを生成する
+      - if: github.event_name != 'pull_request' || github.event.action != 'closed'
+        run: npx --no-install rulesync generate
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         with:
