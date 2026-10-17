@@ -26,16 +26,20 @@ var (
 
 const databaseErrMessage = "database error"
 
+// errTooManyCount 指定されたURLを取り出すことができる数が上限を超えている
+var errTooManyCount = errors.New("count exceeds the limit")
+
 type ShortURLDataType struct {
 	Count   int64
 	URLData string
 }
 
 type CreateShortURLPostDataType struct {
-	URL             string  `json:"url"`
-	WantedShortURL  *string `json:"wanted_short_url" validate:"omitempty,alphanum"`
+	// javascript:などへリダイレクトさせないよう、httpとhttpsのURLのみ受け付ける
+	URL             string  `json:"url"              validate:"required,http_url,max=2048"`
+	WantedShortURL  *string `json:"wanted_short_url" validate:"omitempty,alphanum,max=64"`
 	Count           *int64  `json:"count"`
-	URLLengthOption *string `json:"length_option"`
+	URLLengthOption *string `json:"length_option"    validate:"omitempty,oneof=long short"`
 	ShortURLLength  int     `json:"-"`
 }
 
@@ -63,6 +67,10 @@ func (csurlpdtype *CreateShortURLPostDataType) Normalize() (err error) {
 		return
 	}
 
+	if csurlpdtype.Count != nil && *csurlpdtype.Count > settings.MaxCount {
+		return fmt.Errorf("%w: %d > %d", errTooManyCount, *csurlpdtype.Count, settings.MaxCount)
+	}
+
 	if csurlpdtype.Count == nil || *csurlpdtype.Count <= 0 {
 		// URLを取り出すことができる数
 		defaultValue := settings.Count
@@ -83,12 +91,66 @@ func (csurlpdtype *CreateShortURLPostDataType) Normalize() (err error) {
 	return
 }
 
+// 入力データの検証エラーのとき、messageに入れて返すエラーコード
+// 内部の情報を返さないよう、項目と検証内容ごとに決まったコードのみを返す
+// 利用者向けの文言はフロントエンドでコードごとに用意する
+const (
+	errCodeInvalidParameter      = "invalid parameter"
+	errCodeURLRequired           = "url_required"
+	errCodeURLInvalid            = "url_invalid"
+	errCodeURLTooLong            = "url_too_long"
+	errCodeWantedShortURLInvalid = "wanted_short_url_invalid"
+	errCodeWantedShortURLTooLong = "wanted_short_url_too_long"
+	errCodeLengthOptionInvalid   = "length_option_invalid"
+	errCodeCountTooMany          = "count_too_many"
+)
+
+// normalizeErrCode 入力データの検証エラーを、利用者に返すエラーコードにする
+func normalizeErrCode(err error) string {
+	if errors.Is(err, errTooManyCount) {
+		return errCodeCountTooMany
+	}
+
+	var validationErrors validator.ValidationErrors
+
+	if errors.As(err, &validationErrors) && 0 < len(validationErrors) {
+		fieldError := validationErrors[0]
+		field := fieldError.StructField()
+		tag := fieldError.Tag()
+
+		switch field {
+		case "URL":
+			switch tag {
+			case "required":
+				return errCodeURLRequired
+			case "max":
+				return errCodeURLTooLong
+			default:
+				return errCodeURLInvalid
+			}
+		case "WantedShortURL":
+			if tag == "max" {
+				return errCodeWantedShortURLTooLong
+			}
+
+			return errCodeWantedShortURLInvalid
+		case "URLLengthOption":
+			return errCodeLengthOptionInvalid
+		}
+	}
+
+	return errCodeInvalidParameter
+}
+
 func createServer() (e *echo.Echo) {
 	e = echo.New()
 
 	e.Use(middleware.Recover())
 	e.Use(middleware.RequestLogger())
 	e.Use(middleware.Gzip())
+
+	// 巨大なリクエストボディでメモリを消費させられないよう、大きさに上限を設ける
+	e.Use(middleware.BodyLimit(settings.BodyLimitBytes))
 
 	api := e.Group("/api")
 	api.POST("/create", createShortURL)
@@ -127,12 +189,12 @@ func createShortURL(c *echo.Context) (err error) {
 	inputData := new(CreateShortURLPostDataType)
 	if err = c.Bind(&inputData); err != nil {
 		c.Logger().Error(err.Error())
-		return c.JSON(http.StatusNotAcceptable, RetJSONType{Status: false, Message: "invalid parameter", HashKey: nil})
+		return c.JSON(http.StatusNotAcceptable, RetJSONType{Status: false, Message: errCodeInvalidParameter, HashKey: nil})
 	}
 	// 入力データの正規化
 	if err = inputData.Normalize(); err != nil {
 		c.Logger().Error(err.Error())
-		return c.JSON(http.StatusInternalServerError, RetJSONType{Status: false, Message: err.Error(), HashKey: nil})
+		return c.JSON(http.StatusNotAcceptable, RetJSONType{Status: false, Message: normalizeErrCode(err), HashKey: nil})
 	}
 
 	var key *datastore.Key
