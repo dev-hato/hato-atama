@@ -23,10 +23,16 @@ func newInput(url string) CreateShortURLPostDataType {
 	}
 }
 
-func TestNormalizeAcceptsHTTPURL(t *testing.T) {
+func TestNormalizeAcceptsAllowedSchemeURL(t *testing.T) {
 	t.Parallel()
 
-	for _, url := range []string{"http://example.com/", "https://example.com/articles/1?q=1#top"} {
+	for _, url := range []string{
+		"http://example.com/",
+		"https://example.com/articles/1?q=1#top",
+		"HTTPS://example.com/",
+		"mailto:hato@example.com",
+		"mailto:hato@example.com?subject=hello",
+	} {
 		t.Run(url, func(t *testing.T) {
 			t.Parallel()
 
@@ -68,6 +74,11 @@ func TestNormalizeRejectsMaliciousInput(t *testing.T) {
 		{name: "data scheme", input: newInput("data:text/html,<script>alert(1)</script>")},
 		{name: "file scheme", input: newInput("file:///etc/passwd")},
 		{name: "relative url", input: newInput("//example.com/")},
+		{name: "vbscript scheme", input: newInput("vbscript:msgbox(1)")},
+		{name: "javascript scheme with leading space", input: newInput(" javascript:alert(1)")},
+		{name: "http url without host", input: newInput("http:///etc/passwd")},
+		{name: "empty mailto", input: newInput("mailto:")},
+		{name: "mailto with slashes", input: newInput("mailto://example.com/")},
 		{name: "too long url", input: newInput("https://example.com/" + strings.Repeat("a", 2048))},
 		{
 			name:  "too long wanted short url",
@@ -191,6 +202,7 @@ func TestNormalizeErrCode(t *testing.T) {
 	}{
 		{name: "empty url", input: newInput(""), want: errCodeURLRequired},
 		{name: "javascript scheme", input: newInput("javascript:alert(document.cookie)"), want: errCodeURLInvalid},
+		{name: "empty mailto", input: newInput("mailto:"), want: errCodeURLInvalid},
 		{
 			name:  "too long url",
 			input: newInput("https://example.com/" + strings.Repeat("a", 2048)),

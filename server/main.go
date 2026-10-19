@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"time"
 
@@ -35,8 +36,8 @@ type ShortURLDataType struct {
 }
 
 type CreateShortURLPostDataType struct {
-	// javascript:などへリダイレクトさせないよう、httpとhttpsのURLのみ受け付ける
-	URL             string  `json:"url"              validate:"required,http_url,max=2048"`
+	// javascript:などへリダイレクトさせないよう、許可したスキームのURLのみ受け付ける
+	URL             string  `json:"url"              validate:"required,allowed_url,max=2048"`
 	WantedShortURL  *string `json:"wanted_short_url" validate:"omitempty,alphanum,max=64"`
 	Count           *int64  `json:"count"`
 	URLLengthOption *string `json:"length_option"    validate:"omitempty,oneof=long short"`
@@ -61,8 +62,42 @@ func (s StatusType) MarshalJSON() ([]byte, error) {
 	return json.Marshal(ret)
 }
 
+// isAllowedURL 短縮対象として許可するスキームのURLかどうかを判定する
+// javascript:やdata:などスクリプトを実行できるスキームを通さないよう、許可するスキームを列挙して判定する
+func isAllowedURL(fl validator.FieldLevel) bool {
+	u, err := url.Parse(fl.Field().String())
+	if err != nil {
+		return false
+	}
+
+	// url.Parseはスキームを小文字にして返す
+	switch u.Scheme {
+	case "http", "https":
+		return u.Host != ""
+	case "mailto":
+		return u.Opaque != ""
+	default:
+		return false
+	}
+}
+
+// validate 入力データの検証に使うvalidator
+// 並行して使っても安全なため、起動時に一度だけ作る
+var validate = newValidate()
+
+// newValidate 独自の検証を登録したvalidatorを作る
+func newValidate() *validator.Validate {
+	v := validator.New()
+
+	// 登録に失敗するのはタグ名や関数の指定を誤った場合のみのため、起動時に検出できるようpanicする
+	if err := v.RegisterValidation("allowed_url", isAllowedURL); err != nil {
+		panic(err)
+	}
+
+	return v
+}
+
 func (csurlpdtype *CreateShortURLPostDataType) Normalize() (err error) {
-	validate := validator.New()
 	if err = validate.Struct(csurlpdtype); err != nil {
 		return
 	}
