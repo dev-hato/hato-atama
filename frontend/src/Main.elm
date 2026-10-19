@@ -189,6 +189,9 @@ errorMessageText code =
         "count_too_many" ->
             "使用可能回数は1000回以下で指定してください"
 
+        "request_too_large" ->
+            "入力が長すぎます。短縮したいURLは2,048文字以内で入力してください"
+
         _ ->
             code
 

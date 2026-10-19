@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"net/http"
 	"net/http/httptest"
@@ -117,19 +118,53 @@ func TestNormalizeReturnsTooManyCountError(t *testing.T) {
 func TestCreateServerRejectsTooLargeBody(t *testing.T) {
 	t.Parallel()
 
-	req := httptest.NewRequestWithContext(
-		context.Background(),
-		http.MethodPost,
-		"/api/create",
-		strings.NewReader(`{"url":"https://example.com/`+strings.Repeat("a", int(settings.BodyLimitBytes))+`"}`),
-	)
-	req.Header.Set("Content-Type", "application/json")
+	tests := []struct {
+		name string
 
-	rec := httptest.NewRecorder()
-	createServer().ServeHTTP(rec, req)
+		// Content-Lengthを付けるかどうか
+		withContentLength bool
+	}{
+		{name: "with content length", withContentLength: true},
+		{name: "without content length", withContentLength: false},
+	}
 
-	if rec.Code != http.StatusRequestEntityTooLarge {
-		t.Fatalf("status = %d, want %d", rec.Code, http.StatusRequestEntityTooLarge)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			req := httptest.NewRequestWithContext(
+				context.Background(),
+				http.MethodPost,
+				"/api/create",
+				strings.NewReader(`{"url":"https://example.com/`+strings.Repeat("a", int(settings.BodyLimitBytes))+`"}`),
+			)
+			req.Header.Set("Content-Type", "application/json")
+
+			if !tt.withContentLength {
+				req.ContentLength = -1
+			}
+
+			rec := httptest.NewRecorder()
+			createServer().ServeHTTP(rec, req)
+
+			if rec.Code != http.StatusRequestEntityTooLarge {
+				t.Fatalf("status = %d, want %d", rec.Code, http.StatusRequestEntityTooLarge)
+			}
+
+			// フロントエンドが画面にエラーを表示できるよう、他のエラーと同じ形式で返す
+			var body struct {
+				Status  string `json:"status"`
+				Message string `json:"message"`
+			}
+
+			if err := json.Unmarshal(rec.Body.Bytes(), &body); err != nil {
+				t.Fatalf("json.Unmarshal() error = %v, body = %s", err, rec.Body.String())
+			}
+
+			if body.Status != "error" || body.Message != errCodeRequestTooLarge {
+				t.Fatalf("body = %+v, want status %q and message %q", body, "error", errCodeRequestTooLarge)
+			}
+		})
 	}
 }
 

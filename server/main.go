@@ -103,6 +103,7 @@ const (
 	errCodeWantedShortURLTooLong = "wanted_short_url_too_long"
 	errCodeLengthOptionInvalid   = "length_option_invalid"
 	errCodeCountTooMany          = "count_too_many"
+	errCodeRequestTooLarge       = "request_too_large"
 )
 
 // normalizeErrCode 入力データの検証エラーを、利用者に返すエラーコードにする
@@ -142,6 +143,23 @@ func normalizeErrCode(err error) string {
 	return errCodeInvalidParameter
 }
 
+// requestTooLargeToJSON リクエストボディの大きさが上限を超えたとき、他のエラーと同じ形式でエラーコードを返す
+// フロントエンドが画面にエラーを表示できるよう、Echoが返す形式ではなくRetJSONTypeの形式に揃える
+func requestTooLargeToJSON(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c *echo.Context) error {
+		err := next(c)
+
+		if errors.Is(err, echo.ErrStatusRequestEntityTooLarge) {
+			return c.JSON(
+				http.StatusRequestEntityTooLarge,
+				RetJSONType{Status: false, Message: errCodeRequestTooLarge, HashKey: nil},
+			)
+		}
+
+		return err
+	}
+}
+
 func createServer() (e *echo.Echo) {
 	e = echo.New()
 
@@ -150,6 +168,7 @@ func createServer() (e *echo.Echo) {
 	e.Use(middleware.Gzip())
 
 	// 巨大なリクエストボディでメモリを消費させられないよう、大きさに上限を設ける
+	e.Use(requestTooLargeToJSON)
 	e.Use(middleware.BodyLimit(settings.BodyLimitBytes))
 
 	api := e.Group("/api")
@@ -184,12 +203,23 @@ func getDataStoreKey(hash string) *datastore.Key {
 	return hashKeyKey
 }
 
+// bindErrResponse 入力データを取り出せなかったときのレスポンスを返す
+func bindErrResponse(c *echo.Context, err error) error {
+	// Content-Lengthを付けずに送られた場合は、読み込み中に大きさの上限を超える
+	// そのエラーはrequestTooLargeToJSONで他のエラーと同じ形式に変換する
+	if errors.Is(err, echo.ErrStatusRequestEntityTooLarge) {
+		return err
+	}
+
+	return c.JSON(http.StatusNotAcceptable, RetJSONType{Status: false, Message: errCodeInvalidParameter, HashKey: nil})
+}
+
 func createShortURL(c *echo.Context) (err error) {
 	// 入力データの取り出し
 	inputData := new(CreateShortURLPostDataType)
 	if err = c.Bind(&inputData); err != nil {
 		c.Logger().Error(err.Error())
-		return c.JSON(http.StatusNotAcceptable, RetJSONType{Status: false, Message: errCodeInvalidParameter, HashKey: nil})
+		return bindErrResponse(c, err)
 	}
 	// 入力データの正規化
 	if err = inputData.Normalize(); err != nil {
