@@ -74,8 +74,6 @@ func isAllowedURL(fl validator.FieldLevel) bool {
 	switch u.Scheme {
 	case "http", "https":
 		return u.Host != ""
-	case "mailto":
-		return u.Opaque != ""
 	default:
 		return false
 	}

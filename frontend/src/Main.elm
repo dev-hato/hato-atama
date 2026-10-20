@@ -172,7 +172,7 @@ errorMessageText code =
             "短縮したいURLを入力してください"
 
         "url_invalid" ->
-            "短縮したいURLはhttp://、https://またはmailto:から始まる形式で入力してください"
+            "短縮したいURLはhttp://またはhttps://から始まる形式で入力してください"
 
         "url_too_long" ->
             "短縮したいURLは2,048文字以内で入力してください"
