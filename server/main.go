@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"time"
 
@@ -26,16 +27,20 @@ var (
 
 const databaseErrMessage = "database error"
 
+// errTooManyCount 指定されたURLを取り出すことができる数が上限を超えている
+var errTooManyCount = errors.New("count exceeds the limit")
+
 type ShortURLDataType struct {
 	Count   int64
 	URLData string
 }
 
 type CreateShortURLPostDataType struct {
-	URL             string  `json:"url"`
-	WantedShortURL  *string `json:"wanted_short_url" validate:"omitempty,alphanum"`
+	// javascript:などへリダイレクトさせないよう、許可したスキームのURLのみ受け付ける
+	URL             string  `json:"url"              validate:"required,allowed_url,max=2048"`
+	WantedShortURL  *string `json:"wanted_short_url" validate:"omitempty,alphanum,max=64"`
 	Count           *int64  `json:"count"`
-	URLLengthOption *string `json:"length_option"`
+	URLLengthOption *string `json:"length_option"    validate:"omitempty,oneof=long short"`
 	ShortURLLength  int     `json:"-"`
 }
 
@@ -57,10 +62,46 @@ func (s StatusType) MarshalJSON() ([]byte, error) {
 	return json.Marshal(ret)
 }
 
+// isAllowedURL 短縮対象として許可するスキームのURLかどうかを判定する
+// javascript:やdata:などスクリプトを実行できるスキームを通さないよう、許可するスキームを列挙して判定する
+func isAllowedURL(fl validator.FieldLevel) bool {
+	u, err := url.Parse(fl.Field().String())
+	if err != nil {
+		return false
+	}
+
+	// url.Parseはスキームを小文字にして返す
+	switch u.Scheme {
+	case "http", "https":
+		return u.Host != ""
+	default:
+		return false
+	}
+}
+
+// validate 入力データの検証に使うvalidator
+// 並行して使っても安全なため、起動時に一度だけ作る
+var validate = newValidate()
+
+// newValidate 独自の検証を登録したvalidatorを作る
+func newValidate() *validator.Validate {
+	v := validator.New()
+
+	// 登録に失敗するのはタグ名や関数の指定を誤った場合のみのため、起動時に検出できるようpanicする
+	if err := v.RegisterValidation("allowed_url", isAllowedURL); err != nil {
+		panic(err)
+	}
+
+	return v
+}
+
 func (csurlpdtype *CreateShortURLPostDataType) Normalize() (err error) {
-	validate := validator.New()
 	if err = validate.Struct(csurlpdtype); err != nil {
 		return
+	}
+
+	if csurlpdtype.Count != nil && *csurlpdtype.Count > settings.MaxCount {
+		return fmt.Errorf("%w: %d > %d", errTooManyCount, *csurlpdtype.Count, settings.MaxCount)
 	}
 
 	if csurlpdtype.Count == nil || *csurlpdtype.Count <= 0 {
@@ -83,12 +124,85 @@ func (csurlpdtype *CreateShortURLPostDataType) Normalize() (err error) {
 	return
 }
 
+// 入力データの検証エラーのとき、messageに入れて返すエラーコード
+// 内部の情報を返さないよう、項目と検証内容ごとに決まったコードのみを返す
+// 利用者向けの文言はフロントエンドでコードごとに用意する
+const (
+	errCodeInvalidParameter      = "invalid parameter"
+	errCodeURLRequired           = "url_required"
+	errCodeURLInvalid            = "url_invalid"
+	errCodeURLTooLong            = "url_too_long"
+	errCodeWantedShortURLInvalid = "wanted_short_url_invalid"
+	errCodeWantedShortURLTooLong = "wanted_short_url_too_long"
+	errCodeLengthOptionInvalid   = "length_option_invalid"
+	errCodeCountTooMany          = "count_too_many"
+	errCodeRequestTooLarge       = "request_too_large"
+)
+
+// normalizeErrCode 入力データの検証エラーを、利用者に返すエラーコードにする
+func normalizeErrCode(err error) string {
+	if errors.Is(err, errTooManyCount) {
+		return errCodeCountTooMany
+	}
+
+	var validationErrors validator.ValidationErrors
+
+	if errors.As(err, &validationErrors) && 0 < len(validationErrors) {
+		fieldError := validationErrors[0]
+		field := fieldError.StructField()
+		tag := fieldError.Tag()
+
+		switch field {
+		case "URL":
+			switch tag {
+			case "required":
+				return errCodeURLRequired
+			case "max":
+				return errCodeURLTooLong
+			default:
+				return errCodeURLInvalid
+			}
+		case "WantedShortURL":
+			if tag == "max" {
+				return errCodeWantedShortURLTooLong
+			}
+
+			return errCodeWantedShortURLInvalid
+		case "URLLengthOption":
+			return errCodeLengthOptionInvalid
+		}
+	}
+
+	return errCodeInvalidParameter
+}
+
+// requestTooLargeToJSON リクエストボディの大きさが上限を超えたとき、他のエラーと同じ形式でエラーコードを返す
+// フロントエンドが画面にエラーを表示できるよう、Echoが返す形式ではなくRetJSONTypeの形式に揃える
+func requestTooLargeToJSON(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c *echo.Context) error {
+		err := next(c)
+
+		if errors.Is(err, echo.ErrStatusRequestEntityTooLarge) {
+			return c.JSON(
+				http.StatusRequestEntityTooLarge,
+				RetJSONType{Status: false, Message: errCodeRequestTooLarge, HashKey: nil},
+			)
+		}
+
+		return err
+	}
+}
+
 func createServer() (e *echo.Echo) {
 	e = echo.New()
 
 	e.Use(middleware.Recover())
 	e.Use(middleware.RequestLogger())
 	e.Use(middleware.Gzip())
+
+	// 巨大なリクエストボディでメモリを消費させられないよう、大きさに上限を設ける
+	e.Use(requestTooLargeToJSON)
+	e.Use(middleware.BodyLimit(settings.BodyLimitBytes))
 
 	api := e.Group("/api")
 	api.POST("/create", createShortURL)
@@ -122,17 +236,28 @@ func getDataStoreKey(hash string) *datastore.Key {
 	return hashKeyKey
 }
 
+// bindErrResponse 入力データを取り出せなかったときのレスポンスを返す
+func bindErrResponse(c *echo.Context, err error) error {
+	// Content-Lengthを付けずに送られた場合は、読み込み中に大きさの上限を超える
+	// そのエラーはrequestTooLargeToJSONで他のエラーと同じ形式に変換する
+	if errors.Is(err, echo.ErrStatusRequestEntityTooLarge) {
+		return err
+	}
+
+	return c.JSON(http.StatusNotAcceptable, RetJSONType{Status: false, Message: errCodeInvalidParameter, HashKey: nil})
+}
+
 func createShortURL(c *echo.Context) (err error) {
 	// 入力データの取り出し
 	inputData := new(CreateShortURLPostDataType)
 	if err = c.Bind(&inputData); err != nil {
 		c.Logger().Error(err.Error())
-		return c.JSON(http.StatusNotAcceptable, RetJSONType{Status: false, Message: "invalid parameter", HashKey: nil})
+		return bindErrResponse(c, err)
 	}
 	// 入力データの正規化
 	if err = inputData.Normalize(); err != nil {
 		c.Logger().Error(err.Error())
-		return c.JSON(http.StatusInternalServerError, RetJSONType{Status: false, Message: err.Error(), HashKey: nil})
+		return c.JSON(http.StatusNotAcceptable, RetJSONType{Status: false, Message: normalizeErrCode(err), HashKey: nil})
 	}
 
 	var key *datastore.Key

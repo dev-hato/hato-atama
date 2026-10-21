@@ -152,7 +152,7 @@ update msg model =
                 errorMsg =
                     case result of
                         Err (DetailedBadStatus _ value) ->
-                            Just value.message
+                            Just (errorMessageText value.message)
 
                         _ ->
                             Nothing
@@ -161,6 +161,39 @@ update msg model =
 
         _ ->
             ( model, Cmd.none )
+
+
+{-| サーバーが返すエラーコードを、利用者向けの日本語のメッセージにする
+-}
+errorMessageText : String -> String
+errorMessageText code =
+    case code of
+        "url_required" ->
+            "短縮したいURLを入力してください"
+
+        "url_invalid" ->
+            "短縮したいURLはhttp://またはhttps://から始まる形式で入力してください"
+
+        "url_too_long" ->
+            "短縮したいURLは2,048文字以内で入力してください"
+
+        "wanted_short_url_invalid" ->
+            "希望する短縮URLは英数字で入力してください"
+
+        "wanted_short_url_too_long" ->
+            "希望する短縮URLは64文字以内で入力してください"
+
+        "length_option_invalid" ->
+            "短縮URLの長さはlongまたはshortで指定してください"
+
+        "count_too_many" ->
+            "使用可能回数は1000回以下で指定してください"
+
+        "request_too_large" ->
+            "入力が長すぎます。短縮したいURLは2,048文字以内で入力してください"
+
+        _ ->
+            code
 
 
 subscriptions : Model -> Sub Msg
