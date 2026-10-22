@@ -68,14 +68,3 @@ ESLint、textlintとそのプラグイン・ルールは、RenovateとDependabot
 `release`の`update-package`がバージョンとlockfileを更新し、`actions-diff-pr-management`で修正PRを作成する。修正PRを元のPRのブランチへマージすると、元のPRでも同期済みの状態でCIが実行される。Gitleaksは既存の`update-gitleaks`が同じ流れでSuper-Linterの同梱版に同期する。
 
 Go本体はサーバーのDockerイメージとApp Engineを基準に管理する。
-
-## ARM64環境に対応したElmコンパイラに関して
-
-ARM64環境に対応したElmコンパイラを`elm/elm_arm64`として配置しています。  
-ARM64環境で開発環境を立ち上げると、こちらのコンパイラを使ってフロントエンドのビルドが行われます。  
-ARM64環境に対応したElmコンパイラのビルドを行いたい場合はARM64環境で次のコマンドを実行します。
-
-```sh
-cd elm
-./make_compiler.sh
-```

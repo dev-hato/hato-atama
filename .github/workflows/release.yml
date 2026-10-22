@@ -259,6 +259,11 @@ jobs:
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         run: npm install
         working-directory: frontend
+      # Renovateが更新したelmパッケージのバージョンに、elm.jsonのelm-versionを揃える
+      - if: github.event_name != 'pull_request' || github.event.action != 'closed'
+        run: node scripts/release/update_package/sync_elm_version.mjs
+      - if: github.event_name != 'pull_request' || github.event.action != 'closed'
+        run: npx prettier --write frontend/elm.json
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         with:
