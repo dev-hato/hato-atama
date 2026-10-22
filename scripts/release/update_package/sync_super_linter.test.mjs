@@ -14,7 +14,7 @@ const old = "2026-09-01T00:00:00Z";
 const options = {
   tool: "eslint",
   toolVersion: "10.0.0",
-  nodeVersion: "26.8.1",
+  nodeVersion: "26.12.1",
   minimumAgeDays: 7,
   now,
 };
@@ -177,8 +177,8 @@ test("peer ranges and Node engines are both required", () => {
     peerDependencies: { eslint: "^9.39.0 || ^10.0.0" },
     engines: { node: ">=24" },
   };
-  assert.equal(isCompatible(metadata, "eslint", "9.39.4", "26.8.1"), true);
-  assert.equal(isCompatible(metadata, "eslint", "11.0.0", "26.8.1"), false);
+  assert.equal(isCompatible(metadata, "eslint", "9.39.4", "26.12.1"), true);
+  assert.equal(isCompatible(metadata, "eslint", "11.0.0", "26.12.1"), false);
   assert.equal(isCompatible(metadata, "eslint", "10.0.0", "22.0.0"), false);
 });
 
