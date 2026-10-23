@@ -42,6 +42,12 @@
       "enabled": false
     },
     {
+      "description": "The elm package marks every compiler release as a prerelease, such as 0.19.2-0",
+      "matchDatasources": ["npm"],
+      "matchPackageNames": ["elm"],
+      "ignoreUnstable": false
+    },
+    {
       "groupName": "artifact",
       "matchPackageNames": [
         "actions/download-artifact",

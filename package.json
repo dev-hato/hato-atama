@@ -13,6 +13,7 @@
     "cheerio": "1.2.0",
     "domhandler": "6.0.1",
     "node-fetch": "2.6.12",
+    "prettier": "3.9.6",
     "rulesync": "38.0.0",
     "semver": "7.8.5",
     "textlint": "15.8.0",
@@ -34,6 +35,6 @@
   },
   "packageManager": "npm@11.7.0",
   "engines": {
-    "node": "^24.13.1 || ^26.8.1"
+    "node": "^24.13.1 || ^26.12.1"
   }
 }

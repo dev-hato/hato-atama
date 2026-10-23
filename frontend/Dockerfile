@@ -1,4 +1,4 @@
-FROM node:26.8.1-bullseye-slim@sha256:ce69d6017624735163d253581f6bfa3c8bf6c1eb1640ca71393be122c0716838 AS base
+FROM node:26.12.1-bookworm-slim@sha256:28147155d47dc31abe0a46e0d12b59b2fb3d0a2dcc5dc65fce76a074180b16fe AS base
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 ARG TARGETPLATFORM
@@ -9,23 +9,9 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates curl \
     && rm -rf /var/lib/apt/lists
 
-COPY elm/elm_arm64 /usr/local/bin/elm
-
 WORKDIR /usr/src/app
 
 COPY frontend/elm.json ./
-
-# https://github.com/elm/compiler/blob/24d3a89469e75cf7aa579442ecaf5ddfdd192ab2/installers/linux/README.md
-RUN if [ "${TARGETPLATFORM}" != "linux/arm64" ]; then \
-        curl -L https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o /usr/bin/yq; \
-        chmod +x /usr/bin/yq; \
-        elm_version="$(yq -oy '."elm-version"' elm.json)"; \
-        curl -L -o elm.gz "https://github.com/elm/compiler/releases/download/${elm_version}/binary-for-linux-64-bit.gz"; \
-        gunzip elm.gz; \
-        chmod +x elm; \
-        mv elm /usr/local/bin/; \
-        rm /usr/bin/yq; \
-    fi
 
 RUN find / -type f -perm /u+s -ignore_readdir_race -exec chmod u-s {} \; \
     && find / -type f -perm /g+s -ignore_readdir_race -exec chmod g-s {} \; \
