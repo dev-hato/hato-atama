@@ -26,12 +26,14 @@ RUN mapfile -t PLATFORM < <(echo "${TARGETPLATFORM}" | tr '/' ' ') \
     && go install github.com/air-verse/air \
     && useradd -l -m -s /bin/bash -N -u "1000" "nonroot" \
     && chown nonroot /go/app/server
+USER 1000
 
 FROM scratch
 
 COPY --from=build /etc/group /etc/group
 COPY --from=build /etc/passwd /etc/passwd
 COPY --from=build /etc/shadow /etc/shadow
+USER 1000
 
 WORKDIR /app
 

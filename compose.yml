@@ -39,7 +39,6 @@ services:
       PROJECT_ID: app
       DATASTORE_EMULATOR_HOST: "gcloud_datastore:${GCLOUD_DATASOURCE_PORT}"
       PORT: ${PORT}
-    user: "1000"
     ports:
       - "127.0.0.1:${PORT}:${PORT}"
   frontend:
