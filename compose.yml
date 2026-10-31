@@ -1,21 +1,26 @@
 ---
 services:
   gcloud_datastore:
-    build:
-      context: .
-      dockerfile: gcp/datastore/Dockerfile
-      cache_from:
-        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/gcloud_datastore:${TAG_NAME:-latest}
-        - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/gcloud_datastore
-      args:
-        BUILDKIT_INLINE_CACHE: 1
-      x-bake:
-        platforms:
-          - linux/amd64
-          - linux/arm64
-    image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/gcloud_datastore:${TAG_NAME:-latest}
+    image: gcr.io/google.com/cloudsdktool/google-cloud-cli:591.0.0-emulators@sha256:112c21f8f6e04b03b393b3c34fb943a1f443e839f18c6492c364ac2e6c3ff935
     init: true
+    security_opt:
+      - no-new-privileges:true
     tty: true
+    entrypoint: ["/start.sh"]
+    volumes:
+      - /opt/data
+      - type: bind
+        source: ./gcp/datastore/start.sh
+        target: /start.sh
+        read_only: true
+      - type: bind
+        source: ./gcp/datastore/healthcheck.sh
+        target: /healthcheck.sh
+        read_only: true
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 5s
+      retries: 20
     environment:
       DATASTORE_PROJECT_ID: app
       DATASTORE_LISTEN_ADDRESS: 0.0.0.0:${GCLOUD_DATASOURCE_PORT}
@@ -34,6 +39,7 @@ services:
       PROJECT_ID: app
       DATASTORE_EMULATOR_HOST: "gcloud_datastore:${GCLOUD_DATASOURCE_PORT}"
       PORT: ${PORT}
+    user: "1000"
     ports:
       - "127.0.0.1:${PORT}:${PORT}"
   frontend:
