@@ -32,6 +32,10 @@ COPY frontend/public ./public
 RUN npm run build \
     && rm -rf /home/node/.npm
 
+COPY frontend/healthcheck.sh .
+
+HEALTHCHECK --interval=5s --retries=20 CMD ["./healthcheck.sh"]
+
 FROM nginx:1.31.8@sha256:6e67f8eaac94fc456588d4ff6c470d984841f5b5dc4279863d5cbe6ec5a60def
 
 RUN find / -type f -perm /u+s -ignore_readdir_race -exec chmod u-s {} \; \
@@ -41,3 +45,7 @@ RUN find / -type f -perm /u+s -ignore_readdir_race -exec chmod u-s {} \; \
 USER 101
 
 COPY --from=build /usr/src/app/dist /usr/share/nginx/html
+
+COPY frontend/healthcheck.sh /
+
+HEALTHCHECK --interval=5s --retries=20 CMD ["./healthcheck.sh"]

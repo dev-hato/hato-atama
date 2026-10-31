@@ -10,10 +10,6 @@ services:
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server-base
     image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/server-dev:${TAG_NAME:-latest}
     command: ["air", "-c", ".air.toml"]
-    healthcheck:
-      test: ["CMD", "/go/app/ping/ping"]
-      interval: 5s
-      retries: 20
   frontend:
     build:
       target: build
@@ -24,15 +20,6 @@ services:
         - ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend-base
     image: ghcr.io/${REPOSITORY:-dev-hato/hato-atama}/frontend-dev:${TAG_NAME:-latest}
     command: ["npm", "run", "dev"]
-    volumes:
-      - type: bind
-        source: ./frontend/healthcheck.sh
-        target: /usr/src/app/healthcheck.sh
-        read_only: true
-    healthcheck:
-      test: ["CMD", "/usr/src/app/healthcheck.sh"]
-      interval: 5s
-      retries: 20
     ports:
       # elm-watch のホットリロード用 WebSocket サーバー。
       # ポート番号は frontend/elm-watch.json の "port" と一致させること。

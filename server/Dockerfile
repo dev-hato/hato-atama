@@ -28,6 +28,8 @@ RUN mapfile -t PLATFORM < <(echo "${TARGETPLATFORM}" | tr '/' ' ') \
     && chown nonroot /go/app/server
 USER 1000
 
+HEALTHCHECK --interval=5s --retries=20 CMD ["/go/app/ping/ping"]
+
 FROM scratch
 
 COPY --from=build /etc/group /etc/group
@@ -39,3 +41,5 @@ WORKDIR /app
 
 COPY --from=build /go/app/server/app .
 COPY --from=build /go/app/ping/ping .
+
+HEALTHCHECK --interval=5s --retries=20 CMD ["./ping"]
