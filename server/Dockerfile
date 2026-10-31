@@ -29,7 +29,6 @@ RUN mapfile -t PLATFORM < <(echo "${TARGETPLATFORM}" | tr '/' ' ') \
 USER 1000
 
 HEALTHCHECK --interval=5s --retries=20 CMD ["/go/app/ping/ping"]
-CMD ["air", "-c", ".air.toml"]
 
 FROM scratch
 
@@ -44,4 +43,3 @@ COPY --from=build /go/app/server/app .
 COPY --from=build /go/app/ping/ping .
 
 HEALTHCHECK --interval=5s --retries=20 CMD ["./ping"]
-ENTRYPOINT ["./app"]

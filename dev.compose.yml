@@ -4,8 +4,6 @@ services:
     develop:
       watch:
         - action: rebuild
-          path: ./gcp/datastore/Dockerfile
-        - action: rebuild
           path: ./compose.yml
         - action: rebuild
           path: ./dev.base.compose.yml
