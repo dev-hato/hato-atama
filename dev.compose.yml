@@ -1,20 +1,13 @@
 ---
 services:
   gcloud_datastore:
+    # ビルドしないイメージのためrebuildは使えない。
+    # スクリプトはバインドマウントしているので、start.shの変更時は再起動して反映する。
+    # healthcheck.shは実行のたびに読み込まれるため、監視しなくてよい。
     develop:
       watch:
-        - action: rebuild
-          path: ./gcp/datastore/Dockerfile
-        - action: rebuild
-          path: ./compose.yml
-        - action: rebuild
-          path: ./dev.base.compose.yml
-        - action: rebuild
-          path: ./dev.compose.yml
-        - action: rebuild
+        - action: restart
           path: ./gcp/datastore/start.sh
-        - action: rebuild
-          path: ./gcp/datastore/healthcheck.sh
   server:
     volumes:
       - type: bind

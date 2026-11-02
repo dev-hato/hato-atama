@@ -35,7 +35,6 @@ RUN npm run build \
 COPY frontend/healthcheck.sh .
 
 HEALTHCHECK --interval=5s --retries=20 CMD ["./healthcheck.sh"]
-CMD ["npm", "run", "dev"]
 
 FROM nginx:1.31.8@sha256:6e67f8eaac94fc456588d4ff6c470d984841f5b5dc4279863d5cbe6ec5a60def
 
@@ -44,8 +43,6 @@ RUN find / -type f -perm /u+s -ignore_readdir_race -exec chmod u-s {} \; \
     && touch /var/run/nginx.pid \
     && chown -R nginx:nginx /var/run/nginx.pid /var/cache/nginx /etc/nginx/conf.d
 USER 101
-
-COPY frontend/nginx/ /etc/nginx/
 
 COPY --from=build /usr/src/app/dist /usr/share/nginx/html
 
