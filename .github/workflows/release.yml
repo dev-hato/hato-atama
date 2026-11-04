@@ -18,6 +18,7 @@ env:
 jobs:
   # App Engineにデプロイされるファイルの差分の有無を判定する
   check-deploy-diff:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     outputs:
       deploy-files: ${{ steps.changes.outputs.deploy-files }}
@@ -41,6 +42,7 @@ jobs:
               - 'go.sum'
               - '.gcloudignore'
   build-frontend:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     needs: check-deploy-diff
     if: needs.check-deploy-diff.outputs.deploy-files == 'true'
@@ -64,6 +66,7 @@ jobs:
           name: frontend
           path: frontend/dist
   docker-compose-build-base:
+    timeout-minutes: 120
     runs-on: ubuntu-latest
     env:
       DOCKER_BUILDKIT: 1
@@ -104,6 +107,7 @@ jobs:
           targets: server,frontend
           files: compose.yml,base.compose.yml
   docker-compose-build:
+    timeout-minutes: 120
     runs-on: ubuntu-latest
     needs: docker-compose-build-base
     env:
@@ -148,6 +152,7 @@ jobs:
           push: true
           files: compose.yml,staging.compose.yml
   format-go:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     needs: docker-compose-build-base
     if: always() && (needs.docker-compose-build-base.result == 'success' || (github.event_name == 'pull_request' && github.event.action == 'closed') || github.event_name == 'merge_group')
@@ -193,6 +198,7 @@ jobs:
           pr-title-prefix: formatが間違ってたので直してあげたよ！
   # Node.jsはDockerイメージ、lint依存はSuper-Linterに同期し、差分があれば修正PRを作る
   update-package:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     needs: docker-compose-build-base
     if: always() && (needs.docker-compose-build-base.result == 'success' || (github.event_name == 'pull_request' && github.event.action == 'closed') || github.event_name == 'merge_group')
@@ -280,6 +286,7 @@ jobs:
           branch-name-prefix: fix-version
           pr-title-prefix: Node.js・Super-Linterの依存バージョンを同期
   update-dockle:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -292,6 +299,7 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
   check-nginx-config:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     needs:
       - docker-compose-build
@@ -306,6 +314,7 @@ jobs:
         if: github.event_name == 'pull_request'
       - run: bash "${GITHUB_WORKSPACE}/scripts/release/check_nginx_config/check_nginx_config.sh"
   dockle:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     needs:
       - docker-compose-build
@@ -331,6 +340,7 @@ jobs:
           SERVICE_NAME: ${{matrix.service_name}}
         run: bash "${GITHUB_WORKSPACE}/scripts/release/dockle/run_dockle.sh"
   make-browserslist:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     needs: update-package
     outputs:
@@ -352,6 +362,7 @@ jobs:
         id: set_browserslist
         run: bash "${GITHUB_WORKSPACE}/scripts/release/make_browserslist/set_browserslist.sh"
   e2e-test-mini-docker-compose:
+    timeout-minutes: 120
     runs-on: ubuntu-latest
     needs:
       - docker-compose-build
@@ -396,6 +407,7 @@ jobs:
       - if: failure() && matrix.environment == 'staging'
         run: docker compose -f compose.yml -f staging.compose.yml logs
   e2e-test-all-docker-compose:
+    timeout-minutes: 120
     runs-on: ubuntu-latest
     needs:
       - docker-compose-build
@@ -440,6 +452,7 @@ jobs:
       - if: failure() && matrix.environment == 'staging'
         run: docker compose -f compose.yml -f staging.compose.yml logs
   deploy-app-engine:
+    timeout-minutes: 120
     runs-on: ubuntu-latest
     needs:
       - build-frontend
@@ -474,6 +487,7 @@ jobs:
           RUN_NUMBER: ${{github.run_number}}
         run: bash "${GITHUB_WORKSPACE}/scripts/release/deploy_app_engine/deploy_to_app_engine.sh"
   create-pr-environment:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     needs: deploy-app-engine
     permissions:
@@ -567,6 +581,7 @@ jobs:
         run: bash "${GITHUB_WORKSPACE}/scripts/release/run_all_test.sh"
         working-directory: ./test/e2e
   migrating-traffic:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     needs:
       - e2e-test-all-prd
@@ -587,6 +602,7 @@ jobs:
       - uses: google-github-actions/setup-gcloud@aa5489c8933f4cc7a4f7d45035b3b1440c9c10db # v3.0.1
       - run: bash "${GITHUB_WORKSPACE}/scripts/release/migrating_traffic/set_traffic.sh"
   remove-app-engine-past-versions:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     needs:
       - migrating-traffic
@@ -631,6 +647,7 @@ jobs:
         run: gcloud app versions delete --service=default  ${{steps.get_run_numbers.outputs.result}}
   # docker-compose関連でPRとpushで共通して必ず完了しているべきjobが完了したか
   release-complete-check-docker-compose:
+    timeout-minutes: 10
     runs-on: ubuntu-latest
     needs:
       - update-package
@@ -643,6 +660,7 @@ jobs:
       - run: exit 0
   # PRとpushで共通して完了しているべきjobが完了したか
   release-complete-check:
+    timeout-minutes: 10
     runs-on: ubuntu-latest
     if: always() && (github.event_name != 'pull_request' || github.event.action != 'closed')
     needs:
@@ -657,6 +675,7 @@ jobs:
   # PRをトリガーとした場合に完了しているべきjobが完了したか
   # forkしたリポジトリからdev-hato/hato-atamaへPRを出した場合やforkしたリポジトリ上でPRを立てた場合、merge_groupトリガーの場合はcreate-pr-environmentがskipされていても完了したものと見なす
   pr-test-complete:
+    timeout-minutes: 10
     runs-on: ubuntu-latest
     if: always() && ((github.event_name == 'pull_request' && github.event.action != 'closed') || github.event_name == 'merge_group')
     needs:
@@ -669,6 +688,7 @@ jobs:
       - if: needs.release-complete-check.result != 'success' || (github.event_name != 'merge_group' && github.repository == github.event.pull_request.head.repo.full_name && github.repository == 'dev-hato/hato-atama' && needs.check-deploy-diff.outputs.deploy-files == 'true' && needs.create-pr-environment.result != 'success')
         run: exit 1
   action-timeline-pr-test-complete:
+    timeout-minutes: 10
     needs: pr-test-complete
     if: (github.event_name == 'pull_request' && github.event.action != 'closed') || github.event_name == 'merge_group'
     runs-on: ubuntu-latest
@@ -676,6 +696,7 @@ jobs:
       - uses: Kesin11/actions-timeline@460b1f8a750077029ad3589824d371b200e91dcf # v3.2.1
   # pushをトリガーとした場合に完了しているべきjobが完了したか
   release-complete:
+    timeout-minutes: 10
     runs-on: ubuntu-latest
     if: ${{ always() && github.event_name == 'push' }}
     needs:
@@ -688,6 +709,7 @@ jobs:
       - if: needs.release-complete-check.result != 'success' || (github.repository == 'dev-hato/hato-atama' && needs.check-deploy-diff.outputs.deploy-files == 'true' && needs.remove-app-engine-past-versions.result != 'success')
         run: exit 1
   action-timeline-release-complete:
+    timeout-minutes: 10
     needs: release-complete
     if: github.event_name == 'push'
     runs-on: ubuntu-latest

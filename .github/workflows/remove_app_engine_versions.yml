@@ -9,6 +9,7 @@ permissions:
   contents: read
 jobs:
   remove-app-engine-versions:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     if: github.repository == github.event.pull_request.head.repo.full_name && github.repository == 'dev-hato/hato-atama'
     steps:
