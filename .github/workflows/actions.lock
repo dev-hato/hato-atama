@@ -15,7 +15,7 @@ workflows:
         - 'dev-hato/actions-format-json-yml@8159684fbca33674ff3fe02cae360f4432f9bbcc'
     '.github/workflows/github-actions-cache-cleaner.yml':
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
-        - 'dev-hato/github-actions-cache-cleaner@5f61adf350172a1f8bff35c7cc712ac236b01ac5'
+        - 'dev-hato/github-actions-cache-cleaner@7573e531014f39613c05b8e26cc22a975094d104'
     '.github/workflows/osv-scanner.yml': []
     '.github/workflows/release.yml':
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
@@ -154,9 +154,9 @@ dependencies:
         repo_id: 512097687
         uses:
             - 'dev-hato/actions-diff-pr-management@a3c6f1d6cb3f46d2f48ac3856ef603ef2e508061'
-    'dev-hato/github-actions-cache-cleaner@5f61adf350172a1f8bff35c7cc712ac236b01ac5':
-        ref: 'v0.0.93'
-        commit: 'sha1-5f61adf350172a1f8bff35c7cc712ac236b01ac5'
+    'dev-hato/github-actions-cache-cleaner@7573e531014f39613c05b8e26cc22a975094d104':
+        ref: 'v0.0.94'
+        commit: 'sha1-7573e531014f39613c05b8e26cc22a975094d104'
         owner_id: 68012105
         repo_id: 575637822
         uses:
