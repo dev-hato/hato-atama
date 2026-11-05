@@ -5,14 +5,14 @@ version: 'v0.0.3'
 workflows:
     '.github/workflows/add-to-task-list.yml':
         - 'actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510'
-        - 'dev-hato/actions-add-to-projects@68fe0371ddf7f3192888f4a166bc13f528ae49e5'
+        - 'dev-hato/actions-add-to-projects@8db568a7f7c218b090cb5a8038e261f5eb003dba'
     '.github/workflows/dependency_review.yml':
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
         - 'actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294'
     '.github/workflows/format-json-yml.yml':
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
         - 'actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510'
-        - 'dev-hato/actions-format-json-yml@8159684fbca33674ff3fe02cae360f4432f9bbcc'
+        - 'dev-hato/actions-format-json-yml@3e2804614c492e381420cb831b5d0e633fb290e6'
     '.github/workflows/ghalint.yml':
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
     '.github/workflows/github-actions-cache-cleaner.yml':
@@ -119,9 +119,9 @@ dependencies:
         commit: 'sha1-0bc507ddf224827e3b1af68e014d5e42ab93e795'
         owner_id: 77263318
         repo_id: 325140072
-    'dev-hato/actions-add-to-projects@68fe0371ddf7f3192888f4a166bc13f528ae49e5':
-        ref: 'v1.0.11'
-        commit: 'sha1-68fe0371ddf7f3192888f4a166bc13f528ae49e5'
+    'dev-hato/actions-add-to-projects@8db568a7f7c218b090cb5a8038e261f5eb003dba':
+        ref: 'v1.0.14'
+        commit: 'sha1-8db568a7f7c218b090cb5a8038e261f5eb003dba'
         owner_id: 68012105
         repo_id: 526394375
         uses:
@@ -134,9 +134,9 @@ dependencies:
         repo_id: 350720117
         uses:
             - 'actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3'
-    'dev-hato/actions-format-json-yml@8159684fbca33674ff3fe02cae360f4432f9bbcc':
-        ref: 'v0.0.108'
-        commit: 'sha1-8159684fbca33674ff3fe02cae360f4432f9bbcc'
+    'dev-hato/actions-format-json-yml@3e2804614c492e381420cb831b5d0e633fb290e6':
+        ref: 'v0.0.111'
+        commit: 'sha1-3e2804614c492e381420cb831b5d0e633fb290e6'
         owner_id: 68012105
         repo_id: 515961063
         uses:
