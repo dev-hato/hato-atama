@@ -5,7 +5,7 @@ version: 'v0.0.3'
 workflows:
     '.github/workflows/add-to-task-list.yml':
         - 'actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510'
-        - 'dev-hato/actions-add-to-projects@68fe0371ddf7f3192888f4a166bc13f528ae49e5'
+        - 'dev-hato/actions-add-to-projects@8c1169d928e375602b9f6f5061fe490f21672ffb'
     '.github/workflows/dependency_review.yml':
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
         - 'actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294'
@@ -117,9 +117,9 @@ dependencies:
         commit: 'sha1-0bc507ddf224827e3b1af68e014d5e42ab93e795'
         owner_id: 77263318
         repo_id: 325140072
-    'dev-hato/actions-add-to-projects@68fe0371ddf7f3192888f4a166bc13f528ae49e5':
-        ref: 'v1.0.11'
-        commit: 'sha1-68fe0371ddf7f3192888f4a166bc13f528ae49e5'
+    'dev-hato/actions-add-to-projects@8c1169d928e375602b9f6f5061fe490f21672ffb':
+        ref: 'v1.0.12'
+        commit: 'sha1-8c1169d928e375602b9f6f5061fe490f21672ffb'
         owner_id: 68012105
         repo_id: 526394375
         uses:
@@ -144,6 +144,9 @@ dependencies:
         commit: 'sha1-5538777ee98aa1b8016df625c17c6cbe25531f39'
         owner_id: 68012105
         repo_id: 517688930
+        uses:
+            - 'actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3'
+            - 'dev-hato/actions-diff-pr-management@a3c6f1d6cb3f46d2f48ac3856ef603ef2e508061'
     'dev-hato/actions-update-gitleaks@9ce6c610215914b4f28829b30e7227cb6eeaab8e':
         ref: 'v0.0.113'
         commit: 'sha1-9ce6c610215914b4f28829b30e7227cb6eeaab8e'
