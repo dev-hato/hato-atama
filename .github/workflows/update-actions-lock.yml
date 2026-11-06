@@ -26,14 +26,14 @@ jobs:
         run: gh extension install github/gh-actions-lock --pin v0.4.1
         env:
           GH_TOKEN: ${{ github.token }}
-      # forkからのPRではSecretsを使えないため、読み取り専用の検証のみを行う
+      # forkからのPRではSecretsを使えず、merge queueでは修正PRを作れないため、読み取り専用の検証のみを行う
       - name: Verify lockfile
-        if: github.event_name == 'pull_request' && github.event.action != 'closed' && github.event.pull_request.head.repo.full_name != github.repository
+        if: github.event_name == 'merge_group' || (github.event.action != 'closed' && github.event.pull_request.head.repo.full_name != github.repository)
         run: gh actions-lock --verify --no-narrow
         env:
           GH_TOKEN: ${{ github.token }}
       - name: Relock lockfile
-        if: github.event_name == 'merge_group' || (github.event.action != 'closed' && github.event.pull_request.head.repo.full_name == github.repository)
+        if: github.event_name == 'pull_request' && github.event.action != 'closed' && github.event.pull_request.head.repo.full_name == github.repository
         run: gh actions-lock --relock --no-narrow --no-interactive
         env:
           GH_TOKEN: ${{ github.token }}
