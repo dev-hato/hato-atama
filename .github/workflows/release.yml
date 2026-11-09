@@ -191,7 +191,7 @@ jobs:
         run: bash "${GITHUB_WORKSPACE}/scripts/release/format_go/run_goimports.sh"
         env:
           GO_VERSION: ${{steps.get_go_version.outputs.go_version}}
-      - uses: dev-hato/actions-diff-pr-management@a3c6f1d6cb3f46d2f48ac3856ef603ef2e508061 # v2.4.0
+      - uses: dev-hato/actions-diff-pr-management@474e401b8a7df75f1c804a60aa987140c1e0548c # v2.5.0
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           branch-name-prefix: fix-format
@@ -280,7 +280,7 @@ jobs:
         if: github.event_name != 'pull_request' || github.event.action != 'closed'
         run: npm install
         working-directory: test/e2e
-      - uses: dev-hato/actions-diff-pr-management@a3c6f1d6cb3f46d2f48ac3856ef603ef2e508061 # v2.4.0
+      - uses: dev-hato/actions-diff-pr-management@474e401b8a7df75f1c804a60aa987140c1e0548c # v2.5.0
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           branch-name-prefix: fix-version
