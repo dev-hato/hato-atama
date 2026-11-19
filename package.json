@@ -13,7 +13,7 @@
     "cheerio": "1.2.0",
     "domhandler": "6.0.1",
     "node-fetch": "2.6.12",
-    "prettier": "3.10.0",
+    "prettier": "3.10.1",
     "rulesync": "43.8.1",
     "semver": "7.8.6",
     "textlint": "15.8.0",
